@@ -56,11 +56,19 @@ export const App = ({ data, now, phone }: Props) => {
         <h1>{data.profile.name}</h1>
         <p className="title">{data.profile.title}</p>
         <p className="contacts">
-          <span>{data.contacts.email}</span>
-          {phone !== undefined && phone !== '' && <span>{phone}</span>}
-          <span>{data.contacts.telegram}</span>
-          <span>{data.contacts.linkedin.replace('https://www.', '')}</span>
-          <span>{data.contacts.github.replace('https://', '')}</span>
+          <a href={`mailto:${data.contacts.email}`}>{data.contacts.email}</a>
+          {phone !== undefined && phone !== '' && (
+            <a href={`tel:${phone.replace(/[^\d+]/g, '')}`}>{phone}</a>
+          )}
+          <a href={`https://t.me/${data.contacts.telegram.replace('@', '')}`}>
+            {data.contacts.telegram}
+          </a>
+          <a href={data.contacts.linkedin}>
+            {data.contacts.linkedin.replace('https://www.', '')}
+          </a>
+          <a href={data.contacts.github}>
+            {data.contacts.github.replace('https://', '')}
+          </a>
           <span>{data.contacts.location}</span>
         </p>
       </header>
@@ -104,7 +112,14 @@ export const App = ({ data, now, phone }: Props) => {
                 <h3>
                   {role.title}
                   {role.company !== undefined && (
-                    <span className="company"> · {role.company}</span>
+                    <span className="company">
+                      {' · '}
+                      {role.companyUrl === undefined ? (
+                        role.company
+                      ) : (
+                        <a href={role.companyUrl}>{role.company}</a>
+                      )}
+                    </span>
                   )}
                 </h3>
                 <span className="period">
@@ -138,8 +153,8 @@ export const App = ({ data, now, phone }: Props) => {
               {item.name}
               {item.url !== undefined && (
                 <span className="url">
-                  {' '}
-                  — {item.url.replace('https://', '')}
+                  {' — '}
+                  <a href={item.url}>{item.url.replace('https://', '')}</a>
                 </span>
               )}
             </h3>
@@ -159,7 +174,7 @@ export const App = ({ data, now, phone }: Props) => {
           {data.certificates.map((item) => (
             <p key={item.id}>
               <strong>{item.name}</strong> — {item.issuer}, {item.date} ·{' '}
-              {item.credentialId}
+              <a href={item.url}>{item.credentialId}</a>
             </p>
           ))}
         </div>
