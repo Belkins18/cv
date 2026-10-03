@@ -93,8 +93,8 @@ export const roles: Role[] = [
     // место работы. Отдельной записью она давала видимость трёх параллельных
     // ролей; пометкой у клиентского проекта хронология остаётся непрерывной.
     location: {
-      en: 'via Extrawest to Mar 2022, then directly with the client',
-      uk: 'через Extrawest до березня 2022, далі напряму з клієнтом'
+      en: 'Israel · via Extrawest to Mar 2022, then directly with the client',
+      uk: 'Ізраїль · через Extrawest до березня 2022, далі напряму з клієнтом'
     },
     title: {
       en: 'Frontend Blockchain Developer',
@@ -110,8 +110,8 @@ export const roles: Role[] = [
     id: 'ownix',
     company: 'ownix',
     location: {
-      en: 'via Extrawest · until the company wound down',
-      uk: 'через Extrawest · до закриття компанії'
+      en: 'Israel · via Extrawest, until the company wound down',
+      uk: 'Ізраїль · через Extrawest, до закриття компанії'
     },
     title: {
       en: 'Frontend Developer · NFT marketplace',
