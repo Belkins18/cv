@@ -2,9 +2,25 @@
   "$schema": "https://turbo.build/schema.json",
   "tasks": {
     "lint": {},
-    "build": { "dependsOn": ["^build"], "outputs": ["dist/**", "locales/**"] },
-    "typecheck": { "dependsOn": ["^build", "build"] },
-    "test": { "dependsOn": ["^build", "build"] },
-    "pdf": { "dependsOn": ["^build"], "outputs": ["../web/public/*.pdf"] }
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", "locales/**"],
+      "env": ["VITE_CV_PHONE"]
+    },
+    "typecheck": {
+      "dependsOn": ["^build", "build"]
+    },
+    "test": {
+      "dependsOn": ["^build", "build"]
+    },
+    "pdf": {
+      "dependsOn": ["build"],
+      "outputs": ["../../out/*.pdf"],
+      "env": ["CV_PHONE", "VITE_CV_PHONE"]
+    },
+    "verify:pdf": {
+      "dependsOn": ["pdf"],
+      "env": ["CV_PHONE"]
+    }
   }
 }
