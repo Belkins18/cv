@@ -12,7 +12,8 @@ vi.mock('@cv/data', async (importOriginal) => {
 
 const loadCv = vi.mocked(cvData.loadCv)
 
-const renderPage = () => renderWithRouter(<HomePage />)
+const renderPage = (path?: string) =>
+  renderWithRouter(<HomePage />, path === undefined ? {} : { path })
 
 beforeEach(() => {
   loadCv.mockReset()
@@ -57,5 +58,19 @@ describe('HomePage', () => {
     expect(
       await screen.findByRole('heading', { level: 1, name: 'Nikolay Belibov' })
     ).toBeInTheDocument()
+  })
+
+  // Ссылку правит человек и ломает мессенджер. Белый экран здесь — потеря отклика.
+  it('открывается с мусором в search-параметрах, оставив валидную часть фильтра', async () => {
+    loadCv.mockResolvedValue(cvData.project(cvData.cv, 'en'))
+    renderPage('/?tech=react,drogon,,REACT&lang=fr')
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Nikolay Belibov' })
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('checkbox', { name: /^React\s*\d+$/ })
+    ).toBeChecked()
+    // lang=fr — не локаль этого резюме: язык гасится до английского по умолчанию.
+    expect(loadCv).toHaveBeenCalledWith('en')
   })
 })
