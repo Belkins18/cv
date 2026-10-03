@@ -18,13 +18,13 @@
       "outputs": ["dist/**"],
       "env": ["CV_PHONE"]
     },
-    "pdf": {
+    "@cv/print#pdf": {
       "dependsOn": ["build"],
       "outputs": ["../../out/*.pdf"],
       "env": ["CV_PHONE"]
     },
-    "verify:pdf": {
-      "dependsOn": ["pdf"],
+    "@cv/print#verify:pdf": {
+      "dependsOn": ["@cv/print#pdf"],
       "env": ["CV_PHONE"]
     }
   },

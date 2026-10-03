@@ -11,7 +11,7 @@
     "typecheck": "turbo run typecheck && pnpm typecheck:root",
     "test": "turbo run test",
     "build": "turbo run build",
-    "pdf": "turbo run verify:pdf",
+    "pdf": "turbo run verify:pdf --filter=@cv/print",
     "guard": "vitest run --config tools/repo-guard/vitest.config.ts",
     "format": "prettier --write .",
     "prepare": "husky",
