@@ -1,0 +1,9 @@
+packages:
+  - "packages/*"
+  - "apps/*"
+
+# pnpm 10+ не запускает postinstall-скрипты зависимостей без явного разрешения,
+# а pnpm 12 на этом ещё и валит установку. esbuild — бинарник под vite/vitest,
+# без сборки он не работает.
+allowBuilds:
+  esbuild: true

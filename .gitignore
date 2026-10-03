@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.turbo/
+coverage/
+test-results/
+playwright-report/
+packages/cv-data/locales/
+.env
+.env.*
+!.env.example
+.DS_Store
+
+# приватные материалы: в публичный репозиторий не попадают никогда
+docs/superpowers/specs/
+*.png
+*.jpg

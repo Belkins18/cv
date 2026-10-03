@@ -1,0 +1,10 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "lint": {},
+    "build": { "dependsOn": ["^build"], "outputs": ["dist/**", "locales/**"] },
+    "typecheck": { "dependsOn": ["^build", "build"] },
+    "test": { "dependsOn": ["^build", "build"] },
+    "pdf": { "dependsOn": ["^build"], "outputs": ["../web/public/*.pdf"] }
+  }
+}

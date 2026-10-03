@@ -1,0 +1,42 @@
+{
+  "name": "cv",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.8.1+sha512.f64ba907507f5ceafe06c8d38e6052d0179444580ec1279ddd5bfc11cb48aa8a2644b66598e07e761da84872a9fc57d5f902b87fa49d024198d558612aabbe45",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "build": "turbo run build",
+    "pdf": "turbo run pdf",
+    "guard": "vitest run --config tools/repo-guard/vitest.config.ts",
+    "format": "prettier --write \"**/*.{ts,tsx,css,md,json,yml}\"",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.0.2",
+    "@commitlint/config-conventional": "^21.0.2",
+    "@eslint/js": "^10.0.1",
+    "eslint": "^9.37.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.2",
+    "prettier": "^3.6.2",
+    "tsx": "^4.20.3",
+    "turbo": "^2.5.8",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.45.0",
+    "vitest": "^4.1.8"
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx}": [
+      "eslint --max-warnings=0",
+      "prettier --write"
+    ],
+    "**/*.{json,css,md,yml}": [
+      "prettier --write"
+    ]
+  }
+}
