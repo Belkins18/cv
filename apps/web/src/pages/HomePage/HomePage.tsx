@@ -1,13 +1,17 @@
 import { matchesTech } from '@cv/data'
 import { useQuery } from '@tanstack/react-query'
+import { useCallback, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { cvQueryOptions } from '@/data/cvQuery'
 import { Credentials } from '@/features/Credentials'
 import { Projects } from '@/features/Projects'
 import { Rail } from '@/features/Rail'
+import { ShortcutsDialog } from '@/features/ShortcutsDialog'
 import { Summary } from '@/features/Summary'
 import { TechFilter } from '@/features/TechFilter'
 import { Timeline } from '@/features/Timeline'
 import { useCvSearch } from '@/hooks/useCvSearch'
+import { useShortcuts } from '@/hooks/useShortcuts'
 import { CvError } from '@/pages/CvError'
 import { CvSkeleton } from '@/pages/CvSkeleton'
 
@@ -15,13 +19,29 @@ export const HomePage = () => {
   const { locale, themeMode, selected, setTech, setLocale, setThemeMode } =
     useCvSearch()
   const query = useQuery(cvQueryOptions(locale))
+  const { t, i18n } = useTranslation()
+  const [helpOpen, setHelpOpen] = useState(false)
 
-  if (query.isPending) return <CvSkeleton message="Loading CV" />
+  // Локаль живёт в URL и ведёт данные; хром интерфейса обязан идти за ней,
+  // иначе украинское резюме получает английские подписи кнопок.
+  useEffect(() => {
+    void i18n.changeLanguage(locale)
+  }, [i18n, locale])
+
+  const focusFilter = useCallback(() => {
+    document
+      .querySelector<HTMLElement>("#tech-filter [role='checkbox']")
+      ?.focus()
+  }, [])
+  const toggleHelp = useCallback(() => setHelpOpen((value) => !value), [])
+  useShortcuts({ onFocusFilter: focusFilter, onToggleHelp: toggleHelp })
+
+  if (query.isPending) return <CvSkeleton message={t('state.loading')} />
   if (query.isError) {
     return (
       <CvError
-        message="Could not load the CV data."
-        retryLabel="Retry"
+        message={t('state.error')}
+        retryLabel={t('state.retry')}
         onRetry={() => void query.refetch()}
       />
     )
@@ -65,6 +85,7 @@ export const HomePage = () => {
           languages={query.data.languages}
         />
       </main>
+      <ShortcutsDialog open={helpOpen} onClose={() => setHelpOpen(false)} />
     </div>
   )
 }
