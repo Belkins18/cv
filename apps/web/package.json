@@ -16,8 +16,10 @@
     "@cv/ui": "workspace:*",
     "@tanstack/react-query": "^5.104.1",
     "@tanstack/react-router": "^1.170.41",
+    "i18next": "^26.4.2",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
+    "react-i18next": "^17.0.15",
     "zod": "^4.1.11"
   },
   "devDependencies": {

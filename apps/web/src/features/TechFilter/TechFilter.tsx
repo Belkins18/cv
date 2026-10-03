@@ -1,6 +1,7 @@
 import { TECH, techCounts, type TechId } from '@cv/data'
 import { Chip, SectionTitle } from '@cv/ui'
 import { useId, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export type TechFilterProps = {
   entries: ReadonlyArray<{ tech: readonly TechId[] }>
@@ -29,6 +30,7 @@ export const TechFilter = ({
     [entries]
   )
   const listId = useId()
+  const { t } = useTranslation()
 
   const toggle = (id: TechId): void => {
     onChange(
@@ -40,7 +42,7 @@ export const TechFilter = ({
 
   return (
     <section aria-labelledby="filter-title" id="tech-filter">
-      <SectionTitle id="filter-title">Filter by stack</SectionTitle>
+      <SectionTitle id="filter-title">{t('section.filter')}</SectionTitle>
       <div id={listId} className="flex flex-wrap gap-1.5">
         {ranked.map(([id, count]) => (
           <Chip
@@ -58,14 +60,14 @@ export const TechFilter = ({
       */}
       {selected.length > 0 && matchCount === 0 && (
         <p role="status" className="mt-3 text-sm text-ink-muted">
-          Nothing matches this stack — the cards below are all dimmed.{' '}
+          {t('filter.empty')}{' '}
           <button
             type="button"
             data-testid="filter-reset"
             onClick={() => onChange([])}
             className="underline"
           >
-            Reset the filter
+            {t('filter.reset')}
           </button>
         </p>
       )}

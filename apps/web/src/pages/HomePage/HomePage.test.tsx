@@ -95,4 +95,23 @@ describe('HomePage', () => {
       expect(card).toHaveAttribute('data-dimmed', 'true')
     }
   })
+
+  /*
+   * Локаль в URL ведёт и данные, и хром. Тест идёт последним в файле: язык
+   * i18next — глобальное состояние прогона, и переключать его посреди файла,
+   * где остальные проверки написаны по-английски, значит ронять их по очереди.
+   */
+  it('при украинской локали переводит не только данные, но и подписи кнопок', async () => {
+    loadCv.mockResolvedValue(cvData.project(cvData.cv, 'uk'))
+    renderPage('/?lang=uk')
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Nikolay Belibov' })
+    ).toBeInTheDocument()
+    expect(loadCv).toHaveBeenCalledWith('uk')
+    expect(
+      await screen.findByRole('link', { name: 'Завантажити PDF' })
+    ).toBeInTheDocument()
+    expect(await screen.findByText('Досвід')).toBeInTheDocument()
+    expect(screen.getByText('Проєкти')).toBeInTheDocument()
+  })
 })
