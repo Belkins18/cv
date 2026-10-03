@@ -3,6 +3,56 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Nikolay Belibov — Frontend Engineer</title>
+    <!--
+      Главный канал распространения этого сайта — ссылка: в письме, в LinkedIn,
+      в мессенджере рекрутёру. Без описания и og-тегов она разворачивается
+      пустой карточкой, и первое впечатление о резюме — что оно никакое.
+      Текст держится в тех же границах, что и датасет: титул ровно такой же,
+      как в резюме, домен назван анализом сетевых протоколов. Называть здесь
+      запрещённые слова по имени нельзя — комментарии HTML уезжают в сборку,
+      и `postbuild` ловит их наравне с кодом. Он это и поймал.
+    -->
+    <meta
+      name="description"
+      content="Nikolay Belibov — frontend engineer. React, TypeScript in strict mode, Vite; the web client for a network-protocol analysis platform at WireX Systems. Interactive CV with a stack filter in the URL and a PDF to download."
+    />
+
+    <meta property="og:type" content="profile" />
+    <meta property="og:title" content="Nikolay Belibov — Frontend Engineer" />
+    <meta
+      property="og:description"
+      content="React, TypeScript in strict mode, Vite. Interactive CV with a stack filter in the URL and a PDF to download."
+    />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="uk_UA" />
+    <meta name="twitter:card" content="summary" />
+    <!--
+      og:url и og:image не заданы намеренно. Адрес появится только после
+      подключения Netlify, а неверный og:url хуже отсутствующего: площадки
+      предпочтут его тому, по которому пришли. Картинку превью пришлось бы
+      держать в PNG или JPEG — форматах, которые .gitignore запрещает целиком;
+      SVG для превью не годится, его не читают ни LinkedIn, ни Telegram.
+    -->
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!--
+      Браузер красит собственный хром до того, как приедет CSS: без этого
+      светлая системная тема моргает белым поверх тёмной страницы.
+    -->
+    <meta name="color-scheme" content="dark light" />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: dark)"
+      content="#15171d"
+    />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: light)"
+      content="#fcfcfd"
+    />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <!-- Токены темы @cv/ui только называют Inter и JetBrains Mono; подключает их приложение. -->
@@ -10,7 +60,6 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
       rel="stylesheet"
     />
-    <title>Nikolay Belibov — Frontend Engineer</title>
   </head>
   <body>
     <div id="root"></div>
