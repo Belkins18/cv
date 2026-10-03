@@ -9,7 +9,12 @@
     "checkJs": true,
     "types": ["node"]
   },
-  "include": ["eslint/**/*.js", "test/**/*.ts", "eslint.config.js"],
+  "include": [
+    "eslint/**/*.js",
+    "test/**/*.ts",
+    "eslint.config.js",
+    "vitest.config.ts"
+  ],
   // Фикстура существует, чтобы НЕ компилироваться: тест проверяет, что строгие
   // флаги её отвергают. В общий тайпчек она попасть не должна.
   "exclude": ["test/fixture"]
