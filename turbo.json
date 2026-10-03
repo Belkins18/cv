@@ -13,6 +13,11 @@
     "test": {
       "dependsOn": ["^build", "build"]
     },
+    "@cv/web#build": {
+      "dependsOn": ["^build", "@cv/print#pdf"],
+      "outputs": ["dist/**"],
+      "env": ["CV_PHONE"]
+    },
     "pdf": {
       "dependsOn": ["build"],
       "outputs": ["../../out/*.pdf"],
