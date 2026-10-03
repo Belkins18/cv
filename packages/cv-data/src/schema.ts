@@ -48,7 +48,9 @@ export const makeCvSchema = <T extends z.ZodType<unknown>>(text: T) =>
         period: periodSchema,
         detail: detailSchema,
         tech: z.array(techIdSchema),
-        bullets: z.array(text).default([])
+        bullets: z.array(text).default([]),
+        /** Сколько буллетов показывает PDF. Сайт всегда показывает все. */
+        printBulletLimit: z.number().int().positive().optional()
       })
     ),
     projects: z.array(
