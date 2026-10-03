@@ -75,6 +75,13 @@ pnpm format
 
 Один пакет: `pnpm --filter @cv/data test`.
 
+e2e живут в `apps/web` и гоняются по **собранному** сайту:
+
+```bash
+pnpm --filter @cv/web build
+pnpm --filter @cv/web e2e
+```
+
 ## Linked Instructions
 
 ИИ-агент обязан читать дополнительные инструкции перед соответствующими задачами:
@@ -82,6 +89,7 @@ pnpm format
 - Git Flow, ветки, коммиты или PR-процесс: `docs/instructions/git-flow.md`
 - Husky, Commitlint, Prettier, ESLint, lint-staged, React-компоненты и правила качества: `docs/instructions/code-quality.md`
 - Тесты, test setup или test scripts: `docs/instructions/testing.md`
+- Netlify, GitHub Actions, сборка PDF в сайт или e2e: `docs/instructions/deployment.md`
 
 Если linked instruction-файл отсутствует, агент не выдумывает его содержимое,
 а сообщает об отсутствии и предлагает создать минимальную версию.
