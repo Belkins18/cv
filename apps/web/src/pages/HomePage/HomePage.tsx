@@ -1,6 +1,8 @@
 import { matchesTech } from '@cv/data'
 import { useQuery } from '@tanstack/react-query'
 import { cvQueryOptions } from '@/data/cvQuery'
+import { Credentials } from '@/features/Credentials'
+import { Projects } from '@/features/Projects'
 import { Rail } from '@/features/Rail'
 import { Summary } from '@/features/Summary'
 import { TechFilter } from '@/features/TechFilter'
@@ -55,6 +57,12 @@ export const HomePage = () => {
           selected={selected}
           locale={locale}
           now={now}
+        />
+        <Projects projects={query.data.projects} selected={selected} />
+        <Credentials
+          certificates={query.data.certificates}
+          education={query.data.education}
+          languages={query.data.languages}
         />
       </main>
     </div>
