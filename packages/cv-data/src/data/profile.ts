@@ -28,8 +28,8 @@ export const contacts = {
   linkedin: 'https://www.linkedin.com/in/nikolay-belibov-781507b3/',
   github: 'https://github.com/Belkins18',
   location: {
-    en: 'Mykolaiv, Ukraine · remote since 2021',
-    uk: 'Миколаїв, Україна · віддалено з 2021'
+    en: 'Mykolaiv, Ukraine · remote since 2022',
+    uk: 'Миколаїв, Україна · віддалено з 2022'
   }
   // phone сюда не кладётся никогда: он приходит из CV_PHONE на шаге сборки PDF.
 }

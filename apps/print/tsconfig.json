@@ -10,6 +10,7 @@
   },
   "include": [
     "src",
+    "cv-phone.ts",
     "scripts",
     "test",
     "vite.config.ts",

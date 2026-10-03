@@ -28,7 +28,6 @@ export const certificates: Cv['certificates'] = [
 ]
 
 // Степени записаны по LinkedIn — он объявлен источником правды (дизайн §2.1).
-// Если Nikolay ответит иначе на вопрос 8 из Task 5, правим здесь.
 export const education: Cv['education'] = [
   {
     id: 'chnu',

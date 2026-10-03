@@ -1,5 +1,16 @@
 {
   "extends": "./tsconfig/base.json",
-  "include": ["eslint/**/*.js"],
-  "compilerOptions": { "allowJs": true, "checkJs": false }
+  // Пресет — это js-файл конфига ESLint плюс тесты строгости на TypeScript.
+  // Раньше include охватывал только `eslint/**/*.js` при `checkJs: false`,
+  // то есть `pnpm typecheck` в этом пакете был зелёным, не проверив ни строки,
+  // а `test/strict.test.ts` не попадал ни в один include вообще.
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "types": ["node"]
+  },
+  "include": ["eslint/**/*.js", "test/**/*.ts", "eslint.config.js"],
+  // Фикстура существует, чтобы НЕ компилироваться: тест проверяет, что строгие
+  // флаги её отвергают. В общий тайпчек она попасть не должна.
+  "exclude": ["test/fixture"]
 }
