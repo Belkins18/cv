@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react'
 import { cv, project } from '@cv/data'
 import { describe, expect, it } from 'vitest'
 import { App } from '@/App'
+import { PHONE } from '../../../../tools/repo-guard/patterns'
 
 const data = project(cv, 'en')
 const NOW = new Date(Date.UTC(2026, 9, 3))
@@ -43,7 +44,7 @@ describe('печатная вёрстка резюме', () => {
 
   it('без CV_PHONE телефона в документе нет', () => {
     render(<App data={data} now={NOW} />)
-    expect(document.body.textContent ?? '').not.toMatch(/380\d{9}/)
+    expect(document.body.textContent ?? '').not.toMatch(PHONE)
   })
 
   it('с переданным телефоном показывает его в контактах', () => {

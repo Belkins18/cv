@@ -2,6 +2,8 @@ import { readFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import { extractText, getDocumentProxy } from 'unpdf'
 import { beforeAll, describe, expect, it } from 'vitest'
+import { resolveCvPhone } from '../cv-phone'
+import { PHONE, FORBIDDEN_IN_RESUME } from '../../../tools/repo-guard/patterns'
 
 const pdfPath = fileURLToPath(
   new URL('../../../out/cv-nikolay-belibov.pdf', import.meta.url)
@@ -48,18 +50,19 @@ describe('PDF пригоден для ATS', () => {
     expect(text).not.toContain('{{')
   })
 
-  it('не содержит запрещённых формулировок', () => {
-    // Паттерн склеен из фрагментов: записанное целиком слово сделало бы сам тест
-    // утечкой — гвард приватности сканирует и заголовки, и тела тестов.
-    expect(text).not.toMatch(new RegExp(['cyber', 'security'].join(' ?'), 'i'))
-    expect(text).not.toMatch(/BSAFE/i)
-    expect(text).not.toMatch(/Senior/i)
-  })
+  it.each(FORBIDDEN_IN_RESUME)(
+    'не содержит запрещённой формулировки: %s',
+    (_label, pattern) => {
+      expect(text).not.toMatch(pattern)
+    }
+  )
 
   it('телефон присутствует ровно тогда, когда задан CV_PHONE', () => {
-    const expected = process.env['CV_PHONE']
-    if (expected === undefined || expected === '') {
-      expect(text).not.toMatch(/\+?380\d{9}/)
+    // Значение берётся тем же резолвером, что и сборка: если проверка будет
+    // читать свой источник, рассинхрон снова пройдёт мимо теста.
+    const expected = resolveCvPhone()
+    if (expected === '') {
+      expect(text).not.toMatch(PHONE)
     } else {
       expect(text).toContain(expected)
     }
