@@ -14,6 +14,7 @@ import { useCvSearch } from '@/hooks/useCvSearch'
 import { useShortcuts } from '@/hooks/useShortcuts'
 import { CvError } from '@/pages/CvError'
 import { CvSkeleton } from '@/pages/CvSkeleton'
+import { reloadPage } from '@/utils/reloadPage'
 
 export const HomePage = () => {
   const { locale, themeMode, selected, setTech, setLocale, setThemeMode } =
@@ -42,7 +43,18 @@ export const HomePage = () => {
       <CvError
         message={t('state.error')}
         retryLabel={t('state.retry')}
-        onRetry={() => void query.refetch()}
+        /*
+         * Повтор — перезагрузка страницы, а не refetch, и это не лень.
+         * Данные локали приезжают динамическим `import()`, а браузер кэширует
+         * ПРОВАЛИВШИЙСЯ импорт: запись в module map становится null навсегда,
+         * и следующий `import()` того же URL падает, вообще не ходя в сеть.
+         * Проверено e2e: после отказа чанка повторных запросов к нему нет ни
+         * одного, сколько ни жми. Единственный отказ у `loadCv` — именно такой,
+         * так что refetch здесь был бы кнопкой, которая ничего не делает.
+         * Перезагрузка создаёт module map заново, а фильтр, язык и тема живут
+         * в URL — терять нечего.
+         */
+        onRetry={reloadPage}
       />
     )
   }
