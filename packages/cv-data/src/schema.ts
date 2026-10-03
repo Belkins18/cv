@@ -57,7 +57,8 @@ export const makeCvSchema = <T extends z.ZodType<unknown>>(text: T) =>
       z.object({
         id: z.string().min(1),
         name: z.string().min(1),
-        url: httpsUrl,
+        /** У внутренних продуктов публичной ссылки нет. */
+        url: httpsUrl.optional(),
         summary: text,
         tech: z.array(techIdSchema),
         bullets: z.array(text).default([])
