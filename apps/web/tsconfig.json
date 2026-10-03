@@ -1,0 +1,12 @@
+{
+  "extends": "@cv/config/tsconfig/react.json",
+  // Конфиги vite/vitest читают пути от import.meta.url — это node-код. Пресет
+  // @cv/config/tsconfig/react.json знает только vite/client, поэтому "node"
+  // дописывается здесь, а не в общем пресете.
+  "compilerOptions": {
+    "types": ["vite/client", "node"],
+    "baseUrl": ".",
+    "paths": { "@/*": ["./src/*"] }
+  },
+  "include": ["src", "vite.config.ts", "vitest.config.ts"]
+}

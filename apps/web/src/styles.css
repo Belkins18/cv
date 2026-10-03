@@ -1,0 +1,16 @@
+@import '@cv/ui/theme.css';
+
+/*
+ * Tailwind сканирует контент от директории CSS-файла, который сделал
+ * `@import 'tailwindcss'`, — а это packages/ui. Без этой строки ни один класс
+ * приложения в собранный CSS не попадёт, и ошибка молчаливая: сборка зелёная,
+ * страница без стилей. Путь — от самого styles.css, то есть apps/web/src.
+ */
+@source '.';
+
+body {
+  margin: 0;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
