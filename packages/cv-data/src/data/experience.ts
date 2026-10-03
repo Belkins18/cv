@@ -6,7 +6,7 @@ export const roles: Role[] = [
   {
     id: 'wirex',
     company: 'WireX Systems',
-    companyUrl: 'https://wirexsystems.com/ne2ition-ndr-platform',
+    companyUrl: 'https://wirexsystems.com',
     location: { en: 'Israel / USA · remote', uk: 'Ізраїль / США · віддалено' },
     title: { en: 'Frontend Developer', uk: 'Frontend Developer' },
     period: { start: '2024-06', end: null },
@@ -26,8 +26,8 @@ export const roles: Role[] = [
     ],
     bullets: [
       {
-        // Прод-статус не утверждается: Nikolay прямо сказал, что не знает, доходит ли
-        // продукт до клиентов. В тексте только проверяемое — команда, пайплайн, деплой.
+        // Прод-статус не утверждается: подтвердить его на собеседовании нечем.
+        // В тексте только проверяемое — размер команды, пайплайн, деплой в окружения.
         en: "Built the web client that replaces a legacy Qt desktop application for Ne2ition, the company's network-protocol analysis platform — the old client only ran on outdated Linux systems. A frontend team of two, with the release pipeline in place and regular deploys to AWS environments.",
         uk: 'Побудував вебклієнт на заміну легасі Qt-застосунку для Ne2ition, платформи аналізу мережевих протоколів компанії, — старий клієнт працював лише на застарілих Linux-системах. Фронтенд-команда з двох людей, релізний пайплайн готовий, регулярні деплої в середовища на AWS.'
       },
@@ -67,7 +67,7 @@ export const roles: Role[] = [
     tech: ['react', 'typescript', 'zod'],
     bullets: [
       {
-        // Масштаба Nikolay не назвал, поэтому буллет скромный: что делал — и всё.
+        // Буллет скромный намеренно: масштаба за этой ролью нет, раздувать нечего.
         // Context API в реестр TECH не идёт: это часть React, а не технология в ряду с Redux.
         en: "Built promotional sites and landing pages on React and TypeScript, with form validation on zod schemas; state stayed in React's own context — the projects needed no external state manager.",
         uk: 'Робив промосайти та лендінги на React і TypeScript, валідація форм — на zod-схемах; стан жив у власному контексті React, зовнішнього стейт-менеджера проєкти не потребували.'
@@ -82,9 +82,8 @@ export const roles: Role[] = [
     period: { start: '2022-12', end: '2023-09' },
     detail: 'full',
     tech: ['react', 'typescript'],
-    // Фактов нет и не будет: Nikolay не помнит деталей и прямо попросил
-    // не углубляться. Роль идёт строкой с датами и должностью — пустая запись
-    // честнее выдуманной.
+    // Роль без описания: фактов для честного буллета нет.
+    // Пустая запись честнее выдуманной — в таймлайне остаются даты и должность.
     bullets: []
   },
   {
@@ -98,7 +97,7 @@ export const roles: Role[] = [
     period: { start: '2021-12', end: '2022-08' },
     detail: 'full',
     tech: ['react', 'typescript', 'wagmi', 'reown', 'ethers', 'evm'],
-    // Подтверждено: только EVM-сети. Solana, Tron и Ledger сюда не дописываются.
+    // Только EVM-сети: Solana, Tron и Ledger к этой роли отношения не имеют.
     bullets: []
   },
   {
@@ -109,7 +108,7 @@ export const roles: Role[] = [
     period: { start: '2021-09', end: '2022-03' },
     detail: 'full',
     tech: ['react', 'typescript'],
-    // «Оставь пока без записи»: роль остаётся строкой, описание не пишем.
+    // Роль без описания: остаётся строкой в таймлайне, буллеты не пишем.
     bullets: []
   },
   {
@@ -143,8 +142,8 @@ export const roles: Role[] = [
     tech: ['react', 'javascript', 'electron', 'webrtc', 'scss', 'vue'],
     bullets: [
       {
-        // Самый сильный факт в ролях до WireX: перевод легаси-продукта на другой
-        // фреймворк на кросс-платформенном десктопе. Пишется развёрнуто.
+        // Самое содержательное в ролях до WireX: перевод легаси-продукта на другой
+        // фреймворк на кросс-платформенном десктопе. Поэтому развёрнуто, а не строкой.
         en: 'Rewrote the UI stack of a cross-platform Electron desktop product from Vue to React. The application had been built on Vue from the start, and the migration went through its whole component and state layer — a replacement of the old code, not a wrapper around it.',
         uk: 'Переписав UI-стек кросплатформного Electron-десктопу з Vue на React. Застосунок від початку був побудований на Vue, і міграція пройшла через увесь шар компонентів і стану — це заміна старого коду, а не обгортка над ним.'
       },
