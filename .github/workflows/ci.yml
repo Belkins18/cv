@@ -25,13 +25,23 @@ jobs:
       # и e2e. Playwright объявлен в @cv/web, в корне его бинаря нет.
       - run: pnpm --filter @cv/web exec playwright install --with-deps chromium
 
-      # Гвард первым: смысла гонять остальные гейты над утечкой нет.
+      # Восемь гейтов — ровно те же, что локально, и в том же порядке.
+      # Гвард первым: смысла гонять остальное над утечкой нет.
       - run: pnpm guard
       - run: pnpm lint
+      - run: pnpm format:check
       - run: pnpm typecheck
       - run: pnpm test
       # Собирает и PDF, и сайт: @cv/web#build зависит от @cv/print#pdf.
+      # Внутри сборки два шлюза: copy-pdf читает текстовый слой PDF,
+      # scan-dist — собранный бандл.
       - run: pnpm build
+      # 19 ATS-проверок собранного PDF: текстовый слой, две страницы, ключевые
+      # слова. Живут в отдельном vitest-конфиге, и `pnpm test` их НЕ подхватывает —
+      # без этой строки Review Focus №1 остаётся единственным классом отказа
+      # без автоматического гейта, а CI при этом выкладывает непроверенный PDF
+      # артефактом и Netlify кладёт его под кнопку Download.
+      - run: pnpm pdf
       - run: pnpm --filter @cv/web e2e
 
       # PDF собран БЕЗ CV_PHONE: номер подставляется только в локальной сборке

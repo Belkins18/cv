@@ -7,6 +7,7 @@
     "dev": "vite",
     "prebuild": "tsx scripts/copy-pdf.ts",
     "build": "vite build",
+    "postbuild": "tsx scripts/scan-dist.ts",
     "preview": "vite preview",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
