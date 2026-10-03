@@ -6,4 +6,5 @@ packages:
 # а pnpm 12 на этом ещё и валит установку. esbuild — бинарник под vite/vitest,
 # без сборки он не работает.
 allowBuilds:
+  '@parcel/watcher': true
   esbuild: true

@@ -1,0 +1,8 @@
+{
+  "extends": "@cv/config/tsconfig/react.json",
+  // test/theme.test.ts гоняет Tailwind CLI через node:child_process и читает
+  // пути от import.meta.url — это node-код. Пресет знает только vite/client,
+  // поэтому "node" дописывается здесь, а не в общем пресете.
+  "compilerOptions": { "types": ["vite/client", "node"] },
+  "include": ["src", "test", "vitest.config.ts"]
+}
