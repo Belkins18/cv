@@ -73,4 +73,26 @@ describe('HomePage', () => {
     // lang=fr — не локаль этого резюме: язык гасится до английского по умолчанию.
     expect(loadCv).toHaveBeenCalledWith('en')
   })
+
+  /*
+   * Подсказка пустого фильтра обещает, что погашены «все карточки ниже».
+   * Счётчик совпадений считается по ролям и проектам, поэтому обещание
+   * становится правдой только когда на странице есть и те, и другие.
+   */
+  it('при стеке, которого нет нигде, гасит и роли, и проекты', async () => {
+    loadCv.mockResolvedValue(cvData.project(cvData.cv, 'en'))
+    renderPage('/?tech=solana,tron')
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Nikolay Belibov' })
+    ).toBeInTheDocument()
+    expect(screen.getByRole('status')).toHaveTextContent(/nothing matches/i)
+
+    const roles = screen.getAllByTestId(/^role-/)
+    const projects = screen.getAllByTestId(/^project-/)
+    expect(roles.length).toBeGreaterThan(0)
+    expect(projects.length).toBeGreaterThan(0)
+    for (const card of [...roles, ...projects]) {
+      expect(card).toHaveAttribute('data-dimmed', 'true')
+    }
+  })
 })
