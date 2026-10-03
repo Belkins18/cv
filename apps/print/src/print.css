@@ -52,9 +52,11 @@ body {
   color: var(--muted);
 }
 
+/* Секция рвётся между страницами, а неделимы её части — роль, проект, колонка.
+   С `break-inside: avoid` на самой секции Projects целиком уезжал на следующий лист,
+   оставляя треть страницы пустой, и документ не влезал в два листа при том же тексте. */
 .section {
   margin-top: 4mm;
-  break-inside: avoid;
 }
 
 .section h2 {
@@ -65,6 +67,8 @@ body {
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  /* Заголовок не остаётся один внизу страницы в отрыве от своего содержимого. */
+  break-after: avoid;
 }
 
 .summary {
@@ -138,6 +142,7 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 6mm;
+  break-inside: avoid;
 }
 
 .two-column p {

@@ -11,7 +11,7 @@ export const projects: Project[] = [
       en: 'Data-heavy dashboard for game clan statistics.',
       uk: 'Насичений даними дашборд статистики ігрового клану.'
     },
-    tech: ['react', 'typescript', 'vite', 'tailwind', 'canvas'],
+    tech: ['react', 'typescript', 'vite', 'tailwind', 'canvas', 'zustand'],
     bullets: [
       {
         en: 'Sortable table with expandable rows and pagination, period selectors, stacked bar charts over 25+ entities, a combined bar + line chart with a brush slider, a live mode, markdown export and a dark theme.',

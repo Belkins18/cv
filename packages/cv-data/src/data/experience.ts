@@ -26,8 +26,10 @@ export const roles: Role[] = [
     ],
     bullets: [
       {
-        en: "Built the web client that replaces a legacy Qt desktop application for Ne2ition, the company's network-protocol analysis platform — the old client only ran on outdated Linux systems.",
-        uk: 'Побудував вебклієнт на заміну легасі Qt-застосунку для Ne2ition, платформи аналізу мережевих протоколів компанії, — старий клієнт працював лише на застарілих Linux-системах.'
+        // Прод-статус не утверждается: Nikolay прямо сказал, что не знает, доходит ли
+        // продукт до клиентов. В тексте только проверяемое — команда, пайплайн, деплой.
+        en: "Built the web client that replaces a legacy Qt desktop application for Ne2ition, the company's network-protocol analysis platform — the old client only ran on outdated Linux systems. A frontend team of two, with the release pipeline in place and regular deploys to AWS environments.",
+        uk: 'Побудував вебклієнт на заміну легасі Qt-застосунку для Ne2ition, платформи аналізу мережевих протоколів компанії, — старий клієнт працював лише на застарілих Linux-системах. Фронтенд-команда з двох людей, релізний пайплайн готовий, регулярні деплої в середовища на AWS.'
       },
       {
         en: 'Designed a manifest-driven event architecture: a manifest declares what each protocol event shows, builders produce one normalized view model, and the table, the expanded view, search and sorting all read from it instead of a hand-written renderer per event type — 70+ event types across 15 protocol categories.',
@@ -62,8 +64,15 @@ export const roles: Role[] = [
     title: { en: 'Frontend Developer', uk: 'Frontend Developer' },
     period: { start: '2023-10', end: '2024-04' },
     detail: 'full',
-    tech: ['react', 'typescript'],
-    bullets: [] // заполняется по ответу на вопрос 1 из Task 5, Step 1
+    tech: ['react', 'typescript', 'zod'],
+    bullets: [
+      {
+        // Масштаба Nikolay не назвал, поэтому буллет скромный: что делал — и всё.
+        // Context API в реестр TECH не идёт: это часть React, а не технология в ряду с Redux.
+        en: "Built promotional sites and landing pages on React and TypeScript, with form validation on zod schemas; state stayed in React's own context — the projects needed no external state manager.",
+        uk: 'Робив промосайти та лендінги на React і TypeScript, валідація форм — на zod-схемах; стан жив у власному контексті React, зовнішнього стейт-менеджера проєкти не потребували.'
+      }
+    ]
   },
   {
     id: 'bidflyer',
@@ -73,7 +82,10 @@ export const roles: Role[] = [
     period: { start: '2022-12', end: '2023-09' },
     detail: 'full',
     tech: ['react', 'typescript'],
-    bullets: [] // вопрос 2
+    // Фактов нет и не будет: Nikolay не помнит деталей и прямо попросил
+    // не углубляться. Роль идёт строкой с датами и должностью — пустая запись
+    // честнее выдуманной.
+    bullets: []
   },
   {
     id: 'poollotto',
@@ -86,7 +98,8 @@ export const roles: Role[] = [
     period: { start: '2021-12', end: '2022-08' },
     detail: 'full',
     tech: ['react', 'typescript', 'wagmi', 'reown', 'ethers', 'evm'],
-    bullets: [] // вопрос 3
+    // Подтверждено: только EVM-сети. Solana, Tron и Ledger сюда не дописываются.
+    bullets: []
   },
   {
     id: 'extrawest',
@@ -96,7 +109,8 @@ export const roles: Role[] = [
     period: { start: '2021-09', end: '2022-03' },
     detail: 'full',
     tech: ['react', 'typescript'],
-    bullets: [] // вопрос 4
+    // «Оставь пока без записи»: роль остаётся строкой, описание не пишем.
+    bullets: []
   },
   {
     id: 'ownix',
@@ -108,8 +122,13 @@ export const roles: Role[] = [
     },
     period: { start: '2021-09', end: '2021-12' },
     detail: 'full',
-    tech: ['react', 'typescript', 'ethers', 'evm'],
-    bullets: [] // вопрос 5
+    tech: ['react', 'typescript', 'ethers', 'evm', 'dnd'],
+    bullets: [
+      {
+        en: 'Implemented drag-and-drop in the NFT marketplace interface — React and TypeScript on the front, ethers.js against EVM networks underneath.',
+        uk: 'Реалізував drag-and-drop в інтерфейсі NFT-маркетплейсу — React і TypeScript на фронті, ethers.js до EVM-мереж під ним.'
+      }
+    ]
   },
   {
     id: 'dstar-lab',
@@ -121,8 +140,19 @@ export const roles: Role[] = [
     },
     period: { start: '2019-01', end: '2021-08' },
     detail: 'full',
-    tech: ['react', 'javascript', 'electron', 'webrtc', 'scss'],
-    bullets: [] // вопрос 6
+    tech: ['react', 'javascript', 'electron', 'webrtc', 'scss', 'vue'],
+    bullets: [
+      {
+        // Самый сильный факт в ролях до WireX: перевод легаси-продукта на другой
+        // фреймворк на кросс-платформенном десктопе. Пишется развёрнуто.
+        en: 'Rewrote the UI stack of a cross-platform Electron desktop product from Vue to React. The application had been built on Vue from the start, and the migration went through its whole component and state layer — a replacement of the old code, not a wrapper around it.',
+        uk: 'Переписав UI-стек кросплатформного Electron-десктопу з Vue на React. Застосунок від початку був побудований на Vue, і міграція пройшла через увесь шар компонентів і стану — це заміна старого коду, а не обгортка над ним.'
+      },
+      {
+        en: 'Built the real-time side of the same desktop client: WebRTC communication inside Electron, with the interface styled in SCSS.',
+        uk: 'Зробив real-time частину того самого десктопного клієнта: комунікація на WebRTC всередині Electron, інтерфейс — на SCSS.'
+      }
+    ]
   },
   {
     id: 'early-web',
