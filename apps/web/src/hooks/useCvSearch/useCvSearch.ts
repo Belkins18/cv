@@ -5,7 +5,7 @@ import {
   type TechId
 } from '@cv/data'
 import { useNavigate, useSearch } from '@tanstack/react-router'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import {
   readStored,
   resolvePreferences,
@@ -13,51 +13,39 @@ import {
   type ThemeMode
 } from '@/state/preferences'
 
-/**
- * `matchMedia` может не существовать: его нет при серверном рендере и нет в
- * jsdom. Отсутствие API — не отказ страницы: без него режим `system`
- * разрешается в светлую тему, а явный выбор работает как работал.
- */
-const prefersDarkQuery = (): MediaQueryList | null =>
-  typeof window === 'undefined' || typeof window.matchMedia !== 'function'
-    ? null
-    : window.matchMedia('(prefers-color-scheme: dark)')
-
 export const useCvSearch = () => {
   const search = useSearch({ strict: false })
   const navigate = useNavigate()
-  const [prefersDark, setPrefersDark] = useState(
-    () => prefersDarkQuery()?.matches ?? false
-  )
-
-  // Режим system обязан следовать за системой, пока страница открыта.
-  useEffect(() => {
-    const query = prefersDarkQuery()
-    if (query === null) return
-    const listener = (event: MediaQueryListEvent): void =>
-      setPrefersDark(event.matches)
-    query.addEventListener('change', listener)
-    return () => query.removeEventListener('change', listener)
-  }, [])
 
   const preferences = useMemo(
     () =>
       resolvePreferences(
         search,
         readStored(),
-        typeof navigator === 'undefined' ? ['en'] : navigator.languages,
-        prefersDark
+        typeof navigator === 'undefined' ? ['en'] : navigator.languages
       ),
-    [search, prefersDark]
+    [search]
   )
 
   const selected = useMemo(() => parseTechParam(search.tech), [search.tech])
 
+  /*
+   * В режиме `system` атрибут СНИМАЕТСЯ, а не пишется вычисленным значением.
+   *
+   * Разрешать системную тему в JavaScript незачем: `theme.css` уже описывает
+   * обе ветки через `prefers-color-scheme`, а `:root:not([data-theme='dark'])`
+   * пропускает светлую схему ровно тогда, когда явного выбора нет. Пока хук
+   * писал сюда вычисленный `light`/`dark`, ради этого жили `matchMedia`,
+   * состояние `prefersDark`, подписка на смену схемы и отдельный тип `Theme` —
+   * два десятка строк, дублировавших то, что браузер считает сам, и комментарий
+   * в `theme.css` описывал дизайн лучше, чем код его реализовывал.
+   */
   useEffect(() => {
-    document.documentElement.dataset['theme'] = preferences.theme
-    document.documentElement.lang = preferences.locale
-    writeStored({ lang: preferences.locale, theme: preferences.themeMode })
-  }, [preferences.locale, preferences.theme, preferences.themeMode])
+    const root = document.documentElement
+    if (preferences.themeMode === 'system') delete root.dataset['theme']
+    else root.dataset['theme'] = preferences.themeMode
+    root.lang = preferences.locale
+  }, [preferences.locale, preferences.themeMode])
 
   const setTech = (ids: readonly TechId[]): void => {
     void navigate({
@@ -65,10 +53,22 @@ export const useCvSearch = () => {
       search: (prev) => ({ ...prev, tech: serializeTechParam(ids) })
     })
   }
+
+  /*
+   * Сохраняется только то, что человек нажал руками.
+   *
+   * Раньше запись шла эффектом от уже разрешённых предпочтений, то есть
+   * выведенная локаль возвращалась в хранилище как будто это был выбор: после
+   * первого же визита ветка «взять язык браузера» умирала навсегда, и немец
+   * получал `en` на всю жизнь, даже сменив язык системы. Язык из ссылки тоже
+   * не запоминается — его выбрал отправитель, а не тот, кто ссылку открыл.
+   */
   const setLocale = (lang: Locale): void => {
+    writeStored({ ...readStored(), lang })
     void navigate({ to: '/', search: (prev) => ({ ...prev, lang }) })
   }
   const setThemeMode = (theme: ThemeMode): void => {
+    writeStored({ ...readStored(), theme })
     void navigate({ to: '/', search: (prev) => ({ ...prev, theme }) })
   }
 
