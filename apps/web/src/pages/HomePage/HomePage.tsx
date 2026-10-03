@@ -2,12 +2,13 @@ import { useQuery } from '@tanstack/react-query'
 import { cvQueryOptions } from '@/data/cvQuery'
 import { Rail } from '@/features/Rail'
 import { Summary } from '@/features/Summary'
+import { Timeline } from '@/features/Timeline'
 import { useCvSearch } from '@/hooks/useCvSearch'
 import { CvError } from '@/pages/CvError'
 import { CvSkeleton } from '@/pages/CvSkeleton'
 
 export const HomePage = () => {
-  const { locale, themeMode, setLocale, setThemeMode } = useCvSearch()
+  const { locale, themeMode, selected, setLocale, setThemeMode } = useCvSearch()
   const query = useQuery(cvQueryOptions(locale))
 
   if (query.isPending) return <CvSkeleton message="Loading CV" />
@@ -33,6 +34,12 @@ export const HomePage = () => {
       />
       <main className="min-w-0 flex-1 space-y-10 p-6">
         <Summary data={query.data} now={now} />
+        <Timeline
+          roles={query.data.roles}
+          selected={selected}
+          locale={locale}
+          now={now}
+        />
       </main>
     </div>
   )
