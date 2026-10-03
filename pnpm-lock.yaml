@@ -228,6 +228,9 @@ importers:
       '@cv/config':
         specifier: workspace:*
         version: link:../config
+      '@types/node':
+        specifier: ^26.6.4
+        version: 26.6.4
       tsx:
         specifier: ^4.20.3
         version: 4.23.15
