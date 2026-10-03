@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [master, development]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      # Версия pnpm берётся из `packageManager` в package.json — ни здесь,
+      # ни в netlify.toml её дублировать не нужно.
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # Chromium нужен дважды: шагу pdf, от которого зависит сборка сайта,
+      # и e2e. Playwright объявлен в @cv/web, в корне его бинаря нет.
+      - run: pnpm --filter @cv/web exec playwright install --with-deps chromium
+
+      # Гвард первым: смысла гонять остальные гейты над утечкой нет.
+      - run: pnpm guard
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      # Собирает и PDF, и сайт: @cv/web#build зависит от @cv/print#pdf.
+      - run: pnpm build
+      - run: pnpm --filter @cv/web e2e
+
+      # PDF собран БЕЗ CV_PHONE: номер подставляется только в локальной сборке
+      # того файла, который уходит в отклик (дизайн §10). Артефакт здесь —
+      # чтобы вёрстку резюме можно было посмотреть, не собирая её у себя.
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cv-pdf
+          path: out/cv-nikolay-belibov.pdf
+          if-no-files-found: warn
+
+      # Трейсы перезапущенных e2e: на падении в CI это единственный способ
+      # увидеть, что было на странице.
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-traces
+          path: apps/web/test-results/
+          if-no-files-found: ignore

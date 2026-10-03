@@ -15,5 +15,7 @@ docs/superpowers/specs/
 *.png
 *.jpg
 
-# собранный PDF: в публичный репозиторий не попадает
+# собранный PDF: в публичный репозиторий не попадает.
+# out/ — место сборки, apps/web/public — куда его кладёт prebuild сайта.
 out/
+apps/web/public/*.pdf

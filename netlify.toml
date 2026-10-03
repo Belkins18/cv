@@ -1,0 +1,29 @@
+# Деплой сайта-резюме. Команда и каталог публикации живут здесь, а не в
+# интерфейсе Netlify: иначе сборку нельзя прочитать из репозитория.
+
+[build]
+  # Chromium ставится отдельным шагом: его тянет `@cv/print#pdf`, от которого
+  # зависит сборка сайта — PDF обязан существовать до того, как Vite перенесёт
+  # его в dist. `--filter=@cv/web...` при этом подхватывает и сам шаг pdf:
+  # turbo разрешает явную зависимость `@cv/print#pdf` поверх фильтра.
+  command = "pnpm --filter @cv/web exec playwright install chromium && pnpm turbo run build --filter=@cv/web..."
+  publish = "apps/web/dist"
+
+[build.environment]
+  NODE_VERSION = "24"
+  # Ровно та версия, что в `packageManager` корневого package.json. Разойдутся —
+  # corepack уронит установку: план предлагал «10», репозиторий давно на 12.
+  PNPM_VERSION = "12.8.1"
+  # Браузер кладётся в node_modules, который Netlify кэширует между сборками, —
+  # иначе Chromium качается каждый раз заново.
+  PLAYWRIGHT_BROWSERS_PATH = "0"
+  # CV_PHONE здесь не задан и задан быть не должен: телефон попадает только
+  # в PDF для отклика, который собирается локально (дизайн §10).
+
+# SPA: фильтр и язык живут в search-параметрах, но прямая ссылка на любой путь
+# обязана отдать приложение, а не 404. Существующие файлы — в том числе
+# /cv-nikolay-belibov.pdf — Netlify отдаёт раньше редиректа.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
