@@ -7,19 +7,23 @@
     "node": ">=22"
   },
   "scripts": {
-    "lint": "turbo run lint",
-    "typecheck": "turbo run typecheck",
+    "lint": "turbo run lint && pnpm lint:root",
+    "typecheck": "turbo run typecheck && pnpm typecheck:root",
     "test": "turbo run test",
     "build": "turbo run build",
     "pdf": "turbo run verify:pdf",
     "guard": "vitest run --config tools/repo-guard/vitest.config.ts",
-    "format": "prettier --write \"**/*.{ts,tsx,css,md,json,yml}\"",
-    "prepare": "husky"
+    "format": "prettier --write .",
+    "prepare": "husky",
+    "format:check": "prettier --check .",
+    "lint:root": "eslint --max-warnings=0 .",
+    "typecheck:root": "tsc --noEmit -p tsconfig.json"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.0.2",
     "@commitlint/config-conventional": "^21.0.2",
     "@eslint/js": "^10.0.1",
+    "@types/node": "^26.6.4",
     "eslint": "^9.37.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.2",
@@ -31,11 +35,11 @@
     "vitest": "^4.1.8"
   },
   "lint-staged": {
-    "**/*.{ts,tsx}": [
+    "**/*.{ts,tsx,js}": [
       "eslint --max-warnings=0 --no-warn-ignored",
       "prettier --write"
     ],
-    "**/*.{json,css,md,yml}": [
+    "**/*.{json,css,md,yml,yaml}": [
       "prettier --write"
     ]
   }

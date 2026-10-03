@@ -1,5 +1,5 @@
-import js from "@eslint/js";
-import tseslint from "typescript-eslint";
+import js from '@eslint/js'
+import tseslint from 'typescript-eslint'
 
 /**
  * Корневой конфиг покрывает только инструментарий репозитория: `tools/**` и
@@ -8,8 +8,15 @@ import tseslint from "typescript-eslint";
  */
 export default tseslint.config(
   {
-    ignores: ["node_modules/**", "dist/**", ".turbo/**", "coverage/**", "packages/**", "apps/**"],
+    ignores: [
+      'node_modules/**',
+      'dist/**',
+      '.turbo/**',
+      'coverage/**',
+      'packages/**',
+      'apps/**'
+    ]
   },
   js.configs.recommended,
-  ...tseslint.configs.recommended,
-);
+  ...tseslint.configs.recommended
+)

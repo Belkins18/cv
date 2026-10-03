@@ -14,8 +14,8 @@ export default {
         'ci',
         'test',
         'revert',
-        'perf',
-      ],
-    ],
-  },
+        'perf'
+      ]
+    ]
+  }
 }
