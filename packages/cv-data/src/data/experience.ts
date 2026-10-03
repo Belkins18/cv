@@ -89,7 +89,13 @@ export const roles: Role[] = [
   {
     id: 'poollotto',
     company: 'Poollotto Finance',
-    location: { en: 'Israel · remote', uk: 'Ізраїль · віддалено' },
+    // Extrawest — аутсорс-контора, через которую пришёл проект, а не отдельное
+    // место работы. Отдельной записью она давала видимость трёх параллельных
+    // ролей; пометкой у клиентского проекта хронология остаётся непрерывной.
+    location: {
+      en: 'via Extrawest to Mar 2022, then directly with the client',
+      uk: 'через Extrawest до березня 2022, далі напряму з клієнтом'
+    },
     title: {
       en: 'Frontend Blockchain Developer',
       uk: 'Frontend Blockchain Developer'
@@ -101,20 +107,12 @@ export const roles: Role[] = [
     bullets: []
   },
   {
-    id: 'extrawest',
-    company: 'Extrawest',
-    location: { en: 'Mykolaiv, Ukraine', uk: 'Миколаїв, Україна' },
-    title: { en: 'Frontend Developer', uk: 'Frontend Developer' },
-    period: { start: '2021-09', end: '2022-03' },
-    detail: 'full',
-    tech: ['react', 'typescript'],
-    // Роль без описания: остаётся строкой в таймлайне, буллеты не пишем.
-    bullets: []
-  },
-  {
     id: 'ownix',
     company: 'ownix',
-    location: { en: 'Israel · remote', uk: 'Ізраїль · віддалено' },
+    location: {
+      en: 'via Extrawest · until the company wound down',
+      uk: 'через Extrawest · до закриття компанії'
+    },
     title: {
       en: 'Frontend Developer · NFT marketplace',
       uk: 'Frontend Developer · NFT-маркетплейс'
