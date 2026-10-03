@@ -11,7 +11,7 @@
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "build": "turbo run build",
-    "pdf": "turbo run pdf",
+    "pdf": "turbo run verify:pdf",
     "guard": "vitest run --config tools/repo-guard/vitest.config.ts",
     "format": "prettier --write \"**/*.{ts,tsx,css,md,json,yml}\"",
     "prepare": "husky"

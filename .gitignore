@@ -14,3 +14,6 @@ packages/cv-data/locales/
 docs/superpowers/specs/
 *.png
 *.jpg
+
+# собранный PDF: в публичный репозиторий не попадает
+out/
