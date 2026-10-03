@@ -121,3 +121,29 @@ test('клавиша / фокусирует фильтр, ? открывает �
     page.getByRole('heading', { name: /keyboard shortcuts/i })
   ).toBeVisible()
 })
+
+/*
+ * Хранилище — такой же вход, как URL, и правит его кто угодно: devtools,
+ * расширение, прошлая версия сайта. Пока значение оттуда шло без проверки,
+ * `{"lang":"zz"}` уводил locale в несуществующий чанк, страница вставала
+ * в ошибку — а кнопка «Повторить» перезагружала её и читала то же самое.
+ * Сайт умирал навсегда, и вылечить его можно было только руками.
+ */
+test('битое хранилище не убивает сайт', async ({ page }) => {
+  await page.addInitScript(() =>
+    window.localStorage.setItem(
+      'cv.preferences',
+      '{"lang":"zz","theme":"banana"}'
+    )
+  )
+
+  await page.goto('/')
+
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+    'Nikolay Belibov'
+  )
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en')
+  // И кнопка темы осталась кнопкой, а не упёрлась в undefined-режим.
+  await page.getByRole('button', { name: /switch theme/i }).click()
+  await expect(page).toHaveURL(/theme=(system|light|dark)/)
+})
