@@ -21,7 +21,8 @@
     "@cv/print#pdf": {
       "dependsOn": ["build"],
       "outputs": ["../../out/*.pdf"],
-      "env": ["CV_PHONE"]
+      "env": ["CV_PHONE"],
+      "passThroughEnv": ["PLAYWRIGHT_BROWSERS_PATH"]
     },
     "@cv/print#verify:pdf": {
       "dependsOn": ["@cv/print#pdf"],
