@@ -5,7 +5,8 @@
   // "node" is added here rather than in the shared preset.
   "compilerOptions": {
     "types": ["vite/client", "node"],
-    "baseUrl": ".",
+    // No baseUrl: since TypeScript 5 the "paths" patterns resolve relative to
+    // this file, so the option only adds a deprecated global resolution root.
     "paths": { "@/*": ["./src/*"] }
   },
   "include": [
