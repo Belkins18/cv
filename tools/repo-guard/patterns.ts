@@ -14,10 +14,14 @@
 
 /**
  * The personal phone number. The project rules say it "does not exist in the
- * repository in any form", so separators inside the number are allowed for:
- * `+380 XX XXX XX XX` and `+380-XX-XXX-XX-XX` are the same number as the
- * unspaced form, and they used to slip past. The digit boundaries on both sides
- * keep the pattern from matching inside longer numbers.
+ * repository in any form", so separators inside the number are allowed for: a
+ * form written with spaces or hyphens between the groups is the same number as
+ * the unspaced one, and those used to slip past. The digit boundaries on both
+ * sides keep the pattern from matching inside longer numbers.
+ *
+ * No example is spelled out, and none is needed: the pattern matches any
+ * Ukrainian number, never one in particular. Writing a real one here would put
+ * into the repository exactly what this line exists to forbid.
  */
 export const PHONE = /(?<!\d)\+?\s?380(?:[\s\-.()]?\d){9}(?!\d)/
 
