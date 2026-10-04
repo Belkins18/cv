@@ -7,7 +7,10 @@ export const roles: Role[] = [
     id: 'wirex',
     company: 'WireX Systems',
     companyUrl: 'https://wirexsystems.com',
-    location: { en: 'Israel / USA · remote', uk: 'Ізраїль / США · віддалено' },
+    location: {
+      en: 'Israel / USA · remote · via SixthSense Technology',
+      uk: 'Ізраїль / США · віддалено · через SixthSense Technology'
+    },
     title: { en: 'Frontend Developer', uk: 'Frontend Developer' },
     period: { start: '2024-06', end: null },
     detail: 'full',
@@ -61,7 +64,10 @@ export const roles: Role[] = [
   {
     id: 'cbs-tech',
     company: 'CBS Tech',
-    location: { en: 'Israel · remote', uk: 'Ізраїль · віддалено' },
+    location: {
+      en: 'Israel · remote · via SixthSense Technology',
+      uk: 'Ізраїль · віддалено · через SixthSense Technology'
+    },
     title: { en: 'Frontend Developer', uk: 'Frontend Developer' },
     period: { start: '2023-10', end: '2024-04' },
     detail: 'full',
@@ -79,7 +85,10 @@ export const roles: Role[] = [
   {
     id: 'bidflyer',
     company: 'Bidflyer',
-    location: { en: 'Israel · remote', uk: 'Ізраїль · віддалено' },
+    location: {
+      en: 'Israel · remote · via SixthSense Technology',
+      uk: 'Ізраїль · віддалено · через SixthSense Technology'
+    },
     title: { en: 'Frontend Developer', uk: 'Frontend Developer' },
     period: { start: '2022-12', end: '2023-09' },
     detail: 'full',
@@ -92,12 +101,15 @@ export const roles: Role[] = [
   {
     id: 'poollotto',
     company: 'Poollotto Finance',
-    // Extrawest is the outsourcing shop the project came through, not a separate
-    // place of work. As its own entry it created the appearance of three parallel
-    // roles; as a note on the client project the chronology stays continuous.
+    // Neither agency is a separate place of work. SixthSense Technology sourced
+    // every project from September 2021 on and still does; Extrawest was the
+    // employer, and only until March 2022. As entries of their own they created
+    // the appearance of parallel roles; as a note on the client project the
+    // chronology stays continuous — and matches the LinkedIn profile, which
+    // lists the outstaffing company from 2021.
     location: {
-      en: 'Israel · via Extrawest to Mar 2022, then directly with the client',
-      uk: 'Ізраїль · через Extrawest до березня 2022, далі напряму з клієнтом'
+      en: 'Israel · via SixthSense Technology, Extrawest to Mar 2022',
+      uk: 'Ізраїль · через SixthSense Technology, Extrawest до березня 2022'
     },
     title: {
       en: 'Frontend Blockchain Developer',
@@ -113,8 +125,8 @@ export const roles: Role[] = [
     id: 'ownix',
     company: 'ownix',
     location: {
-      en: 'Israel · via Extrawest, until the company wound down',
-      uk: 'Ізраїль · через Extrawest, до закриття компанії'
+      en: 'Israel · via SixthSense Technology and Extrawest · until the client wound down',
+      uk: 'Ізраїль · через SixthSense Technology та Extrawest · до закриття клієнта'
     },
     title: {
       en: 'Frontend Developer · NFT marketplace',
