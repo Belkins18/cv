@@ -35,6 +35,42 @@ describe('the experience dataset', () => {
     expect(compact[0]?.period.end).toBe('2018-12')
   })
 
+  /*
+   * Every role since September 2021 was placed by the same outstaffing company.
+   * That thread is what makes three short client projects read as one continuous
+   * employment instead of job-hopping, and it is the only thing that squares the
+   * resume with the LinkedIn profile, where the company is listed from 2021.
+   *
+   * It is carried in `location` and nowhere else: as a role of its own it looked
+   * like parallel jobs — the comment on `poollotto` records that finding for
+   * Extrawest. No type holds the thread, so it can be dropped from a role in
+   * total silence.
+   */
+  it.each(['wirex', 'cbs-tech', 'bidflyer', 'poollotto', 'ownix'])(
+    'names the company that placed the role: %s',
+    (id) => {
+      const role = roles.find((r) => r.id === id)
+
+      expect(role?.location?.en).toContain('SixthSense Technology')
+      expect(role?.location?.uk).toContain('SixthSense Technology')
+    }
+  )
+
+  /*
+   * Extrawest was the employer for the first two roles only, and the resume says
+   * so rather than flattening both agencies into one. Dropping it would leave the
+   * entry point unexplained; spreading it further would claim a relationship that
+   * ended in March 2022.
+   */
+  it.each(['poollotto', 'ownix'])(
+    'keeps the employer that was the entry point: %s',
+    (id) => {
+      expect(roles.find((r) => r.id === id)?.location?.en).toContain(
+        'Extrawest'
+      )
+    }
+  )
+
   // The dictionary of what is forbidden lives in tools/repo-guard/patterns.ts and
   // is imported from there: a copy of a pattern that turns out softer than the
   // original is not a duplicate, it is a hole. Test titles are scanned by the
