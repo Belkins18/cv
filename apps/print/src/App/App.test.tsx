@@ -7,13 +7,14 @@ import { PHONE } from '../../../../tools/repo-guard/patterns'
 const data = project(cv, 'en')
 const NOW = new Date(Date.UTC(2026, 9, 3))
 
-// Гвард приватности различает форму номера, а не владельца: записанный целиком
-// даже этот выдуманный номер даёт красный `pnpm guard`. Поэтому он склеен из
-// фрагментов — расширять список SELF гварда нельзя, рядом лежат настоящие данные.
+// The privacy guard recognizes the shape of a number, not its owner: written out
+// in full, even this made-up number turns `pnpm guard` red. So it is assembled
+// from fragments — extending the guard's SELF list is not an option, the real
+// resume data lives right next door.
 const FAKE_PHONE = ['+', '380', '0'.repeat(9)].join('')
 
-describe('печатная вёрстка резюме', () => {
-  it('показывает имя, титул и контакты', () => {
+describe('the printed resume layout', () => {
+  it('shows the name, the title and the contacts', () => {
     render(<App data={data} now={NOW} />)
     expect(
       screen.getByRole('heading', { level: 1, name: 'Nikolay Belibov' })
@@ -22,19 +23,19 @@ describe('печатная вёрстка резюме', () => {
     expect(screen.getByText('belibov.nikolay@gmail.com')).toBeInTheDocument()
   })
 
-  it('подставляет стаж в summary', () => {
+  it('substitutes the years of experience into the summary', () => {
     render(<App data={data} now={NOW} />)
     expect(screen.getByTestId('summary')).toHaveTextContent('11 years')
     expect(screen.getByTestId('summary')).not.toHaveTextContent('{{')
   })
 
-  it('обрезает буллеты по printBulletLimit', () => {
+  it('trims the bullets down to printBulletLimit', () => {
     render(<App data={data} now={NOW} />)
     const wirex = screen.getByTestId('role-wirex')
     expect(wirex.querySelectorAll('li')).toHaveLength(5)
   })
 
-  it('сворачивает ранний опыт в одну строку без названия компании', () => {
+  it('folds the early experience into one line with no company name', () => {
     render(<App data={data} now={NOW} />)
     const early = screen.getByTestId('role-early-web')
     expect(early.querySelectorAll('li')).toHaveLength(0)
@@ -42,17 +43,17 @@ describe('печатная вёрстка резюме', () => {
     expect(early).toHaveTextContent('Jan 2015 — Dec 2018')
   })
 
-  it('без CV_PHONE телефона в документе нет', () => {
+  it('leaves no phone number in the document when CV_PHONE is unset', () => {
     render(<App data={data} now={NOW} />)
     expect(document.body.textContent ?? '').not.toMatch(PHONE)
   })
 
-  it('с переданным телефоном показывает его в контактах', () => {
+  it('shows the phone number among the contacts once one is passed in', () => {
     render(<App data={data} now={NOW} phone={FAKE_PHONE} />)
     expect(screen.getByText(FAKE_PHONE)).toBeInTheDocument()
   })
 
-  it('собирает блок навыков из реестра, который реально используется в данных', () => {
+  it('builds the skills block from the registry entries the data actually uses', () => {
     render(<App data={data} now={NOW} />)
     const skills = screen.getByTestId('skills')
     expect(skills).toHaveTextContent('React')

@@ -3,16 +3,16 @@ import { fileURLToPath } from 'node:url'
 import { beforeAll, describe, expect, it } from 'vitest'
 
 /*
- * Фикстура компилируется ОДИН раз на файл, а не по разу на тест.
+ * The fixture is compiled ONCE per file, not once per test.
  *
- * Раньше каждый `it` поднимал свой `pnpm exec tsc` — два полных процесса ради
- * одной и той же компиляции. Под девятью параллельными задачами turbo второй
- * не укладывался в дефолтные пять секунд, и `pnpm test` мигал примерно раз
- * на пять-шесть холодных прогонов. Мигающий гейт хуже отсутствующего:
- * он приучает не смотреть на красное — а этот гейт теперь ещё и в CI.
+ * Each `it` used to spawn its own `pnpm exec tsc` — two full processes for one
+ * and the same compilation. Under turbo's nine parallel tasks the second one
+ * missed the default five-second budget, and `pnpm test` flaked roughly once
+ * every five or six cold runs. A flaky gate is worse than a missing one: it
+ * trains people to look past red — and this gate now runs in CI too.
  *
- * `fileURLToPath`, а не `.pathname`: последний не декодирует percent-encoding,
- * и на пути с пробелом в имени каталога cwd получался битым.
+ * `fileURLToPath`, not `.pathname`: the latter does not decode percent-encoding,
+ * so a directory name with a space in it produced a broken cwd.
  */
 const packageRoot = fileURLToPath(new URL('..', import.meta.url))
 
@@ -34,13 +34,13 @@ beforeAll(() => {
   }
 })
 
-describe('пресет tsconfig/base', () => {
-  it('отвергает доступ по индексу без проверки', () => {
+describe('the tsconfig/base preset', () => {
+  it('rejects an unchecked index access', () => {
     expect(code).not.toBe(0)
     expect(output).toContain("possibly 'undefined'")
   })
 
-  it('отвергает явный undefined в опциональном поле', () => {
+  it('rejects an explicit undefined in an optional field', () => {
     expect(output).toContain('exactOptionalPropertyTypes')
   })
 })

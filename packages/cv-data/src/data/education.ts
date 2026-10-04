@@ -27,7 +27,8 @@ export const certificates: Cv['certificates'] = [
   }
 ]
 
-// Степени записаны по LinkedIn — он объявлен источником правды (дизайн §2.1).
+// The degrees are transcribed from LinkedIn, which the design doc (§2.1)
+// declares the source of truth for them.
 export const education: Cv['education'] = [
   {
     id: 'chnu',

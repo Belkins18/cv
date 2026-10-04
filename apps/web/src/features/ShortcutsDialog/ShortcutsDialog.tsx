@@ -4,9 +4,10 @@ import { useTranslation } from 'react-i18next'
 export type ShortcutsDialogProps = { open: boolean; onClose: () => void }
 
 /**
- * Нативный `<dialog>`: модальность, фокус-ловушка и Esc приезжают от платформы,
- * библиотека ради одной справки не нужна. Кнопка закрытия есть отдельно —
- * тому, кто открыл справку мышью, Esc знать неоткуда.
+ * A native `<dialog>`: modality, the focus trap and Esc all come from the
+ * platform, and one help panel is not worth a library. There is a separate close
+ * button as well — someone who opened the panel with a mouse has no way of
+ * knowing about Esc.
  */
 export const ShortcutsDialog = ({ open, onClose }: ShortcutsDialogProps) => {
   const ref = useRef<HTMLDialogElement>(null)
@@ -16,9 +17,10 @@ export const ShortcutsDialog = ({ open, onClose }: ShortcutsDialogProps) => {
     const dialog = ref.current
     if (dialog === null) return
     /*
-     * `showModal` есть не везде: jsdom его не реализует, и часть webview тоже.
-     * Как и с `matchMedia`, защита живёт в компоненте, а не в полифиле тестов —
-     * справка тогда открывается немодально, но открывается.
+     * `showModal` is not everywhere: jsdom does not implement it, and neither do
+     * some webviews. As with `matchMedia`, the guard lives in the component
+     * rather than in a test polyfill — the panel then opens non-modally, but it
+     * opens.
      */
     if (typeof dialog.showModal !== 'function') {
       dialog.open = open

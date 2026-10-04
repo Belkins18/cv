@@ -11,15 +11,16 @@ import type { ReactNode } from 'react'
 import { searchSchema } from '@/routes/search'
 
 export type RenderWithRouterOptions = {
-  /** Начальный URL — им в тест заводятся search-параметры, в том числе мусорные. */
+  /** The initial URL — how a test feeds in search params, junk ones included. */
   path?: string
 }
 
 /**
- * TanStack Router 1.170 бросает «Cannot read properties of null» на useSearch
- * вне RouterProvider — даже с `strict: false`. План допускал оба поведения;
- * живая версия требует настоящий роутер, поэтому компонент монтируется в
- * маршрут с той же `searchSchema`, что и боевой, поверх memory-истории.
+ * TanStack Router 1.170 throws "Cannot read properties of null" from useSearch
+ * outside a RouterProvider — even with `strict: false`. The plan allowed for
+ * either behaviour; the installed version insists on a real router, so the
+ * component is mounted into a route carrying the same `searchSchema` as
+ * production, on top of a memory history.
  */
 export const renderWithRouter = (
   ui: ReactNode,
@@ -36,7 +37,8 @@ export const renderWithRouter = (
     routeTree: rootRoute.addChildren([indexRoute]),
     history: createMemoryHistory({ initialEntries: [path] })
   })
-  // retry: false — иначе тест отказа ждёт три повтора вместо одного отказа.
+  // retry: false, or the failure test would wait out three retries instead of
+  // observing one failure.
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } }
   })

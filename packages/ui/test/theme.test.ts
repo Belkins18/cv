@@ -1,6 +1,6 @@
 // @vitest-environment node
-// Тест гоняет Tailwind CLI через node:child_process: в jsdom import.meta.url
-// не file-URL, и fileURLToPath на нём падает.
+// The test drives the Tailwind CLI through node:child_process: under jsdom
+// import.meta.url is not a file URL, and fileURLToPath throws on it.
 import { execFileSync } from 'node:child_process'
 import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -9,10 +9,10 @@ import { fileURLToPath } from 'node:url'
 import { beforeAll, describe, expect, it } from 'vitest'
 
 /**
- * theme.css — единственный файл пакета, который не проверяется юнит-тестами
- * компонентов: @theme обрабатывает Tailwind, а не TypeScript. Опечатка в
- * директиве тихо выключила бы весь набор токенов, поэтому прогоняем файл
- * через настоящий компилятор Tailwind и смотрим, что получилось.
+ * theme.css is the one file in this package that the component unit tests never
+ * cover: @theme is handled by Tailwind, not by TypeScript. A typo in the
+ * directive would silently switch the whole token set off, so we run the file
+ * through the real Tailwind compiler and look at what came out.
  */
 const packageRoot = fileURLToPath(new URL('..', import.meta.url))
 
@@ -23,8 +23,8 @@ beforeAll(() => {
   const input = join(dir, 'input.css')
   const output = join(dir, 'output.css')
 
-  // Классы, которыми пользуются примитивы пакета: Tailwind генерирует утилиту
-  // только под найденный кандидат, поэтому список подаём явно через @source inline.
+  // The classes the package primitives use: Tailwind only emits a utility for a
+  // candidate it has actually seen, so we hand it the list via @source inline.
   writeFileSync(
     input,
     [
@@ -43,21 +43,21 @@ beforeAll(() => {
 }, 60_000)
 
 describe('theme.css', () => {
-  it('компилируется Tailwind и отдаёт токены темы как переменные', () => {
+  it('compiles under Tailwind and exposes the theme tokens as variables', () => {
     expect(compiled).toContain('--color-surface:')
     expect(compiled).toContain('--color-ink-muted:')
     expect(compiled).toContain('--color-accent-ink:')
     expect(compiled).toContain('--font-mono:')
   })
 
-  it('порождает утилиты на именах токенов — цвета в компонентах не хардкод', () => {
+  it('emits utilities named after the tokens, so components never hardcode a color', () => {
     expect(compiled).toContain('.bg-surface-raised')
     expect(compiled).toContain('.text-ink-muted')
     expect(compiled).toContain('.border-border')
     expect(compiled).toContain('.outline-accent')
   })
 
-  it('держит светлую тему на тех же именах переменных', () => {
+  it('keeps the light theme on the same variable names', () => {
     expect(compiled).toContain("[data-theme='light']")
     expect(compiled).toContain('prefers-color-scheme')
   })

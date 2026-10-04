@@ -1,11 +1,14 @@
 import { expect, test } from '@playwright/test'
 
 /*
- * Ссылка на этот сайт уходит в письмо, в LinkedIn и в мессенджер рекрутёру —
- * то есть карточку превью увидят раньше самого сайта. Теги в index.html
- * не проверяет ни один тип и ни одна сборка: удалить их можно молча.
+ * A link to this site travels into an email, onto LinkedIn and into a message to
+ * a recruiter — which means the preview card is seen before the site itself. The
+ * tags in index.html are checked by no type and no build step: they can be
+ * deleted in total silence.
  */
-test('ссылка разворачивается не пустой карточкой', async ({ page }) => {
+test('the link unfurls as something other than an empty card', async ({
+  page
+}) => {
   await page.goto('/')
 
   await expect(page).toHaveTitle('Nikolay Belibov — Frontend Engineer')
@@ -25,7 +28,7 @@ test('ссылка разворачивается не пустой карточ
   await expect(await content('meta[property="og:type"]')).toBe('profile')
 })
 
-test('фавиконка существует и это SVG, а не HTML под видом иконки', async ({
+test('the favicon exists and is real SVG, not HTML dressed up as an icon', async ({
   page,
   request
 }) => {
@@ -41,11 +44,11 @@ test('фавиконка существует и это SVG, а не HTML под
 })
 
 /*
- * Описание — публичный текст, и на него распространяются те же границы,
- * что и на датасет. Гвард сюда дотягивается (index.html отслеживается),
- * но проверить стоит и то, что уехало в сборку.
+ * The description is public text, so the same boundaries that apply to the
+ * dataset apply to it. The guard does reach here (index.html is tracked), but
+ * what ended up in the build is worth checking too.
  */
-test('описание не выходит за границы, принятые для текста резюме', async ({
+test('the description stays inside the boundaries set for the resume text', async ({
   page
 }) => {
   await page.goto('/')

@@ -11,7 +11,7 @@ export type RailProps = {
   onThemeMode: (mode: ThemeMode) => void
 }
 
-/** Кнопка перебирает три режима по кругу: system → light → dark → system. */
+/** The button cycles through all three modes: system, light, dark, system. */
 const NEXT_MODE: Record<ThemeMode, ThemeMode> = {
   system: 'light',
   light: 'dark',
@@ -72,7 +72,7 @@ export const Rail = ({
           {MODE_GLYPH[themeMode]}
         </IconButton>
       </div>
-      {/* Файл кладёт шаг pdf сборки — см. Task 21. */}
+      {/* The file is placed here by the pdf build step — see Task 21. */}
       <a
         href="/cv-nikolay-belibov.pdf"
         download

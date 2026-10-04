@@ -15,7 +15,7 @@ const renderCredentials = () =>
   )
 
 describe('Credentials', () => {
-  it('даёт проверяемые ссылки на сертификаты', () => {
+  it('gives verifiable links to the certificates', () => {
     renderCredentials()
     expect(
       screen.getByRole('link', { name: /Harness Engineering/ })
@@ -25,7 +25,7 @@ describe('Credentials', () => {
     )
   })
 
-  it('перечисляет три ступени образования и три языка', () => {
+  it('lists three education entries and three languages', () => {
     renderCredentials()
     expect(screen.getAllByTestId(/^education-/)).toHaveLength(3)
     expect(screen.getAllByTestId(/^language-/)).toHaveLength(3)

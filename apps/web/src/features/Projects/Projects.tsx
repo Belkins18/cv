@@ -8,10 +8,11 @@ export type ProjectsProps = {
 }
 
 /**
- * Проекты живут по тем же правилам, что и роли: фильтр гасит несовпавшие,
- * но не выкидывает их из документа. Это же делает правдой подсказку фильтра —
- * «все карточки ниже погашены» считается по ролям и проектам сразу.
- * У внутреннего продукта публичной ссылки нет — тогда имя остаётся текстом.
+ * Projects follow the same rules as roles: the filter dims whatever does not
+ * match but never drops it from the document. That is also what makes the
+ * filter's hint true — "the cards below are all dimmed" is counted over roles
+ * and projects together. An internal product has no public link, and then its
+ * name simply stays text.
  */
 export const Projects = ({ projects, selected }: ProjectsProps) => {
   const { t } = useTranslation()

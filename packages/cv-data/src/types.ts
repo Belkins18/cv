@@ -2,12 +2,12 @@ export const LOCALES = ['en', 'uk'] as const
 export type Locale = (typeof LOCALES)[number]
 
 /**
- * Локализация зашита в тип: строка обязана существовать на обоих языках.
- * Забыть перевод физически нельзя — tsc не соберётся.
+ * Localization is baked into the type: a string is required to exist in both
+ * languages. Forgetting a translation is physically impossible — tsc refuses.
  */
 export type Localized = { readonly [L in Locale]: string }
 
-/** Уровень детализации — поле данных, а не два разных датасета. */
+/** The level of detail is a data field, not two different datasets. */
 export type Detail = 'full' | 'compact' | 'hidden'
 
 export type IsoMonth = string

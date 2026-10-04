@@ -8,27 +8,27 @@ const roles = project(cv, 'en').roles
 const NOW = new Date(Date.UTC(2026, 9, 3))
 
 describe('Timeline', () => {
-  it('показывает все роли, свёрнутыми по умолчанию', () => {
+  it('shows every role, collapsed by default', () => {
     render(<Timeline roles={roles} selected={[]} locale="en" now={NOW} />)
     expect(screen.getAllByRole('article')).toHaveLength(roles.length)
     expect(screen.queryByText(/manifest-driven/i)).not.toBeInTheDocument()
   })
 
-  it('раскрывает роль по клику', async () => {
+  it('expands a role on click', async () => {
     const user = userEvent.setup()
     render(<Timeline roles={roles} selected={[]} locale="en" now={NOW} />)
     await user.click(screen.getByRole('button', { name: /WireX Systems/ }))
     expect(screen.getByText(/manifest-driven/i)).toBeInTheDocument()
   })
 
-  it('показывает период и длительность', () => {
+  it('shows the period and the duration', () => {
     render(<Timeline roles={roles} selected={[]} locale="en" now={NOW} />)
     const wirex = screen.getByTestId('role-wirex')
     expect(wirex).toHaveTextContent('Jun 2024 — Present')
     expect(wirex).toHaveTextContent('2 yr 5 mo')
   })
 
-  it('при фильтре несовпадающие гаснут, но остаются в документе', () => {
+  it('dims the roles that do not match the filter but keeps them in the document', () => {
     render(
       <Timeline roles={roles} selected={['electron']} locale="en" now={NOW} />
     )
@@ -44,12 +44,13 @@ describe('Timeline', () => {
   })
 
   /*
-   * Конституция держит опыт до 2019 одной строкой `detail: "compact"` без
-   * буллетов. Раскрывать там нечего, поэтому и кнопки быть не должно: иначе
-   * `aria-controls` указывает в несуществующую панель, а скринридер объявляет
-   * «свёрнуто» там, где нажатие ничего не делает.
+   * The project's rules keep everything before 2019 as a single
+   * `detail: "compact"` line with no bullets. There is nothing to expand there,
+   * so there must be no button either: otherwise `aria-controls` points at a
+   * panel that does not exist and a screen reader announces "collapsed" where
+   * pressing does nothing.
    */
-  it('карточке без буллетов не даёт кнопку, указывающую в пустоту', () => {
+  it('gives a bullet-less card no button pointing into the void', () => {
     render(<Timeline roles={roles} selected={[]} locale="en" now={NOW} />)
     const early = screen.getByTestId('role-early-web')
     expect(early).toHaveTextContent('Frontend / HTML developer')
@@ -57,7 +58,7 @@ describe('Timeline', () => {
     expect(early.querySelector('[aria-controls]')).toBeNull()
   })
 
-  it('раскрываемой карточке кнопку даёт, и она действительно раскрывает', async () => {
+  it('gives an expandable card a button that really does expand it', async () => {
     const user = userEvent.setup()
     render(<Timeline roles={roles} selected={[]} locale="en" now={NOW} />)
     const wirex = screen.getByTestId('role-wirex')
@@ -71,10 +72,10 @@ describe('Timeline', () => {
   })
 
   /*
-   * Страна есть в PDF и обязана быть на сайте: без неё читатель не понимает,
-   * что ownix и Poollotto были израильскими.
+   * The country is in the PDF and has to be on the site: without it the reader
+   * has no way of knowing that ownix and Poollotto were Israeli.
    */
-  it('показывает страну роли, как её показывает PDF', () => {
+  it('shows the country of a role the way the PDF shows it', () => {
     render(<Timeline roles={roles} selected={[]} locale="en" now={NOW} />)
     expect(screen.getByTestId('role-wirex')).toHaveTextContent(
       'Israel / USA · remote'

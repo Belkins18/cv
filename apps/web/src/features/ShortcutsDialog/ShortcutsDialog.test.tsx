@@ -4,12 +4,12 @@ import { describe, expect, it, vi } from 'vitest'
 import { ShortcutsDialog } from './ShortcutsDialog'
 
 describe('ShortcutsDialog', () => {
-  it('закрытая справка в дереве доступности не видна', () => {
+  it('keeps a closed help panel out of the accessibility tree', () => {
     render(<ShortcutsDialog open={false} onClose={vi.fn()} />)
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
-  it('открытая справка перечисляет обе горячие клавиши', () => {
+  it('lists both shortcuts once the panel is open', () => {
     render(<ShortcutsDialog open onClose={vi.fn()} />)
     const dialog = screen.getByRole('dialog')
     expect(dialog).toHaveAccessibleName(/keyboard shortcuts/i)
@@ -17,7 +17,7 @@ describe('ShortcutsDialog', () => {
     expect(dialog).toHaveTextContent('?')
   })
 
-  it('закрывается кнопкой — не только клавишей Esc', async () => {
+  it('closes from the button, not only from Esc', async () => {
     const onClose = vi.fn()
     const user = userEvent.setup()
     render(<ShortcutsDialog open onClose={onClose} />)

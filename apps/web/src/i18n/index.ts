@@ -4,12 +4,13 @@ import { en } from './en'
 import { uk } from './uk'
 
 /**
- * Ключи словаря плоские и содержат точки (`section.experience`), поэтому
- * `keySeparator` выключен: иначе i18next искал бы вложенный объект `section`
- * и возвращал бы сам ключ вместо перевода.
+ * The dictionary keys are flat and contain dots (`section.experience`), so
+ * `keySeparator` is switched off: otherwise i18next would look for a nested
+ * `section` object and return the key itself instead of a translation.
  *
- * `useSuspense: false` — ресурсы лежат в бандле, ждать нечего, а Suspense
- * потребовал бы границу вокруг каждого компонента в тестах.
+ * `useSuspense: false` because the resources are already in the bundle, there is
+ * nothing to wait for, and Suspense would demand a boundary around every
+ * component in the tests.
  */
 void i18next.use(initReactI18next).init({
   resources: { en: { translation: en }, uk: { translation: uk } },
@@ -20,7 +21,7 @@ void i18next.use(initReactI18next).init({
   react: { useSuspense: false }
 })
 
-/** Типизация `t`: опечатка в ключе становится ошибкой компиляции. */
+/** Typing for `t`: a typo in a key becomes a compile error. */
 declare module 'i18next' {
   interface CustomTypeOptions {
     defaultNS: 'translation'

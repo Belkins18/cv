@@ -8,22 +8,24 @@ import {
 } from '../../../tools/repo-guard/patterns'
 
 /*
- * Второй рубеж приватности — внутри сборки, а не рядом с ней.
+ * The second line of privacy defence, inside the build rather than beside it.
  *
- * `pnpm guard` читает `git ls-files` и видит исходники. Здесь читается то, что
- * реально уедет на хостинг: собранный `dist`, где строки уже вкомпилированы
- * в чанки, перемешаны с кодом библиотек и переименованы минификатором. Утечка,
- * попавшая в бандл из непроиндексированного файла, из зависимости или через
- * `import.meta.env`, гварду не видна, а сайту — видна.
+ * `pnpm guard` reads `git ls-files` and therefore sees sources. What is read
+ * here is what actually ships: the built `dist`, where strings are already
+ * compiled into chunks, mixed with library code and renamed by the minifier.
+ * A leak that reaches the bundle from an unindexed file, from a dependency or
+ * through `import.meta.env` is invisible to the guard — and perfectly visible
+ * on the site.
  *
- * Раньше этот скан жил отдельной e2e-спекой, то есть гонял его только CI.
- * Netlify собирает и публикует параллельно, не дожидаясь зелёного CI, — утечка
- * успела бы уехать, а CI покраснел бы уже после. Шлюз PDF сделан механизмом
- * внутри сборки (`copy-pdf.ts`), и у второго рубежа того же класса нет причин
- * быть защищённым иначе. Теперь это `postbuild`: сборка либо чистая, либо её нет.
+ * This scan used to live in a separate e2e spec, which meant only CI ever ran
+ * it. Netlify builds and publishes in parallel without waiting for a green CI,
+ * so a leak would have shipped and CI would have gone red afterwards. The PDF
+ * gate was made a mechanism inside the build (`copy-pdf.ts`), and a second line
+ * of the same class has no reason to be protected any differently. It is now a
+ * `postbuild`: either the build is clean or there is no build.
  *
- * Словарь не копируется, а импортируется из `tools/repo-guard/patterns.ts`:
- * копия, которая мягче оригинала, — не дубликат, а дыра.
+ * The dictionary is imported from `tools/repo-guard/patterns.ts` rather than
+ * copied: a copy that is softer than the original is not a duplicate, it is a hole.
  */
 
 const distDir = fileURLToPath(new URL('../dist/', import.meta.url))
@@ -40,19 +42,19 @@ const walk = async (dir: string): Promise<string[]> => {
 }
 
 /*
- * Полярность как у гварда: отсекаются бинарники, сканируется всё остальное.
- * Белый список расширений пропустил бы незнакомый файл молча, а молчаливый
- * пропуск здесь неотличим от чистого прогона. Текстовый слой PDF при этом
- * не остаётся непроверенным — его читает `copy-pdf.ts` до того, как файл
- * вообще попадает в `public/`.
+ * The same polarity as the guard: binaries are filtered out, everything else is
+ * scanned. An allowlist of extensions would skip an unfamiliar file in silence,
+ * and a silent skip here is indistinguishable from a clean run. The PDF's text
+ * layer is not left unchecked either — `copy-pdf.ts` reads it before the file
+ * ever lands in `public/`.
  */
 const files = (await walk(distDir)).filter((file) => !BINARY_FILE.test(file))
 
 if (files.length < 3) {
-  // Страховка от молчаливой самонейтрализации: пустой dist сделал бы проверку
-  // ниже зелёной, ничего не проверив.
+  // Insurance against silent self-neutralization: an empty dist would make the
+  // check below green without checking anything.
   throw new Error(
-    `в ${distDir} нечего сканировать (${files.length} файлов) — сборка пуста или каталог не тот`
+    `nothing to scan in ${distDir} (${files.length} files) — the build is empty or this is the wrong directory`
   )
 }
 
@@ -61,8 +63,8 @@ const contents = await Promise.all(
   files.map(async (file) => [file, await readFile(file, 'utf8')] as const)
 )
 
-// Метки и пути, но не совпадения: напечатать найденное — значит выписать
-// приватные данные в лог сборки, который на Netlify и в CI хранится.
+// Labels and paths, but never the matches: printing what was found would mean
+// writing private data into a build log that Netlify and CI keep.
 const found = [...dictionary].flatMap(([label, pattern]) => {
   const hits = contents
     .filter(([, text]) => pattern.test(text))
@@ -72,9 +74,9 @@ const found = [...dictionary].flatMap(([label, pattern]) => {
 
 if (found.length > 0) {
   throw new Error(
-    `в собранном сайте найдено приватное:\n  ${found.join('\n  ')}\n` +
-      'Сайт публичный — эта сборка уехала бы на хостинг как есть.'
+    `private data found in the built site:\n  ${found.join('\n  ')}\n` +
+      'The site is public — this build would have gone to the host as is.'
   )
 }
 
-console.log(`dist просканирован: ${files.length} файлов, чисто`)
+console.log(`dist scanned: ${files.length} files, clean`)

@@ -2,7 +2,7 @@ import { isTechId, type TechId } from './tech'
 
 type HasTech = { readonly tech: readonly TechId[] }
 
-/** URL правят руками и ломают мессенджеры: неизвестное молча отбрасывается, валидное остаётся. */
+/** URLs get hand-edited and mangled by messengers: unknown ids are dropped silently, valid ones survive. */
 export const parseTechParam = (raw: string | null | undefined): TechId[] => {
   if (!raw) return []
   const selected = new Set<TechId>()
@@ -23,7 +23,7 @@ export const techScore = (
   selected: readonly TechId[]
 ): number => entry.tech.filter((id) => selected.includes(id)).length
 
-/** Мультивыбор — ИЛИ: пересечение по одному чипу уже показывает соответствие. */
+/** Multi-select is an OR: overlapping on a single chip already counts as a match. */
 export const matchesTech = (
   entry: HasTech,
   selected: readonly TechId[]

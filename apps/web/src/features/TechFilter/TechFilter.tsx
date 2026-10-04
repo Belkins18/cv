@@ -17,10 +17,10 @@ export const TechFilter = ({
   matchCount
 }: TechFilterProps) => {
   /*
-   * Пары, а не ключи: techCounts отдаёт Partial-запись, и при
-   * noUncheckedIndexedAccess обращение counts[id] снова стало бы
-   * `number | undefined`, которое Chip с exactOptionalPropertyTypes не примет.
-   * Ключ и счётчик приезжают вместе — значит, счётчик есть по построению.
+   * Pairs, not keys: techCounts returns a Partial record, so under
+   * noUncheckedIndexedAccess reading counts[id] would be `number | undefined`
+   * again, which Chip under exactOptionalPropertyTypes will not accept. The key
+   * and the count arrive together, so by construction the count exists.
    */
   const ranked = useMemo(
     () =>
@@ -55,8 +55,8 @@ export const TechFilter = ({
         ))}
       </div>
       {/*
-        Пустой результат — не пустая страница: карточки ниже остаются на месте
-        погашенными, а здесь человек видит, что именно произошло, и чем это снять.
+        An empty result is not an empty page: the cards below stay where they are,
+        dimmed, while right here the visitor sees what happened and what undoes it.
       */}
       {selected.length > 0 && matchCount === 0 && (
         <p role="status" className="mt-3 text-sm text-ink-muted">

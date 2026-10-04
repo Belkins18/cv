@@ -26,8 +26,9 @@ export const roles: Role[] = [
     ],
     bullets: [
       {
-        // Прод-статус не утверждается: подтвердить его на собеседовании нечем.
-        // В тексте только проверяемое — размер команды, пайплайн, деплой в окружения.
+        // No production status is claimed: there would be nothing to back it up
+        // in an interview. The text keeps only what is checkable — team size,
+        // the release pipeline, deploys to environments.
         en: "Built the web client that replaces a legacy Qt desktop application for Ne2ition, the company's network-protocol analysis platform — the old client only ran on outdated Linux systems. A frontend team of two, with the release pipeline in place and regular deploys to AWS environments.",
         uk: 'Побудував вебклієнт на заміну легасі Qt-застосунку для Ne2ition, платформи аналізу мережевих протоколів компанії, — старий клієнт працював лише на застарілих Linux-системах. Фронтенд-команда з двох людей, релізний пайплайн готовий, регулярні деплої в середовища на AWS.'
       },
@@ -67,8 +68,9 @@ export const roles: Role[] = [
     tech: ['react', 'typescript', 'zod'],
     bullets: [
       {
-        // Буллет скромный намеренно: масштаба за этой ролью нет, раздувать нечего.
-        // Context API в реестр TECH не идёт: это часть React, а не технология в ряду с Redux.
+        // The bullet is modest on purpose: there is no scale behind this role,
+        // and nothing to inflate. The Context API does not enter the TECH
+        // registry: it is part of React, not a technology alongside Redux.
         en: "Built promotional sites and landing pages on React and TypeScript, with form validation on zod schemas; state stayed in React's own context — the projects needed no external state manager.",
         uk: 'Робив промосайти та лендінги на React і TypeScript, валідація форм — на zod-схемах; стан жив у власному контексті React, зовнішнього стейт-менеджера проєкти не потребували.'
       }
@@ -82,16 +84,17 @@ export const roles: Role[] = [
     period: { start: '2022-12', end: '2023-09' },
     detail: 'full',
     tech: ['react', 'typescript'],
-    // Роль без описания: фактов для честного буллета нет.
-    // Пустая запись честнее выдуманной — в таймлайне остаются даты и должность.
+    // A role with no description: there are no facts for an honest bullet.
+    // An empty entry is more honest than an invented one — the timeline still
+    // carries the dates and the title.
     bullets: []
   },
   {
     id: 'poollotto',
     company: 'Poollotto Finance',
-    // Extrawest — аутсорс-контора, через которую пришёл проект, а не отдельное
-    // место работы. Отдельной записью она давала видимость трёх параллельных
-    // ролей; пометкой у клиентского проекта хронология остаётся непрерывной.
+    // Extrawest is the outsourcing shop the project came through, not a separate
+    // place of work. As its own entry it created the appearance of three parallel
+    // roles; as a note on the client project the chronology stays continuous.
     location: {
       en: 'Israel · via Extrawest to Mar 2022, then directly with the client',
       uk: 'Ізраїль · через Extrawest до березня 2022, далі напряму з клієнтом'
@@ -103,7 +106,7 @@ export const roles: Role[] = [
     period: { start: '2021-12', end: '2022-08' },
     detail: 'full',
     tech: ['react', 'typescript', 'wagmi', 'reown', 'ethers', 'evm'],
-    // Только EVM-сети: Solana, Tron и Ledger к этой роли отношения не имеют.
+    // EVM networks only: Solana, Tron and Ledger have nothing to do with this role.
     bullets: []
   },
   {
@@ -140,8 +143,9 @@ export const roles: Role[] = [
     tech: ['react', 'javascript', 'electron', 'webrtc', 'scss', 'vue'],
     bullets: [
       {
-        // Самое содержательное в ролях до WireX: перевод легаси-продукта на другой
-        // фреймворк на кросс-платформенном десктопе. Поэтому развёрнуто, а не строкой.
+        // The most substantial thing among the pre-WireX roles: moving a legacy
+        // product onto a different framework on cross-platform desktop. Hence the
+        // full paragraph rather than a single line.
         en: 'Rewrote the UI stack of a cross-platform Electron desktop product from Vue to React. The application had been built on Vue from the start, and the migration went through its whole component and state layer — a replacement of the old code, not a wrapper around it.',
         uk: 'Переписав UI-стек кросплатформного Electron-десктопу з Vue на React. Застосунок від початку був побудований на Vue, і міграція пройшла через увесь шар компонентів і стану — це заміна старого коду, а не обгортка над ним.'
       },
@@ -153,7 +157,7 @@ export const roles: Role[] = [
   },
   {
     id: 'early-web',
-    // Компания не указывается осознанно: период девятилетней давности, джуновский.
+    // The company is deliberately left out: a junior stretch from nine years ago.
     location: { en: 'Remote', uk: 'Віддалено' },
     title: { en: 'Frontend / HTML developer', uk: 'Frontend / HTML developer' },
     period: { start: '2015-01', end: '2018-12' },

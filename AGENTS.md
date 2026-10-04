@@ -1,81 +1,81 @@
 # AGENTS.md
 
-## Язык и стиль работы
+## Language and working style
 
-- Инструкции, пояснения и проектная документация пишутся на русском языке.
-- Имена файлов, директорий, компонентов, переменных, функций, типов и веток Git пишутся на английском языке.
-- ИИ-агент отвечает кратко, по делу и без выдуманных фактов.
-- Если не хватает критичных данных, агент явно указывает предположение и выбирает минимальный безопасный вариант.
-- Если задача затрагивает архитектуру, зависимости, Git Flow, tooling или данные резюме, агент сначала читает релевантные инструкции.
+- Instructions, explanations and project documentation are written in English.
+- Names of files, directories, components, variables, functions, types and Git branches are written in English.
+- The AI agent answers briefly, to the point, and without inventing facts.
+- When critical information is missing, the agent states its assumption explicitly and picks the smallest safe option.
+- When a task touches architecture, dependencies, Git flow, tooling or the resume data, the agent reads the relevant instructions first.
 
-## Что это за репозиторий
+## What this repository is
 
-Монорепо резюме. Один датасет — два артефакта: ATS-пригодный PDF (EN) и
-двуязычный сайт-резюме. Репозиторий **публичный**.
+A CV monorepo. One dataset, two artifacts: an ATS-readable PDF (EN) and a
+bilingual CV website. The repository is **public**.
 
-- `packages/config` — пресеты TypeScript и ESLint (`@cv/config`);
-- `packages/cv-data` — единственный источник правды: zod-схемы, реестр технологий,
-  вычисляемые длительности, генерация локализованных JSON-чанков (`@cv/data`);
-- `packages/ui` — обезличенные примитивы интерфейса (`@cv/ui`);
-- `apps/print` — Vite-приложение с print-CSS, из него Playwright печатает PDF (`@cv/print`);
-- `apps/web` — сайт с фильтром по стеку в search-параметрах (`@cv/web`).
+- `packages/config` — TypeScript and ESLint presets (`@cv/config`);
+- `packages/cv-data` — the single source of truth: zod schemas, the technology
+  registry, derived durations, and generation of the localized JSON chunks (`@cv/data`);
+- `packages/ui` — impersonal interface primitives (`@cv/ui`);
+- `apps/print` — a Vite app with print CSS, which Playwright prints to PDF (`@cv/print`);
+- `apps/web` — the site, with a stack filter living in the search params (`@cv/web`).
 
-Границы: `cv-data` не импортирует React. `ui` не знает слова «резюме».
-`print` зависит от `cv-data`, но **не** от `ui`. `web` склеивает всё.
+Boundaries: `cv-data` imports no React. `ui` does not know the word "resume".
+`print` depends on `cv-data` but **not** on `ui`. `web` glues everything together.
 
-## Приватность
+## Privacy
 
-Репозиторий публичный, поэтому в нём не существует:
+The repository is public, so none of the following exists in it:
 
-- личного телефона — он попадает в PDF только через переменную окружения `CV_PHONE`;
-- рабочей почты работодателя; контактная почта — `belibov.nikolay@gmail.com`;
-- внутренних метрик работодателя;
-- скриншотов, спек и дизайн-документов.
+- the personal phone number — it reaches the PDF only through the `CV_PHONE` environment variable;
+- the employer work email; the contact address is `belibov.nikolay@gmail.com`;
+- the employer internal metrics;
+- screenshots, specs and design documents.
 
-Это проверяет `pnpm guard` (`tools/repo-guard/privacy.test.ts`). Гвард запускается
-перед каждым merge. Ослаблять его правила нельзя.
+This is enforced by `pnpm guard` (`tools/repo-guard/privacy.test.ts`). The guard
+runs before every merge. Its rules must never be weakened.
 
-## Базовый стек
+## Base stack
 
-- **Vite + React + TypeScript**, TypeScript в режиме `strict` плюс
+- **Vite + React + TypeScript**, with TypeScript in `strict` mode plus
   `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, `verbatimModuleSyntax`.
-- Монорепо — **pnpm workspaces + Turborepo**.
-- Данные — zod. Роутинг и загрузка — TanStack Router + Query. Стили — Tailwind v4.
-- Тесты — Vitest, e2e — Playwright. Деплой — Netlify, CI — GitHub Actions.
-- Node — `>=22`.
+- The monorepo runs on **pnpm workspaces + Turborepo**.
+- Data is validated with zod. Routing and loading use TanStack Router + Query. Styling is Tailwind v4.
+- Tests are Vitest, e2e is Playwright. Deployment is Netlify, CI is GitHub Actions.
+- Node `>=22`.
 
-## Менеджер пакетов
+## Package manager
 
-Менеджер зависимостей — **pnpm**, версия зафиксирована в поле `packageManager`
-и ставится через `corepack`. Это осознанное расхождение с правилом EasyFop
-«только Bun»: монорепо здесь требование задачи, а pnpm workspaces + Turborepo —
-самая узнаваемая связка под него.
+The dependency manager is **pnpm**, with the version pinned in the
+`packageManager` field and installed through `corepack`. This is a deliberate
+departure from the EasyFop rule of "Bun only": a monorepo is part of the brief
+here, and pnpm workspaces + Turborepo is the most recognizable pairing for it.
 
-- Production-зависимость пакета: `pnpm add --filter <pkg> <name>`.
-- Dev-зависимость пакета: `pnpm add -D --filter <pkg> <name>`.
-- В корень — только `pnpm add -w -D <name>` и только то, что нужно всему репозиторию.
-- `pnpm-lock.yaml` обязан быть зафиксирован в Git.
-- `npm`, `yarn` и `bun` запрещены, если пользователь явно не разрешил их.
-- Перед добавлением зависимости агент проверяет, нельзя ли решить задачу уже установленным стеком.
-- Новые production-зависимости нельзя добавлять без явного разрешения.
+- A production dependency of a package: `pnpm add --filter <pkg> <name>`.
+- A dev dependency of a package: `pnpm add -D --filter <pkg> <name>`.
+- At the root, only `pnpm add -w -D <name>`, and only for what the whole repository needs.
+- `pnpm-lock.yaml` must be committed to Git.
+- `npm`, `yarn` and `bun` are forbidden unless the user explicitly allows them.
+- Before adding a dependency, the agent checks whether the already installed stack can do the job.
+- New production dependencies must not be added without explicit permission.
 
-## Команды
+## Commands
 
-Все команды запускаются из корня, это `turbo run <task>` по всему workspace:
+Every command runs from the root and is `turbo run <task>` across the workspace:
 
 ```bash
 pnpm lint
 pnpm typecheck
 pnpm test
 pnpm build
-pnpm guard      # тест приватности публичного репозитория
-pnpm pdf        # сборка PDF
+pnpm guard      # the privacy test for a public repository
+pnpm pdf        # build the PDF
 pnpm format
 ```
 
-Один пакет: `pnpm --filter @cv/data test`.
+A single package: `pnpm --filter @cv/data test`.
 
-e2e живут в `apps/web` и гоняются по **собранному** сайту:
+The e2e suite lives in `apps/web` and runs against the **built** site:
 
 ```bash
 pnpm --filter @cv/web build
@@ -84,51 +84,51 @@ pnpm --filter @cv/web e2e
 
 ## Linked Instructions
 
-ИИ-агент обязан читать дополнительные инструкции перед соответствующими задачами:
+The AI agent must read the additional instructions before the matching tasks:
 
-- Git Flow, ветки, коммиты или PR-процесс: `docs/instructions/git-flow.md`
-- Husky, Commitlint, Prettier, ESLint, lint-staged, React-компоненты и правила качества: `docs/instructions/code-quality.md`
-- Тесты, test setup или test scripts: `docs/instructions/testing.md`
-- Netlify, GitHub Actions, сборка PDF в сайт или e2e: `docs/instructions/deployment.md`
+- Git flow, branches, commits or the PR process: `docs/instructions/git-flow.md`
+- Husky, Commitlint, Prettier, ESLint, lint-staged, React components and quality rules: `docs/instructions/code-quality.md`
+- Tests, test setup or test scripts: `docs/instructions/testing.md`
+- Netlify, GitHub Actions, folding the PDF into the site, or e2e: `docs/instructions/deployment.md`
 
-Если linked instruction-файл отсутствует, агент не выдумывает его содержимое,
-а сообщает об отсутствии и предлагает создать минимальную версию.
+If a linked instruction file is missing, the agent does not invent its contents;
+it reports the absence and offers to create a minimal version.
 
-## Конвенции кода
+## Code conventions
 
-- **Только arrow functions.** `export const Name = () => {}`; `function Name() {}` запрещён.
-- **Только named export.** Default export для компонентов не используется.
-- **Component-as-a-Folder.** Компонент — это папка: `Chip/Chip.tsx` + `Chip/index.ts`.
-  Тест компонента лежит в его же папке. `types.ts` появляется, только когда типы пропсов разрослись.
-- **Сгенерированный код адаптируется под эти правила.** Если `shadcn` CLI положил
-  `components/ui/button.tsx` с `function Button()` — файл переносится в
-  `components/UI/Button/Button.tsx` и переписывается. Документация библиотеки правилам проекта не указ.
-- **`cn` живёт в `utils/classNames/classNames.ts`**, не в `lib/utils.ts`.
-- **Алиас `@` обязателен в приложениях** (`apps/web`, `apps/print`) и указывает на их `src`.
-  Внутри `packages/*` алиаса нет — там короткие относительные импорты.
-- **Стилизация — только Tailwind + CSS-переменные.** SCSS, CSS-in-JS и CSS Modules не используются.
-  Цвета берутся из токенов, не хардкодятся в компонентах.
-- **shadcn-компоненты добавляются поштучно**, весь набор сразу не ставится.
-- **Тема — три режима:** `type ThemeMode = "system" | "light" | "dark"`, по умолчанию `system`,
-  выбор пользователя сохраняется в `localStorage`.
+- **Arrow functions only.** `export const Name = () => {}`; `function Name() {}` is forbidden.
+- **Named exports only.** Components never use a default export.
+- **Component-as-a-Folder.** A component is a folder: `Chip/Chip.tsx` + `Chip/index.ts`.
+  Its test lives in the same folder. `types.ts` appears only once the prop types have outgrown the file.
+- **Generated code is adapted to these rules.** If the `shadcn` CLI drops
+  `components/ui/button.tsx` with `function Button()`, the file moves to
+  `components/UI/Button/Button.tsx` and is rewritten. A library's documentation does not override the project's rules.
+- **`cn` lives in `utils/classNames/classNames.ts`**, not in `lib/utils.ts`.
+- **The `@` alias is mandatory in the apps** (`apps/web`, `apps/print`) and points at their `src`.
+  Inside `packages/*` there is no alias — short relative imports are used there.
+- **Styling is Tailwind plus CSS variables only.** SCSS, CSS-in-JS and CSS Modules are not used.
+  Colors come from tokens and are never hardcoded in components.
+- **shadcn components are added one at a time**; the whole set is never installed at once.
+- **The theme has three modes:** `type ThemeMode = "system" | "light" | "dark"`, defaulting to `system`,
+  with the user's choice stored in `localStorage`.
 
-## Главные запреты
+## Hard prohibitions
 
-ИИ-агенту запрещено без явного разрешения:
+Without explicit permission, the AI agent must not:
 
-- менять стек проекта;
-- добавлять production-зависимости;
-- менять `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `turbo.json`,
-  `tsconfig*.json`, ESLint, Prettier, Husky или Commitlint конфиги вне рамок задачи;
-- ослаблять правила `tools/repo-guard/` или коммитить приватные данные;
-- переписывать архитектуру или делать большие рефакторинги внутри маленьких задач;
-- удалять существующий код без объяснения причины;
-- менять Git Flow;
-- создавать глобальные абстракции без необходимости;
-- использовать `npm`, `yarn` или `bun` для управления зависимостями;
-- игнорировать ошибки TypeScript, ESLint, Prettier, тестов или сборки;
-- отключать правила линтера, форматтера или TypeScript ради быстрого прохождения проверки;
-- изменять файлы вне рамок задачи.
+- change the project stack;
+- add production dependencies;
+- change `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `turbo.json`,
+  `tsconfig*.json`, or the ESLint, Prettier, Husky or Commitlint configs outside the scope of the task;
+- weaken the rules in `tools/repo-guard/` or commit private data;
+- rewrite the architecture or perform large refactors inside small tasks;
+- delete existing code without explaining why;
+- change the Git flow;
+- create global abstractions where none are needed;
+- use `npm`, `yarn` or `bun` to manage dependencies;
+- ignore errors from TypeScript, ESLint, Prettier, the tests or the build;
+- disable a linter, formatter or TypeScript rule just to get a check to pass;
+- modify files outside the scope of the task.
 
 <!-- BEGIN:turborepo-agent-rules -->
 

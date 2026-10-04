@@ -1,3 +1,3 @@
-// Пакет линтуется собственным пресетом: иначе `eslint .` поднимается до корневого
-// конфига, а тот пакеты игнорирует — у каждого свой.
+// The package lints itself with its own preset: otherwise `eslint .` walks up
+// to the root config, and that one ignores packages — each has its own.
 export { default } from './eslint/index.js'

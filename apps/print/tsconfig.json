@@ -1,8 +1,8 @@
 {
   "extends": "@cv/config/tsconfig/react.json",
-  // scripts/pdf.ts и конфиги vite/vitest — node-код: им нужны console, fs/promises
-  // и import.meta.url. Пресет @cv/config/tsconfig/react.json знает только vite/client,
-  // поэтому "node" дописывается здесь, а не в общем пресете.
+  // scripts/pdf.ts and the vite/vitest configs are Node code: they need console,
+  // fs/promises and import.meta.url. The @cv/config/tsconfig/react.json preset
+  // only knows vite/client, so "node" is added here rather than in the shared preset.
   "compilerOptions": {
     "types": ["vite/client", "node"],
     "baseUrl": ".",

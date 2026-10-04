@@ -1,7 +1,7 @@
 /**
- * Перезагрузка страницы, вынесенная в отдельный модуль не ради красоты,
- * а ради проверяемости: `window.location` в jsdom — unforgeable-свойство,
- * подменить `reload` на объекте нельзя. Подменяется модуль целиком.
+ * A page reload pulled out into its own module not for elegance but for
+ * testability: in jsdom `window.location` is an unforgeable property, so
+ * `reload` cannot be stubbed on the object. The whole module is mocked instead.
  */
 export const reloadPage = (): void => {
   window.location.reload()

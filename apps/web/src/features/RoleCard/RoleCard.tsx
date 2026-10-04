@@ -19,8 +19,8 @@ export type RoleCardProps = {
 }
 
 /**
- * Погашенная карточка остаётся в документе и остаётся раскрываемой: фильтр
- * подсвечивает совпадения, а не прячет историю.
+ * A dimmed card stays in the document and stays expandable: the filter
+ * highlights matches, it does not hide history.
  */
 export const RoleCard = ({ role, selected, locale, now }: RoleCardProps) => {
   const [open, setOpen] = useState(false)
@@ -48,11 +48,11 @@ export const RoleCard = ({ role, selected, locale, now }: RoleCardProps) => {
     <article data-testid={`role-${role.id}`} data-dimmed={dimmed}>
       <Card dimmed={dimmed}>
         {/*
-          Кнопка появляется только у карточки, которой есть что раскрыть.
-          Конституция требует держать опыт до 2019 одной строкой `compact`
-          без буллетов — и у неё кнопка объявляла бы `aria-expanded`
-          и `aria-controls`, указывающий в никуда: скринридер говорил бы
-          «свёрнуто», нажатие не делало бы ничего.
+          The button appears only on a card that has something to expand. The
+          project's rules keep everything before 2019 as a single `compact` line
+          with no bullets — and there the button would announce `aria-expanded`
+          plus an `aria-controls` pointing at nothing: a screen reader would say
+          "collapsed", and pressing it would do nothing at all.
         */}
         {expandable ? (
           <button
@@ -68,9 +68,10 @@ export const RoleCard = ({ role, selected, locale, now }: RoleCardProps) => {
           <div className={headerClass}>{header}</div>
         )}
         {/*
-          Страна рендерится в PDF и обязана рендериться здесь: без неё читатель
-          не понимает, что ownix и Poollotto были израильскими — а слово Israel
-          вернули в датасет отдельным решением.
+          The country is rendered in the PDF and has to be rendered here too:
+          without it the reader has no way of knowing that ownix and Poollotto
+          were Israeli — and the word Israel was put back into the dataset by a
+          deliberate decision.
         */}
         {role.location !== undefined && (
           <p className="mt-1 text-xs text-ink-muted">{role.location}</p>

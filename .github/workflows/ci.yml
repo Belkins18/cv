@@ -11,8 +11,8 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      # Версия pnpm берётся из `packageManager` в package.json — ни здесь,
-      # ни в netlify.toml её дублировать не нужно.
+      # The pnpm version comes from `packageManager` in package.json — there is
+      # no need to duplicate it here or in netlify.toml.
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v5
         with:
@@ -21,32 +21,33 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # Chromium нужен дважды: шагу pdf, от которого зависит сборка сайта,
-      # и e2e. Playwright объявлен в @cv/web, в корне его бинаря нет.
+      # Chromium is needed twice: by the pdf step the site build depends on, and
+      # by e2e. Playwright is declared in @cv/web; there is no binary at the root.
       - run: pnpm --filter @cv/web exec playwright install --with-deps chromium
 
-      # Восемь гейтов — ровно те же, что локально, и в том же порядке.
-      # Гвард первым: смысла гонять остальное над утечкой нет.
+      # Eight gates — exactly the local ones, in the same order.
+      # The guard goes first: running the rest on top of a leak makes no sense.
       - run: pnpm guard
       - run: pnpm lint
       - run: pnpm format:check
       - run: pnpm typecheck
       - run: pnpm test
-      # Собирает и PDF, и сайт: @cv/web#build зависит от @cv/print#pdf.
-      # Внутри сборки два шлюза: copy-pdf читает текстовый слой PDF,
-      # scan-dist — собранный бандл.
+      # Builds both the PDF and the site: @cv/web#build depends on @cv/print#pdf.
+      # Two gates live inside the build: copy-pdf reads the PDF's text layer,
+      # scan-dist reads the built bundle.
       - run: pnpm build
-      # 19 ATS-проверок собранного PDF: текстовый слой, две страницы, ключевые
-      # слова. Живут в отдельном vitest-конфиге, и `pnpm test` их НЕ подхватывает —
-      # без этой строки Review Focus №1 остаётся единственным классом отказа
-      # без автоматического гейта, а CI при этом выкладывает непроверенный PDF
-      # артефактом и Netlify кладёт его под кнопку Download.
+      # The 19 ATS checks over the built PDF: text layer, two pages, keywords.
+      # They live in a separate vitest config, and `pnpm test` does NOT pick them
+      # up — without this line Review Focus #1 would be the one class of failure
+      # with no automated gate, while CI publishes that unchecked PDF as an
+      # artifact and Netlify puts it behind the Download button.
       - run: pnpm pdf
       - run: pnpm --filter @cv/web e2e
 
-      # PDF собран БЕЗ CV_PHONE: номер подставляется только в локальной сборке
-      # того файла, который уходит в отклик (дизайн §10). Артефакт здесь —
-      # чтобы вёрстку резюме можно было посмотреть, не собирая её у себя.
+      # The PDF is built WITHOUT CV_PHONE: the number is injected only by the
+      # local build of the file that goes out with an application (design doc §10).
+      # The artifact exists so the resume layout can be looked at without
+      # building it locally.
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -54,8 +55,8 @@ jobs:
           path: out/cv-nikolay-belibov.pdf
           if-no-files-found: warn
 
-      # Трейсы перезапущенных e2e: на падении в CI это единственный способ
-      # увидеть, что было на странице.
+      # Traces from retried e2e runs: on a CI failure this is the only way to
+      # see what was on the page.
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

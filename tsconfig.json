@@ -1,8 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  // Инструментарий репозитория: гвард приватности и его словарь. Раньше эти файлы
-  // не попадали ни в один include — самый критичный по безопасности код проекта
-  // не тайпчекался вообще. Пакеты и приложения проверяют себя своими tsconfig.
+  // The repository tooling: the privacy guard and its dictionary. These files
+  // used to be in no include at all — the most security-critical code in the
+  // project was never typechecked. Packages and apps check themselves with their
+  // own tsconfigs.
   "extends": "./packages/config/tsconfig/base.json",
   "compilerOptions": { "types": ["node"] },
   "include": ["tools"]

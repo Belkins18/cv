@@ -2,22 +2,22 @@ import { describe, expect, it } from 'vitest'
 import { CvDataError, loadCv, loadCvFrom } from './load'
 
 describe('loadCv', () => {
-  it('грузит английский чанк и валидирует его', async () => {
+  it('loads the English chunk and validates it', async () => {
     const data = await loadCv('en')
     expect(data.profile.title).toBe('Frontend Engineer')
     expect(data.roles.length).toBeGreaterThan(0)
   })
 
-  it('грузит украинский чанк', async () => {
+  it('loads the Ukrainian chunk', async () => {
     expect((await loadCv('uk')).profile.title).toBe('Фронтенд-інженер')
   })
 
-  it('на битых данных бросает CvDataError, а не падает в рендере', async () => {
+  it('throws CvDataError on broken data instead of blowing up mid-render', async () => {
     const broken = () => Promise.resolve({ default: { profile: { name: 42 } } })
     await expect(loadCvFrom('en', broken)).rejects.toBeInstanceOf(CvDataError)
   })
 
-  it('на сетевой ошибке бросает CvDataError и сохраняет причину', async () => {
+  it('throws CvDataError on a network failure and keeps the cause', async () => {
     const offline = () =>
       Promise.reject(new Error('Failed to fetch dynamically imported module'))
     const error = await loadCvFrom('uk', offline).catch((e: unknown) => e)

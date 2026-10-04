@@ -2,9 +2,10 @@ import js from '@eslint/js'
 import tseslint from 'typescript-eslint'
 
 /**
- * Корневой конфиг покрывает только инструментарий репозитория: `tools/**` и
- * конфиги в корне. У пакетов и приложений свои конфиги поверх `@cv/config/eslint`
- * — общие правила живут там, а не здесь, иначе одно правило разъедется на копии.
+ * The root config covers the repository tooling only: `tools/**` and the configs
+ * at the root. Packages and apps carry their own configs on top of
+ * `@cv/config/eslint` — the shared rules live there, not here, or one rule would
+ * drift into copies.
  */
 export default tseslint.config(
   {

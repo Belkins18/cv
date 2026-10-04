@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { searchSchema } from './search'
 
 describe('searchSchema', () => {
-  it('пропускает корректные параметры', () => {
+  it('lets well-formed params through', () => {
     expect(
       searchSchema.parse({ tech: 'react,vite', lang: 'uk', theme: 'light' })
     ).toEqual({
@@ -12,19 +12,19 @@ describe('searchSchema', () => {
     })
   })
 
-  it('гасит неизвестный язык вместо падения — ссылку мог покалечить мессенджер', () => {
+  it('drops an unknown language instead of throwing, because a messenger may have mangled the link', () => {
     expect(searchSchema.parse({ lang: 'fr' }).lang).toBeUndefined()
   })
 
-  it('принимает системный режим темы', () => {
+  it('accepts the system theme mode', () => {
     expect(searchSchema.parse({ theme: 'system' }).theme).toBe('system')
   })
 
-  it('гасит неизвестную тему', () => {
+  it('drops an unknown theme', () => {
     expect(searchSchema.parse({ theme: 'midnight' }).theme).toBeUndefined()
   })
 
-  it('переживает полностью мусорный вход', () => {
+  it('survives input that is junk all the way through', () => {
     expect(() =>
       searchSchema.parse({ tech: 42, lang: [], theme: null, extra: 'x' })
     ).not.toThrow()

@@ -10,9 +10,9 @@ export type IconButtonProps = {
 }
 
 /**
- * Кнопка без текста: label обязателен, иначе в скринридере остаётся пустая
- * кнопка. aria-pressed пишется только когда кнопка действительно двухпозиционная
- * — у обычной кнопки этого атрибута быть не должно.
+ * A button with no text: label is required, otherwise a screen reader is left
+ * announcing an empty button. aria-pressed is written only when the button
+ * really is a two-state toggle — a plain button must not carry the attribute.
  */
 export const IconButton = ({
   label,

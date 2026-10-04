@@ -10,8 +10,8 @@ export type ChipProps = {
 }
 
 /**
- * Переключатель с семантикой чекбокса: группа чипов — это множественный выбор,
- * а не навигация, поэтому role="checkbox" + aria-checked, а не aria-pressed.
+ * A toggle with checkbox semantics: a group of chips is a multiple selection,
+ * not navigation, hence role="checkbox" + aria-checked rather than aria-pressed.
  */
 export const Chip = ({
   label,

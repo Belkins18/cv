@@ -8,8 +8,8 @@ export type SectionTitleProps = {
 }
 
 /**
- * Заголовок раздела с обязательным id: на него ссылается aria-labelledby
- * секции — без этого разделы в списке ориентиров безымянны.
+ * A section heading with a required id: the section's aria-labelledby points at
+ * it — without that, the sections are unnamed in the landmark list.
  */
 export const SectionTitle = ({
   id,

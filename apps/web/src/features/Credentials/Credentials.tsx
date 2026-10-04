@@ -9,8 +9,9 @@ export type CredentialsProps = {
 }
 
 /**
- * Три короткие колонки одной секции: сертификат без проверяемой ссылки
- * ничего не доказывает, поэтому имя сертификата — всегда ссылка на выдачу.
+ * Three short columns in one section: a certificate with no verifiable link
+ * proves nothing, so a certificate's name is always a link to the issuer's
+ * record.
  */
 export const Credentials = ({
   certificates,

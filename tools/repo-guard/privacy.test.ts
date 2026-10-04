@@ -8,30 +8,32 @@ import {
   FORBIDDEN_PATHS
 } from './patterns'
 
-/** Файлы, которые git реально отслеживает. Именно они уедут в публичный репозиторий. */
+/** The files git actually tracks. These are the ones that go to a public repository. */
 const tracked = (): string[] =>
   execFileSync('git', ['ls-files'], {
     encoding: 'utf8',
-    // Дефолтный maxBuffer — 1 МБ, и на большом индексе git падает с ENOBUFS.
-    // Гвард при этом краснеет по технической причине, а не по найденной утечке:
-    // отличить одно от другого в выводе трудно, поэтому запас берётся сразу.
+    // The default maxBuffer is 1 MB, and on a large index git fails with ENOBUFS.
+    // The guard then goes red for a technical reason rather than a leak it found,
+    // and telling the two apart in the output is hard, so the headroom is taken
+    // up front.
     maxBuffer: 64 * 1024 * 1024
   })
     .split('\n')
     .filter(Boolean)
 
 /**
- * Файлы, которые сканер не сканирует.
- * Словарь запрещённого обязан содержать запрещённые строки — это его работа.
- * Без исключения гвард всегда падает на самом себе, и словарь пришлось бы
- * прятать за склейкой фрагментов, то есть делать нечитаемым.
- * `pnpm-lock.yaml` — машинный файл с хэшами, в нём совпадения ложные.
+ * The files the scanner does not scan.
+ * A dictionary of forbidden strings is required to contain forbidden strings —
+ * that is its job. Without the exception the guard would always fail on itself,
+ * and the dictionary would have to hide behind string concatenation, which is to
+ * say become unreadable. `pnpm-lock.yaml` is a machine-written file full of
+ * hashes, where every match is a false one.
  *
- * Данных резюме ни в одном из этих файлов нет, поэтому слепого пятна они не создают.
+ * Neither file holds any resume data, so neither creates a blind spot.
  */
 const SELF = ['tools/repo-guard/patterns.ts', 'pnpm-lock.yaml']
 
-/** Файлы датасета — ровно то, из чего собирается текст резюме. */
+/** The dataset files: exactly what the resume text is assembled from. */
 const DATASET = /^packages\/cv-data\/src\/data\/[^/]+\.ts$/
 
 const isScannable = (file: string): boolean =>
@@ -39,38 +41,38 @@ const isScannable = (file: string): boolean =>
 
 const read = (file: string): string => readFileSync(file, 'utf8')
 
-describe('приватность публичного репозитория', () => {
+describe('the privacy of a public repository', () => {
   const files = tracked()
   const scannable = files.filter(isScannable)
 
-  it('сканирует непустой набор файлов', () => {
-    // Страховка от молчаливой самонейтрализации: если фильтры однажды отсекут
-    // всё, остальные тесты станут зелёными, ничего не проверив.
+  it('scans a non-empty set of files', () => {
+    // Insurance against silent self-neutralization: if the filters ever cut
+    // everything away, the remaining tests go green having checked nothing.
     expect(scannable.length).toBeGreaterThan(20)
   })
 
-  it.each(FORBIDDEN_PATHS)('не отслеживает %s', (_label, pattern) => {
+  it.each(FORBIDDEN_PATHS)('tracks no %s', (_label, pattern) => {
     expect(files.filter((f) => pattern.test(f))).toEqual([])
   })
 
   it.each(FORBIDDEN_CONTENT)(
-    'ни один файл не содержит: %s',
+    'finds no file containing: %s',
     (_label, pattern) => {
       expect(scannable.filter((f) => pattern.test(read(f)))).toEqual([])
     }
   )
 
-  describe('текст резюме', () => {
+  describe('the resume text', () => {
     const dataset = scannable.filter(
       (f) => DATASET.test(f) && !f.endsWith('.test.ts')
     )
 
-    it('датасет найден', () => {
+    it('finds the dataset', () => {
       expect(dataset.length).toBeGreaterThan(0)
     })
 
     it.each(FORBIDDEN_IN_RESUME)(
-      'датасет не содержит: %s',
+      'finds nothing in the dataset matching: %s',
       (_label, pattern) => {
         expect(dataset.filter((f) => pattern.test(read(f)))).toEqual([])
       }

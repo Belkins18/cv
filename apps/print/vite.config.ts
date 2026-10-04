@@ -6,13 +6,14 @@ import { resolveCvPhone } from './cv-phone'
 const src = fileURLToPath(new URL('./src', import.meta.url))
 
 export default defineConfig(({ mode }) => ({
-  // base "./" — чтобы собранная страница открывалась и из подпапки, и из preview-сервера.
+  // base "./" so the built page opens both from a subfolder and from the preview server.
   base: './',
   plugins: [react()],
   resolve: { alias: { '@': src } },
   build: { assetsInlineLimit: 0 },
-  // Телефон приходит под одним внешним именем CV_PHONE; имя с префиксом VITE_
-  // выводится из него здесь и наружу не выходит. Подробности — в cv-phone.ts.
+  // The phone number arrives under one external name, CV_PHONE; the VITE_-prefixed
+  // name is derived from it right here and never leaves this file. Details in
+  // cv-phone.ts.
   define: {
     'import.meta.env.VITE_CV_PHONE': JSON.stringify(resolveCvPhone(mode))
   }

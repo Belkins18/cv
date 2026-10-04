@@ -10,7 +10,7 @@ export type TechGroup =
 
 export type TechMeta = { readonly label: string; readonly group: TechGroup }
 
-/** Реестр, а не строки: опечатка в id — ошибка компиляции, фильтр выводится из данных. */
+/** A registry, not free strings: a typo in an id is a compile error, and the filter is derived from the data. */
 export const TECH = {
   react: { label: 'React', group: 'core' },
   typescript: { label: 'TypeScript', group: 'core' },

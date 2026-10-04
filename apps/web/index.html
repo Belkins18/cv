@@ -6,13 +6,14 @@
 
     <title>Nikolay Belibov — Frontend Engineer</title>
     <!--
-      Главный канал распространения этого сайта — ссылка: в письме, в LinkedIn,
-      в мессенджере рекрутёру. Без описания и og-тегов она разворачивается
-      пустой карточкой, и первое впечатление о резюме — что оно никакое.
-      Текст держится в тех же границах, что и датасет: титул ровно такой же,
-      как в резюме, домен назван анализом сетевых протоколов. Называть здесь
-      запрещённые слова по имени нельзя — комментарии HTML уезжают в сборку,
-      и `postbuild` ловит их наравне с кодом. Он это и поймал.
+      This site travels as a link: in an email, on LinkedIn, in a message to a
+      recruiter. Without a description and og tags that link unfurls as an empty
+      card, and the first impression of the CV is that there is nothing to it.
+      The text stays inside the same boundaries as the dataset: the title is
+      exactly the one in the resume, and the domain is called network-protocol
+      analysis. The terms the project forbids must not be spelled out here —
+      HTML comments travel into the build, and `postbuild` catches them just
+      like code. It caught precisely that.
     -->
     <meta
       name="description"
@@ -29,17 +30,18 @@
     <meta property="og:locale:alternate" content="uk_UA" />
     <meta name="twitter:card" content="summary" />
     <!--
-      og:url и og:image не заданы намеренно. Адрес появится только после
-      подключения Netlify, а неверный og:url хуже отсутствующего: площадки
-      предпочтут его тому, по которому пришли. Картинку превью пришлось бы
-      держать в PNG или JPEG — форматах, которые .gitignore запрещает целиком;
-      SVG для превью не годится, его не читают ни LinkedIn, ни Telegram.
+      og:url and og:image are deliberately absent. The address only exists once
+      Netlify is wired up, and a wrong og:url is worse than a missing one:
+      platforms prefer it over the address the visitor actually came from. A
+      preview image would have to live as PNG or JPEG — formats .gitignore bans
+      outright; SVG is no good for a preview, neither LinkedIn nor Telegram
+      reads it.
     -->
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <!--
-      Браузер красит собственный хром до того, как приедет CSS: без этого
-      светлая системная тема моргает белым поверх тёмной страницы.
+      The browser paints its own chrome before the CSS arrives: without this a
+      light system theme flashes white over a dark page.
     -->
     <meta name="color-scheme" content="dark light" />
     <meta
@@ -55,7 +57,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- Токены темы @cv/ui только называют Inter и JetBrains Mono; подключает их приложение. -->
+    <!-- The @cv/ui theme tokens only name Inter and JetBrains Mono; loading them is the app's job. -->
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
       rel="stylesheet"

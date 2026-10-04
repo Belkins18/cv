@@ -1,22 +1,25 @@
 @import '@cv/ui/theme.css';
 
 /*
- * Где Tailwind ищет классы — проверено сборкой, а не прочитано в документации.
+ * Where Tailwind looks for classes — established by building, not by reading the
+ * documentation.
  *
- * С @tailwindcss/vite автоопределение контента отсчитывается от корня Vite
- * (apps/web), а не от директории CSS-файла с `@import 'tailwindcss'`. Поэтому
- * свой src приложение получает и без директивы; строка ниже прибивает его
- * явно, чтобы смена корня или переезд на CLI не выключили утилиты молча.
+ * Under @tailwindcss/vite, content auto-detection is measured from the Vite root
+ * (apps/web), not from the directory of the CSS file that holds
+ * `@import 'tailwindcss'`. So the app gets its own src with or without the
+ * directive; the line below nails it down explicitly, so that changing the root
+ * or moving to the CLI cannot switch the utilities off in silence.
  */
 @source '.';
 
 /*
- * А вот исходники @cv/ui автоопределение не находит: пакет виден приложению
- * через симлинк в node_modules, а node_modules Tailwind из сканирования
- * исключает. Без этой строки сборка зелёная и страница собирается, но классы
- * примитивов — opacity-35 у погашенной карточки, tabular-nums у счётчиков,
- * outline у focus-visible — в CSS не попадают вовсе. Проверено снятием
- * директивы: CSS худеет с 14.4 КБ до 11.9 КБ, и ровно на эти классы.
+ * The @cv/ui sources, on the other hand, auto-detection never finds: the app
+ * sees that package through a symlink in node_modules, and Tailwind excludes
+ * node_modules from scanning. Without this line the build is green and the page
+ * renders, yet the primitives' classes — opacity-35 on a dimmed card,
+ * tabular-nums on the counters, the focus-visible outline — never reach the CSS
+ * at all. Verified by removing the directive: the CSS shrinks from 14.4 KB to
+ * 11.9 KB, and by exactly those classes.
  */
 @source '../../../packages/ui/src';
 

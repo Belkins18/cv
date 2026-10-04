@@ -1,21 +1,22 @@
 # Git Flow Instruction
 
-## Назначение
+## Purpose
 
-Этот документ описывает правила работы с Git, ветками, коммитами и Pull Request.
+This document describes the rules for working with Git, branches, commits and
+pull requests.
 
-ИИ-агент обязан читать этот файл перед:
+The AI agent must read this file before:
 
-- созданием новой ветки;
-- изменением Git Flow;
-- подготовкой Pull Request;
-- merge в `development` или `master`;
-- изменением правил коммитов;
-- изменением release-процесса.
+- creating a new branch;
+- changing the Git flow;
+- preparing a pull request;
+- merging into `development` or `master`;
+- changing the commit rules;
+- changing the release process.
 
-## Основные ветки
+## Main branches
 
-В проекте используются две главные ветки:
+The project uses two main branches:
 
 ```txt
 master
@@ -24,50 +25,53 @@ development
 
 ### `master`
 
-`master` — стабильная production-ветка.
+`master` is the stable production branch.
 
-Правила:
+Rules:
 
-- прямые коммиты запрещены;
-- прямые пуши запрещены;
-- код попадает в `master` из `development` — через Pull Request либо merge,
-  который выполняет владелец проекта лично;
-- ИИ-агент в `master` не мерджит и не пушит без явного разрешения на конкретное
-  действие;
-- merge в `master` выполняется только после проверки стабильности проекта.
+- direct commits are forbidden;
+- direct pushes are forbidden;
+- code reaches `master` from `development`, either through a pull request or
+  through a merge the project owner performs personally;
+- the AI agent neither merges nor pushes into `master` without explicit
+  permission for that specific action;
+- a merge into `master` happens only after the project has been checked for
+  stability.
 
 ### `development`
 
-`development` — основная ветка разработки и интеграции.
+`development` is the main development and integration branch.
 
-Правила:
+Rules:
 
-- прямые коммиты запрещены: код приходит из рабочей ветки;
-- новые задачи создаются только от актуальной `development`;
-- код попадает в `development` через merge из `feat/*` или `fix/*`;
-- **Pull Request не обязателен.** Проект разрабатывается в одиночку, ревьюить
-  свой же PR перед собственным merge — ритуал без пользы. Merge выполняется
-  локально с `--no-ff`, чтобы в истории осталось видно границу задачи;
-- пуш в `development` разрешён;
-- перед merge проверки обязательны: `pnpm format`, `pnpm lint`,
+- direct commits are forbidden: code arrives from a working branch;
+- new tasks are branched only off an up-to-date `development`;
+- code reaches `development` through a merge from `feat/*` or `fix/*`;
+- **a pull request is not required.** The project is developed solo, and
+  reviewing your own PR before your own merge is a ritual with no payoff. The
+  merge is done locally with `--no-ff`, so the boundary of the task stays
+  visible in the history;
+- pushing to `development` is allowed;
+- the checks before a merge are mandatory: `pnpm format`, `pnpm lint`,
   `pnpm typecheck`, `pnpm test`, `pnpm build`, `pnpm guard`.
 
-Правило про Pull Request смягчено 2026-09-21. Оно вернётся, если над проектом
-начнёт работать кто-то ещё: ревью чужого кода — это уже не ритуал.
+The pull-request rule was relaxed on 2026-09-21. It comes back the moment
+someone else starts working on the project: reviewing someone else's code is no
+longer a ritual.
 
-## Рабочие ветки
+## Working branches
 
-Для новых задач используются отдельные ветки.
+New tasks get their own branches.
 
-### Feature-ветки
+### Feature branches
 
-Для новых фич:
+For new features:
 
 ```txt
 feat/short-feature-name
 ```
 
-Примеры:
+Examples:
 
 ```txt
 feat/auth-page
@@ -75,15 +79,15 @@ feat/dashboard-filters
 feat/user-settings
 ```
 
-### Fix-ветки
+### Fix branches
 
-Для исправления багов:
+For bug fixes:
 
 ```txt
 fix/short-bug-name
 ```
 
-Примеры:
+Examples:
 
 ```txt
 fix/button-click
@@ -91,9 +95,9 @@ fix/form-validation
 fix/header-layout
 ```
 
-### Другие допустимые префиксы
+### Other acceptable prefixes
 
-При необходимости можно использовать:
+Where it helps, these are fine too:
 
 ```txt
 docs/update-readme
@@ -102,23 +106,23 @@ chore/update-deps
 test/add-form-tests
 ```
 
-Но для обычных задач предпочтительны:
+But for ordinary work, prefer:
 
 ```txt
 feat/*
 fix/*
 ```
 
-## Старт новой задачи
+## Starting a new task
 
-Перед началом новой задачи агент должен:
+Before starting a new task the agent must:
 
-1. Проверить текущую ветку.
-2. Убедиться, что работа начинается от `development`.
-3. Обновить `development`, если подключён remote.
-4. Создать новую ветку под задачу.
+1. Check the current branch.
+2. Make sure the work starts from `development`.
+3. Update `development` if a remote is configured.
+4. Create a new branch for the task.
 
-Пример:
+Example:
 
 ```bash
 git checkout development
@@ -126,34 +130,35 @@ git pull origin development
 git checkout -b feat/example-feature
 ```
 
-Если remote ещё не настроен или проект находится только локально, агент должен сообщить об этом и работать с локальной веткой.
+If no remote is configured yet, or the project is local-only, the agent must say
+so and work with the local branch.
 
-## Локальный MVP-режим
+## Local MVP mode
 
-Если проект находится на стадии локального MVP и удалённый репозиторий ещё не подключён:
+While the project is a local MVP and no remote repository is connected yet:
 
-- агент всё равно должен работать через feature/fix-ветки;
-- Pull Request может быть заменён локальным review через diff;
-- merge в `development` выполняется только после локальных проверок;
-- прямые коммиты в `master` всё равно запрещены.
+- the agent still works through feature/fix branches;
+- a pull request may be replaced by a local review of the diff;
+- a merge into `development` happens only after the local checks pass;
+- direct commits to `master` remain forbidden all the same.
 
-## Коммиты
+## Commits
 
-В проекте используется стиль Conventional Commits.
+The project follows Conventional Commits.
 
-Формат:
+Format:
 
 ```txt
 type(scope): message
 ```
 
-Минимально допустимый формат:
+The minimal acceptable format:
 
 ```txt
 type: message
 ```
 
-Примеры:
+Examples:
 
 ```txt
 feat: add auth page
@@ -163,7 +168,7 @@ chore: configure lint-staged
 refactor: simplify dashboard layout
 ```
 
-Допустимые типы:
+Accepted types:
 
 ```txt
 feat
@@ -178,16 +183,16 @@ revert
 perf
 ```
 
-## Правила сообщений коммитов
+## Rules for commit messages
 
-Сообщение коммита должно:
+A commit message must:
 
-- быть на английском языке;
-- быть коротким и понятным;
-- описывать фактическое изменение;
-- не содержать расплывчатых фраз вроде `update`, `fix stuff`, `changes`.
+- be in English;
+- be short and clear;
+- describe the change that actually happened;
+- avoid vague phrases such as `update`, `fix stuff`, `changes`.
 
-Плохо:
+Bad:
 
 ```txt
 update
@@ -195,7 +200,7 @@ fix
 some changes
 ```
 
-Хорошо:
+Good:
 
 ```txt
 feat: add notification settings page
@@ -203,13 +208,13 @@ fix: handle empty form state
 docs: move code quality setup to instructions
 ```
 
-## Завершение задачи: merge в development
+## Finishing a task: merging into development
 
-После завершения задачи ветка `feat/*` или `fix/*` вливается в `development`
-локально, командой `git merge --no-ff`. Pull Request не обязателен — почему,
-написано в разделе про `development` выше.
+Once a task is done, the `feat/*` or `fix/*` branch is merged into `development`
+locally with `git merge --no-ff`. A pull request is not required — the section on
+`development` above explains why.
 
-Перед merge агент обязан проверить:
+Before the merge the agent must run:
 
 ```bash
 pnpm format
@@ -220,19 +225,19 @@ pnpm build
 pnpm guard
 ```
 
-Если какая-то команда отсутствует, агент должен явно сообщить об этом.
-Утверждать, что проверка прошла, можно только если она запускалась.
+If one of these commands does not exist, the agent must say so explicitly.
+A check may be reported as passing only if it was actually run.
 
-Отчёт о задаче заменяет описание PR и содержит:
+The task report stands in for a PR description and contains:
 
-- краткое описание задачи;
-- список основных изменений;
-- результаты проверок;
-- риски или ограничения;
-- что проверить вручную.
+- a short description of the task;
+- a list of the main changes;
+- the results of the checks;
+- risks or limitations;
+- what to verify by hand.
 
-Если Pull Request всё-таки создаётся — например, чтобы сохранить обсуждение, —
-его описание строится по тому же шаблону:
+If a pull request is created after all — to preserve a discussion, say — its
+description follows the same template:
 
 ```md
 ## Summary
@@ -255,16 +260,16 @@ pnpm guard
 - ...
 ```
 
-## Pull Request из development в master
+## Pull request from development into master
 
-PR из `development` в `master` создаётся только когда:
+A PR from `development` into `master` is opened only when:
 
-- весь функционал протестирован;
-- сборка проходит успешно;
-- нет известных блокирующих багов;
-- проект готов к релизу.
+- all the functionality has been tested;
+- the build succeeds;
+- there are no known blocking bugs;
+- the project is ready for a release.
 
-Перед merge в `master` обязательно выполнить:
+Before merging into `master`, always run:
 
 ```bash
 pnpm format
@@ -274,31 +279,32 @@ pnpm build
 pnpm guard
 ```
 
-Если есть тесты:
+And, where tests exist:
 
 ```bash
 pnpm test
 ```
 
-## Запреты
+## Prohibitions
 
-ИИ-агенту запрещено:
+The AI agent must not:
 
-- пушить напрямую в `master`;
-- мерджить в `master` без явного разрешения;
-- делать merge без проверок;
-- удалять ветки без явного разрешения;
-- менять Git Flow без явного разрешения;
-- переписывать историю Git через `rebase`, `reset --hard`, `force push` без явного разрешения;
-- создавать бессмысленные коммиты с сообщениями вроде `update` или `fix`.
+- push directly to `master`;
+- merge into `master` without explicit permission;
+- merge without running the checks;
+- delete branches without explicit permission;
+- change the Git flow without explicit permission;
+- rewrite Git history through `rebase`, `reset --hard` or a force push without
+  explicit permission;
+- create meaningless commits with messages such as `update` or `fix`.
 
-## Что агент должен сообщить после Git-задачи
+## What the agent must report after a Git task
 
-После работы с Git агент должен кратко сообщить:
+After working with Git, the agent reports briefly:
 
-- текущую ветку;
-- от какой ветки она создана;
-- какие коммиты сделаны;
-- какие проверки запущены;
-- сведена ли ветка в `development`;
-- есть ли нерешённые конфликты или риски.
+- the current branch;
+- which branch it was created from;
+- which commits were made;
+- which checks were run;
+- whether the branch has been merged into `development`;
+- whether any conflicts or risks are still open.

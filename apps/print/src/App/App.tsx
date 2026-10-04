@@ -9,9 +9,10 @@ import {
   type TechId
 } from '@cv/data'
 
-// phone объявлен как `string | undefined`, а не `phone?: string`: при
-// exactOptionalPropertyTypes передать явный undefined в необязательное поле нельзя,
-// а main.tsx читает его из окружения и именно undefined и получает.
+// phone is declared as `string | undefined`, not `phone?: string`: under
+// exactOptionalPropertyTypes an explicit undefined cannot be passed to an
+// optional field, and main.tsx reads it from the environment, where undefined is
+// exactly what it gets.
 type Props = { data: ResolvedCv; now: Date; phone?: string | undefined }
 
 const GROUP_ORDER: readonly TechGroup[] = [
@@ -36,7 +37,7 @@ const GROUP_LABEL: Record<TechGroup, string> = {
   legacy: 'Also worked with'
 }
 
-/** Список навыков выводится из данных: технология без роли и проекта в резюме не появляется. */
+/** The skills list is derived from the data: a technology with no role and no project never shows up in the resume. */
 const usedTech = (data: ResolvedCv): TechId[] => {
   const used = new Set<TechId>()
   for (const entry of [...data.roles, ...data.projects]) {
