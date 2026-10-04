@@ -15,5 +15,5 @@ for (const locale of LOCALES) {
     `${JSON.stringify(project(cv, locale), null, 2)}\n`,
     'utf8'
   )
-  console.log(`написано ${file}`)
+  console.log(`written ${file}`)
 }

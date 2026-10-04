@@ -24,6 +24,6 @@ const walk = (value: unknown, locale: Locale): unknown => {
   return value
 }
 
-/** Один датасет, два рендера: разойтись по содержанию они не могут архитектурно. */
+/** One dataset, two renders: architecturally they cannot diverge in content. */
 export const project = (source: Cv, locale: Locale): ResolvedCv =>
   resolvedCvSchema.parse(walk(source, locale))

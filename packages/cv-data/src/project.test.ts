@@ -3,19 +3,19 @@ import { cv } from './data/index'
 import { project } from './project'
 
 describe('project', () => {
-  it('заменяет Localized на строку выбранной локали', () => {
+  it('replaces a Localized object with the string of the chosen locale', () => {
     expect(project(cv, 'en').profile.title).toBe('Frontend Engineer')
     expect(project(cv, 'uk').profile.title).toBe('Фронтенд-інженер')
   })
 
-  it('спускается в массивы и вложенные объекты', () => {
+  it('descends into arrays and nested objects', () => {
     const uk = project(cv, 'uk')
     const wirex = uk.roles.find((r) => r.id === 'wirex')
     expect(typeof wirex?.bullets[0]).toBe('string')
     expect(wirex?.location).toContain('Ізраїль')
   })
 
-  it('не трогает значения, которые не Localized', () => {
+  it('leaves values that are not Localized alone', () => {
     const en = project(cv, 'en')
     const wirex = en.roles.find((r) => r.id === 'wirex')
     expect(wirex?.company).toBe('WireX Systems')
@@ -24,7 +24,7 @@ describe('project', () => {
     expect(wirex?.printBulletLimit).toBe(5)
   })
 
-  it('результат проходит схему спроецированного документа', () => {
+  it('produces a result that passes the projected-document schema', () => {
     expect(() => project(cv, 'uk')).not.toThrow()
   })
 })

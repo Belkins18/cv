@@ -9,49 +9,45 @@ import {
 } from './schema'
 
 describe('localizedSchema', () => {
-  it('принимает обе локали', () => {
+  it('accepts both locales', () => {
     expect(
       localizedSchema.parse({ en: 'Frontend Engineer', uk: 'Фронтенд-інженер' })
     ).toBeTruthy()
   })
 
-  it('отвергает пустой украинский перевод — забыть перевод нельзя', () => {
+  it('rejects an empty Ukrainian string, so a translation cannot be forgotten', () => {
     expect(() =>
       localizedSchema.parse({ en: 'Frontend Engineer', uk: '' })
     ).toThrow()
   })
 
-  it('отвергает отсутствующую локаль', () => {
+  it('rejects a missing locale', () => {
     expect(() => localizedSchema.parse({ en: 'Frontend Engineer' })).toThrow()
   })
 })
 
 describe('isoMonthSchema', () => {
-  it.each(['2024-06', '2015-01', '2026-12'])('принимает %s', (value) => {
+  it.each(['2024-06', '2015-01', '2026-12'])('accepts %s', (value) => {
     expect(isoMonthSchema.parse(value)).toBe(value)
   })
 
-  it.each([
-    '2024-13',
-    '2024-00',
-    '24-06',
-    '2024-6',
-    '2024/06',
-    'настоящее время'
-  ])('отвергает %s', (value) => {
-    expect(() => isoMonthSchema.parse(value)).toThrow()
-  })
+  it.each(['2024-13', '2024-00', '24-06', '2024-6', '2024/06', 'present'])(
+    'rejects %s',
+    (value) => {
+      expect(() => isoMonthSchema.parse(value)).toThrow()
+    }
+  )
 })
 
 describe('periodSchema', () => {
-  it('принимает открытый период', () => {
+  it('accepts an open-ended period', () => {
     expect(periodSchema.parse({ start: '2024-06', end: null })).toEqual({
       start: '2024-06',
       end: null
     })
   })
 
-  it('отвергает период, который кончается раньше, чем начался', () => {
+  it('rejects a period that ends before it starts', () => {
     expect(() =>
       periodSchema.parse({ start: '2024-06', end: '2023-01' })
     ).toThrow()
@@ -59,11 +55,11 @@ describe('periodSchema', () => {
 })
 
 describe('techIdSchema', () => {
-  it('принимает id из реестра', () => {
+  it('accepts an id from the registry', () => {
     expect(techIdSchema.parse('tanstack-query')).toBe('tanstack-query')
   })
 
-  it('отвергает технологию, которой нет в реестре', () => {
+  it('rejects a technology that is not in the registry', () => {
     expect(() => techIdSchema.parse('drogon')).toThrow()
   })
 })
@@ -100,11 +96,11 @@ const minimalCv = {
 }
 
 describe('cvSchema', () => {
-  it('принимает минимальный валидный документ', () => {
+  it('accepts a minimal valid document', () => {
     expect(cvSchema.parse(minimalCv).roles).toHaveLength(1)
   })
 
-  it('отвергает роль с технологией вне реестра', () => {
+  it('rejects a role carrying a technology outside the registry', () => {
     const broken = {
       ...minimalCv,
       roles: [{ ...minimalCv.roles[0], tech: ['react', 'drogon'] }]
@@ -112,7 +108,7 @@ describe('cvSchema', () => {
     expect(() => cvSchema.parse(broken)).toThrow()
   })
 
-  it('resolvedCvSchema принимает тот же документ после подстановки локали', () => {
+  it('resolvedCvSchema accepts the same document once a locale is substituted in', () => {
     const resolved = {
       ...minimalCv,
       profile: {

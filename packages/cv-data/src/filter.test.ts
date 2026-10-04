@@ -8,7 +8,7 @@ import {
 } from './filter'
 
 describe('parseTechParam', () => {
-  it('разбирает нормальный список', () => {
+  it('parses a well-formed list', () => {
     expect(parseTechParam('react,typescript,vite')).toEqual([
       'react',
       'typescript',
@@ -16,14 +16,14 @@ describe('parseTechParam', () => {
     ])
   })
 
-  it('выбрасывает неизвестные id, но сохраняет валидные — ссылку правят руками', () => {
+  it('drops unknown ids and keeps the valid ones, because links get hand-edited', () => {
     expect(parseTechParam('react,drogon,typescript')).toEqual([
       'react',
       'typescript'
     ])
   })
 
-  it('терпит мусор: пробелы, регистр, пустые элементы, лишние запятые', () => {
+  it('tolerates junk: spaces, casing, empty items, stray commas', () => {
     expect(parseTechParam(' React , ,TYPESCRIPT,,vite ')).toEqual([
       'react',
       'typescript',
@@ -31,12 +31,12 @@ describe('parseTechParam', () => {
     ])
   })
 
-  it('схлопывает дубликаты', () => {
+  it('collapses duplicates', () => {
     expect(parseTechParam('react,react,react')).toEqual(['react'])
   })
 
   it.each([null, undefined, '', ',,,', 'drogon'])(
-    'на %p возвращает пустой список',
+    'returns an empty list for %p',
     (raw) => {
       expect(parseTechParam(raw)).toEqual([])
     }
@@ -44,37 +44,37 @@ describe('parseTechParam', () => {
 })
 
 describe('serializeTechParam', () => {
-  it('сортирует — одна и та же выборка даёт одну и ту же ссылку', () => {
+  it('sorts, so the same selection always yields the same link', () => {
     expect(serializeTechParam(['vite', 'react'])).toBe('react,vite')
   })
 
-  it('на пустой выборке возвращает undefined, чтобы параметр исчез из URL', () => {
+  it('returns undefined on an empty selection, so the parameter disappears from the URL', () => {
     expect(serializeTechParam([])).toBeUndefined()
   })
 })
 
-describe('techScore и matchesTech', () => {
+describe('techScore and matchesTech', () => {
   const role = { tech: ['react', 'typescript', 'vite'] } as const
 
-  it('считает число пересечений', () => {
+  it('counts the overlapping entries', () => {
     expect(techScore(role, ['react', 'vite', 'solana'])).toBe(2)
   })
 
-  it('без выбора совпадают все', () => {
+  it('matches everything when nothing is selected', () => {
     expect(matchesTech(role, [])).toBe(true)
   })
 
-  it('совпадение по одному чипу достаточно', () => {
+  it('treats a match on a single chip as enough', () => {
     expect(matchesTech(role, ['react', 'solana'])).toBe(true)
   })
 
-  it('без единого пересечения не совпадает', () => {
+  it('does not match when there is no overlap at all', () => {
     expect(matchesTech(role, ['solana', 'tron'])).toBe(false)
   })
 })
 
 describe('techCounts', () => {
-  it('считает, в скольких записях встречается каждая технология', () => {
+  it('counts how many entries each technology appears in', () => {
     const counts = techCounts([
       { tech: ['react', 'vite'] },
       { tech: ['react'] }

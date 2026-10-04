@@ -14,7 +14,7 @@ const fromDate = (date: Date): YearMonth => ({
 
 const index = ({ year, month }: YearMonth): number => year * 12 + month
 
-/** Включительно по обоим концам: июнь→июнь это один месяц, как считает LinkedIn. */
+/** Inclusive on both ends: June to June is one month, the way LinkedIn counts it. */
 export const monthsBetween = (
   start: IsoMonth,
   end: IsoMonth | null,
@@ -25,8 +25,9 @@ export const monthsBetween = (
   1
 
 /**
- * «11 лет опыта» нигде не записано цифрой: считается от первой роли и не устаревает.
- * Перекрывающиеся роли не складываются — берётся календарная дистанция.
+ * "11 years of experience" is written down as a number nowhere: it is derived
+ * from the earliest role and never goes stale. Overlapping roles are not summed
+ * up — what is measured is the calendar distance.
  */
 export const totalExperienceYears = (
   roles: ReadonlyArray<{ period: { start: IsoMonth } }>,

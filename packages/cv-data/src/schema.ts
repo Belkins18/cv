@@ -8,29 +8,30 @@ export const localizedSchema = z.object({
 
 export const isoMonthSchema = z
   .string()
-  .regex(/^\d{4}-(0[1-9]|1[0-2])$/, 'ожидается формат YYYY-MM')
+  .regex(/^\d{4}-(0[1-9]|1[0-2])$/, 'expected the YYYY-MM format')
 
 export const periodSchema = z
   .object({ start: isoMonthSchema, end: isoMonthSchema.nullable() })
   .refine(
     (p) => p.end === null || p.end >= p.start,
-    'период заканчивается раньше, чем начинается'
+    'the period ends before it starts'
   )
 
 export const techIdSchema = z.enum(TECH_IDS as [TechId, ...TechId[]])
 export const detailSchema = z.enum(['full', 'compact', 'hidden'])
 
-const httpsUrl = z.string().regex(/^https:\/\/\S+$/, 'ожидается https-ссылка')
+const httpsUrl = z.string().regex(/^https:\/\/\S+$/, 'expected an https link')
 
 /**
- * Одна форма документа, две инстанциации: с Localized-объектами (исходный датасет)
- * и с простыми строками (датасет, спроецированный на локаль). Разойтись они не могут.
+ * One document shape, two instantiations: one over Localized objects (the source
+ * dataset) and one over plain strings (the dataset projected onto a locale).
+ * They cannot drift apart.
  */
 export const makeCvSchema = <T extends z.ZodType<unknown>>(text: T) =>
   z.object({
     profile: z.object({ name: z.string().min(1), title: text, summary: text }),
     contacts: z.object({
-      // z.email() — форма zod 4; z.string().email() помечен deprecated.
+      // z.email() is the zod 4 form; z.string().email() is deprecated.
       email: z.email(),
       telegram: z.string().min(1),
       linkedin: httpsUrl,
@@ -49,7 +50,7 @@ export const makeCvSchema = <T extends z.ZodType<unknown>>(text: T) =>
         detail: detailSchema,
         tech: z.array(techIdSchema),
         bullets: z.array(text).default([]),
-        /** Сколько буллетов показывает PDF. Сайт всегда показывает все. */
+        /** How many bullets the PDF shows. The site always shows all of them. */
         printBulletLimit: z.number().int().positive().optional()
       })
     ),
@@ -57,7 +58,7 @@ export const makeCvSchema = <T extends z.ZodType<unknown>>(text: T) =>
       z.object({
         id: z.string().min(1),
         name: z.string().min(1),
-        /** У внутренних продуктов публичной ссылки нет. */
+        /** Internal products have no public link. */
         url: httpsUrl.optional(),
         summary: text,
         tech: z.array(techIdSchema),

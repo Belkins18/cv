@@ -6,7 +6,7 @@ export class CvDataError extends Error {
     readonly locale: Locale,
     cause: unknown
   ) {
-    super(`не удалось загрузить данные резюме для локали «${locale}»`, {
+    super(`failed to load the CV data for locale "${locale}"`, {
       cause
     })
     this.name = 'CvDataError'
@@ -16,8 +16,8 @@ export class CvDataError extends Error {
 export type LocaleImporter = () => Promise<{ default: unknown }>
 
 /**
- * Два статических динамических импорта вместо шаблонной строки: только так
- * сборщик нарежет отдельный чанк на каждый язык.
+ * Two statically written dynamic imports instead of one template string: that is
+ * the only form from which the bundler cuts a separate chunk per language.
  */
 const importers: Record<Locale, LocaleImporter> = {
   en: () => import('../locales/en.json'),
