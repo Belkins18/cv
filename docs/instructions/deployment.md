@@ -1,119 +1,121 @@
-# Деплой и CI
+# Deployment and CI
 
-## Что из чего собирается
+## What is built from what
 
-Артефакта два, и оба растут из одного датасета `@cv/data`:
+There are two artifacts, and both grow out of the same `@cv/data` dataset:
 
-- `out/cv-nikolay-belibov.pdf` — делает `@cv/print#pdf` (Playwright печатает
-  страницу `apps/print` в PDF с настоящим текстовым слоем);
-- `apps/web/dist` — сайт.
+- `out/cv-nikolay-belibov.pdf` — produced by `@cv/print#pdf` (Playwright prints
+  the `apps/print` page to a PDF with a real text layer);
+- `apps/web/dist` — the site.
 
-Сайт **зависит** от PDF: `turbo.json` объявляет
-`"@cv/web#build": { "dependsOn": ["^build", "@cv/print#pdf"] }`, а `prebuild`
-пакета `@cv/web` переносит готовый файл в `apps/web/public/`, откуда Vite
-кладёт его в `dist/`. Без этой связки кнопка Download PDF ведёт в 404,
-и сборка при этом остаётся зелёной — поэтому шаг копирования **падает**,
-когда PDF не найден, а не предупреждает.
+The site **depends** on the PDF: `turbo.json` declares
+`"@cv/web#build": { "dependsOn": ["^build", "@cv/print#pdf"] }`, and the
+`prebuild` of `@cv/web` moves the finished file into `apps/web/public/`, from
+where Vite puts it into `dist/`. Without that wiring the Download PDF button
+leads to a 404 while the build stays green — which is why the copy step **fails**
+when the PDF is missing instead of warning.
 
-Следствие: `pnpm build` требует установленного Chromium.
+A consequence: `pnpm build` requires an installed Chromium.
 
 ```bash
 pnpm --filter @cv/web exec playwright install chromium
 ```
 
-## PDF в Git не попадает
+## The PDF never enters Git
 
-`out/` и `apps/web/public/*.pdf` — в `.gitignore`. PDF каждый раз собирается
-заново, в репозитории его нет.
+`out/` and `apps/web/public/*.pdf` are gitignored. The PDF is rebuilt every time;
+the repository does not hold it.
 
-## Телефон: шлюз, а не напоминание
+## The phone number: a gate, not a reminder
 
-`CV_PHONE` задаётся **только** когда собирается тот PDF, который уходит
-в отклик. Ни Netlify, ни GitHub Actions эту переменную не знают и знать
-не должны: сайт публичный.
+`CV_PHONE` is set **only** when building the PDF that goes out with a job
+application. Neither Netlify nor GitHub Actions knows that variable, and neither
+should: the site is public.
 
-Но инструкция, которую нужно не нарушить, слабее проверки, которую нарушить
-нельзя. Поэтому `apps/web/scripts/copy-pdf.ts` — единственный путь из `out/`
-в каталог публикации — **извлекает текстовый слой** того самого файла, который
-сейчас поедет на сайт, и сверяет его со словарём `tools/repo-guard/patterns.ts`
-целиком. Нашёл — роняет сборку и ничего не копирует, а старую копию в `public/`
-сносит до проверки, чтобы отказ не оставлял на диске файл от прошлой сборки.
+But an instruction you are supposed not to break is weaker than a check you
+cannot break. So `apps/web/scripts/copy-pdf.ts` — the only path from `out/` into
+the publish directory — **extracts the text layer** of the very file that is
+about to go to the site and compares it against the whole
+`tools/repo-guard/patterns.ts` dictionary. On a match it fails the build and
+copies nothing; it also removes the old copy from `public/` before the check, so
+a refusal never leaves a file from an earlier build on disk.
 
-Проверяется файл, а не переменная окружения, и это важно: переменная может
-быть не задана, а заражённый PDF — остаться в `out/` от прошлой сборки.
-В сообщениях об отказе печатаются только метки паттернов, не совпадения:
-логи сборки на Netlify и в GitHub Actions хранятся и доступны.
+What is checked is the file, not an environment variable, and that matters: the
+variable may be unset while a tainted PDF sits in `out/` from an earlier build.
+The failure messages print only the pattern labels, never the matches: build logs
+on Netlify and in GitHub Actions are stored and readable.
 
-Два артефакта разведены по командам:
+The two artifacts are separated by command:
 
 ```bash
-CV_PHONE="+380…" pnpm pdf    # PDF для отклика, остаётся в out/
-pnpm build                    # сайт; с заданным CV_PHONE упадёт, и это норма
+CV_PHONE="+380…" pnpm pdf    # the PDF for applications, stays in out/
+pnpm build                    # the site; with CV_PHONE set it fails, and that is correct
 ```
 
 ## Netlify
 
-`netlify.toml` держит и команду сборки, и каталог публикации — в интерфейсе
-Netlify ничего настраивать не нужно, кроме выбора репозитория.
+`netlify.toml` holds both the build command and the publish directory — nothing
+needs configuring in the Netlify UI beyond picking the repository.
 
-Сборка ставит Chromium и запускает `turbo run build --filter=@cv/web...`.
-Фильтр подхватывает и шаг `@cv/print#pdf`: явная зависимость `package#task`
-сильнее фильтра.
+The build installs Chromium and runs `turbo run build --filter=@cv/web...`. The
+filter picks up the `@cv/print#pdf` step as well: an explicit `package#task`
+dependency outranks the filter.
 
-**Если Netlify не сможет поднять Chromium** (не хватит системных библиотек —
-`--with-deps` в их контейнере недоступен), запасной план из плана задачи 21:
-собирать PDF в GitHub Actions, публиковать артефактом, а в Netlify собирать
-сайт с уже готовым файлом. Переключаться только когда Netlify реально падает,
-а не превентивно.
+**If Netlify cannot bring up Chromium** (missing system libraries — `--with-deps`
+is unavailable in their container), the fallback from the task 21 plan is to build
+the PDF in GitHub Actions, publish it as an artifact, and have Netlify build the
+site against the ready file. Switch only once Netlify actually fails, not
+pre-emptively.
 
-## Два шлюза внутри сборки
+## Two gates inside the build
 
-Проверка, которая гоняется рядом со сборкой, защищает хуже проверки, встроенной
-в неё: Netlify собирает и публикует параллельно и зелёного CI не ждёт. Поэтому
-оба рубежа приватности живут в скриптах `@cv/web` и роняют сборку:
+A check that runs beside the build protects worse than a check built into it:
+Netlify builds and publishes in parallel and does not wait for a green CI. So both
+privacy gates live in the `@cv/web` scripts and fail the build:
 
-| шаг         | скрипт                 | что читает                                     |
-| ----------- | ---------------------- | ---------------------------------------------- |
-| `prebuild`  | `scripts/copy-pdf.ts`  | текстовый слой PDF перед переносом в `public/` |
-| `postbuild` | `scripts/scan-dist.ts` | собранный `dist` целиком, кроме бинарников     |
+| step        | script                 | what it reads                                     |
+| ----------- | ---------------------- | ------------------------------------------------- |
+| `prebuild`  | `scripts/copy-pdf.ts`  | the PDF's text layer before it moves to `public/` |
+| `postbuild` | `scripts/scan-dist.ts` | the whole built `dist`, binaries aside            |
 
-Оба импортируют словарь из `tools/repo-guard/patterns.ts` и не копируют его:
-копия, которая мягче оригинала, — не дубликат, а дыра. Оба печатают метки
-паттернов и имена файлов, но не совпадения: логи сборки хранятся.
+Both import the dictionary from `tools/repo-guard/patterns.ts` rather than
+copying it: a copy that is softer than the original is not a duplicate, it is a
+hole. Both print pattern labels and file names, never the matches: build logs are
+stored.
 
 ## CI
 
-`.github/workflows/ci.yml` гоняет на `push` в `master`/`development` и на
-каждый pull request восемь гейтов — ровно те же, что локально, и в том же
-порядке:
+`.github/workflows/ci.yml` runs on a `push` to `master`/`development` and on every
+pull request, and it runs eight gates — exactly the local ones, in the same order:
 
 ```
 pnpm guard → pnpm lint → pnpm format:check → pnpm typecheck
 → pnpm test → pnpm build → pnpm pdf → pnpm --filter @cv/web e2e
 ```
 
-Гвард идёт первым: гонять остальное над утечкой смысла нет.
+The guard goes first: running the rest on top of a leak makes no sense.
 
-`pnpm pdf` — отдельная строка не ради симметрии: 19 ATS-проверок собранного PDF
-живут в `apps/print/test/pdf.test.ts` под своим `vitest.pdf.config.ts`,
-и `pnpm test` их **не** подхватывает. Без этой строки «PDF без текстового слоя
-или длиннее двух страниц» остаётся единственным классом отказа из Review Focus
-без автоматического гейта — а CI при этом выкладывает непроверенный PDF
-артефактом, и Netlify кладёт его под кнопку Download.
+`pnpm pdf` is a line of its own, and not for symmetry: the 19 ATS checks over the
+built PDF live in `apps/print/test/pdf.test.ts` under their own
+`vitest.pdf.config.ts`, and `pnpm test` does **not** pick them up. Without that
+line, "a PDF with no text layer or longer than two pages" would be the one class
+of failure from Review Focus with no automated gate — while CI publishes that
+unchecked PDF as an artifact and Netlify puts it behind the Download button.
 
-Собранный PDF уезжает в артефакты сборки, трейсы упавших e2e — тоже.
+The built PDF is uploaded as a build artifact, and so are the traces of failed
+e2e runs.
 
-pnpm ставится через corepack из поля `packageManager`, поэтому его версия
-не продублирована ни в workflow, ни в `netlify.toml` сверх необходимого.
+pnpm is installed through corepack from the `packageManager` field, so its version
+is not duplicated in the workflow or in `netlify.toml` beyond what is necessary.
 
 ## e2e
 
 ```bash
-pnpm --filter @cv/web build   # e2e гоняются по собранному сайту
+pnpm --filter @cv/web build   # e2e runs against the built site
 pnpm --filter @cv/web e2e
 ```
 
-Playwright поднимает `vite preview` сам. Набор проверяет поведение: сценарии
-в `e2e/cv.spec.ts` и ссылку на PDF в `e2e/pdf-link.spec.ts`. Скан бандла из него
-убран — он переехал в `postbuild`, потому что рубеж приватности обязан стоять
-на пути публикации, а не рядом с ним.
+Playwright starts `vite preview` itself. The suite checks behaviour: the scenarios
+in `e2e/cv.spec.ts` and the PDF link in `e2e/pdf-link.spec.ts`. The bundle scan has
+been taken out of it — it moved into `postbuild`, because a privacy gate belongs
+on the path to publication, not beside it.

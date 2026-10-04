@@ -1,55 +1,54 @@
 # Testing Instruction
 
-## Назначение
+## Purpose
 
-Этот документ описывает правила настройки и написания тестов в монорепозитории
-`cv`: пакеты `packages/*` и приложения `apps/*`.
+This document describes how tests are set up and written in the `cv` monorepo:
+the `packages/*` packages and the `apps/*` applications.
 
-ИИ-агент обязан читать этот файл перед:
+The AI agent must read this file before:
 
-- настройкой тестовой инфраструктуры;
-- изменением test scripts;
-- изменением конфигурации Vitest;
-- написанием новых тестов;
-- исправлением ошибок тестов.
+- setting up the test infrastructure;
+- changing the test scripts;
+- changing the Vitest configuration;
+- writing new tests;
+- fixing failing tests.
 
-## Используемые инструменты
+## The tools in use
 
-В проекте используется базовый слой тестирования:
+The project builds on a basic testing layer:
 
-- Vitest — test runner для unit и component tests.
-- jsdom — DOM-окружение для React-компонентов.
-- React Testing Library — тестирование UI через поведение пользователя.
-- `@testing-library/jest-dom` — дополнительные DOM matchers.
-- `@testing-library/user-event` — имитация пользовательских действий.
+- Vitest — the test runner for unit and component tests.
+- jsdom — the DOM environment for React components.
+- React Testing Library — testing the UI through user behaviour.
+- `@testing-library/jest-dom` — extra DOM matchers.
+- `@testing-library/user-event` — simulating user actions.
 
-Для покрытия используется встроенная интеграция Vitest с provider `v8`.
+Coverage uses Vitest's built-in integration with the `v8` provider.
 
-- Playwright — генерация PDF из `apps/print` и e2e-проверки сайта.
+- Playwright — generating the PDF from `apps/print` and running the site's e2e checks.
 
-Playwright здесь не «E2E на будущее», а часть сборки: PDF резюме печатается
-headless-браузером, и тест `apps/print/test/pdf.test.ts` извлекает из готового
-файла текстовый слой и число страниц. Резюме-картинка приезжает рекрутеру пустой
-карточкой, поэтому проверка обязательна.
+Playwright is not "e2e for later" here, it is part of the build: the resume PDF is
+printed by a headless browser, and `apps/print/test/pdf.test.ts` extracts the text
+layer and the page count from the finished file. A resume that arrives as an image
+reaches the recruiter as an empty card, so the check is mandatory.
 
-## Что тестируем в первую очередь
+## What gets tested first
 
-В первую очередь тестируются:
+First in line:
 
-- переиспользуемые компоненты из `packages/ui` и `apps/*/src/features/`;
-- датасет резюме и его схемы в `packages/cv-data`;
-- утилиты и чистые функции, если они появятся;
-- пользовательские сценарии с важной бизнес-логикой;
-- регрессии для найденных багов.
+- the reusable components from `packages/ui` and `apps/*/src/features/`;
+- the resume dataset and its schemas in `packages/cv-data`;
+- utilities and pure functions, once there are any;
+- user scenarios that carry meaningful business logic;
+- regressions for bugs that have been found.
 
-Тест должен проверять наблюдаемое поведение, а не внутреннюю реализацию
-компонента.
+A test checks observable behaviour, not a component's internal implementation.
 
-## Где хранить тесты
+## Where tests live
 
-Тесты хранятся рядом с кодом, который проверяют.
+Tests live next to the code they cover.
 
-Пример для компонента:
+For a component:
 
 ```txt
 src/components/Button/
@@ -58,34 +57,36 @@ src/components/Button/
   index.ts
 ```
 
-Стилизация — Tailwind и CSS-переменные, файлов `*.module.css` в проекте нет.
+Styling is Tailwind plus CSS variables; the project has no `*.module.css` files.
 
-Исключение — тесты над артефактом сборки: они лежат в `<пакет>/test/` и ходят
-в `dist/` или `out/`, потому что проверяют не исходник, а то, что собралось.
+The exception is a test over a build artifact: those live in `<package>/test/` and
+reach into `dist/` or `out/`, because what they check is not the source but what
+came out of the build.
 
-## Именование test-файлов
+## Naming test files
 
-Разрешённый формат:
+The allowed formats:
 
 ```txt
 *.test.ts
 *.test.tsx
 ```
 
-Для React-компонентов используется `*.test.tsx`.
+React components use `*.test.tsx`.
 
-## Команды
+## Commands
 
-Это монорепо: тесты каждого пакета запускает `turbo run test` из корня, а не
-раннер из конкретной папки. Корневые pnpm scripts — единственный вход:
+This is a monorepo: each package's tests are started by `turbo run test` from the
+root, not by a runner inside one folder. The root pnpm scripts are the only entry
+point:
 
 ```bash
-pnpm test                        # turbo run test по всему workspace
-pnpm --filter @cv/data test      # тесты одного пакета
+pnpm test                        # turbo run test across the workspace
+pnpm --filter @cv/data test      # the tests of a single package
 pnpm test -- --coverage
 ```
 
-Обычно после изменений запускаются:
+The usual run after a change:
 
 ```bash
 pnpm format
@@ -93,71 +94,72 @@ pnpm test
 pnpm build
 ```
 
-Если изменение затрагивает lint-правила или TypeScript-ошибки, дополнительно
-запускается:
+If the change touches lint rules or TypeScript errors, add:
 
 ```bash
 pnpm lint
 ```
 
-## Что запрещено агенту
+## What the agent must not do
 
-ИИ-агенту запрещено без отдельного разрешения:
+Without separate permission, the AI agent must not:
 
-- добавлять Cypress или другой E2E-инструмент помимо Playwright;
-- менять package manager проекта — это pnpm, и только он;
-- запускать project scripts через `npm` или `yarn`;
-- отключать TypeScript, ESLint или test failures ради прохождения проверок;
-- добавлять жёсткий coverage threshold на старте проекта;
-- переписывать архитектуру приложения ради тестов;
-- тестировать детали реализации вместо пользовательского поведения.
+- add Cypress or any other e2e tool alongside Playwright;
+- change the project's package manager — it is pnpm, and only pnpm;
+- run the project scripts through `npm` or `yarn`;
+- silence TypeScript, ESLint or failing tests to get the checks to pass;
+- add a hard coverage threshold at the start of the project;
+- rewrite the application architecture for the sake of the tests;
+- test implementation details instead of user-visible behaviour.
 
-## Когда тесты не нужны
+## When tests are not needed
 
-Тесты можно не добавлять для:
+Tests may be skipped for:
 
-- чисто текстовых правок в документации;
-- изменения комментариев;
-- форматирования без изменения поведения;
-- одноразовых технических файлов без runtime-логики.
+- purely textual edits to the documentation;
+- changes to comments;
+- formatting that does not change behaviour;
+- one-off technical files with no runtime logic.
 
-Если тест не добавлен для изменения кода, агент должен кратко объяснить почему.
+If a code change ships without a test, the agent briefly explains why.
 
-## Разделение Vitest и Playwright
+## The split between Vitest and Playwright
 
-Vitest — unit- и компонентные тесты внутри пакета. Playwright — всё, что требует
-настоящего браузера: печать PDF и e2e сайта.
+Vitest covers unit and component tests inside a package. Playwright covers
+everything that needs a real browser: printing the PDF and the site's e2e.
 
-У приложения два конфига Vitest, и это осознанно: `vitest.config.ts` гоняет
-компонентные тесты в jsdom, `vitest.pdf.config.ts` — проверку собранного PDF в
-окружении `node`. Смешивать их нельзя, у них разные окружения и разный вход.
+The application has two Vitest configs, deliberately: `vitest.config.ts` runs the
+component tests in jsdom, while `vitest.pdf.config.ts` checks the built PDF in a
+`node` environment. They must not be merged — different environments, different
+inputs.
 
 ## Setup
 
-Глобальный setup приложения лежит рядом с его исходниками:
+An application's global setup lives next to its sources:
 
 ```txt
 apps/<app>/src/test-setup.ts
 ```
 
-В нём подключается `@testing-library/jest-dom/vitest` и **явный** `afterEach(cleanup)`:
-при `globals: false` testing-library не находит глобальный `afterEach` и свою
-автоочистку не регистрирует — без этой строки второй `render` в файле падает с
-«Found multiple elements».
+It wires up `@testing-library/jest-dom/vitest` and an **explicit**
+`afterEach(cleanup)`: with `globals: false`, testing-library cannot find a global
+`afterEach` and never registers its auto cleanup — without that line the second
+`render` in a file fails with "Found multiple elements".
 
-Vitest настраивается отдельным `vitest.config.ts`, повторяющим alias `@` из
-`vite.config.ts`.
+Vitest is configured by its own `vitest.config.ts`, which repeats the `@` alias
+from `vite.config.ts`.
 
-## Гвард приватности
+## The privacy guard
 
-`pnpm guard` сканирует отслеживаемые git файлы на запрещённое содержимое.
-Два правила, которые стоили отдельного разбора:
+`pnpm guard` scans the git-tracked files for forbidden content. Two rules that
+cost a separate investigation:
 
-- **запускать его после `git add`.** Гвард читает `git ls-files` и неотслеживаемый
-  файл не видит: прогон до `git add` ложно-зелёный;
-- **зелёный гвард не доказывает, что утечки нет.** Словарь —
-  `tools/repo-guard/patterns.ts`, он производная от раздела «Приватность»
-  конституции, а не её замена. Новый текст сверяется с конституцией глазами.
+- **run it after `git add`.** The guard reads `git ls-files` and cannot see an
+  untracked file: a run before `git add` is falsely green;
+- **a green guard does not prove there is no leak.** The dictionary is
+  `tools/repo-guard/patterns.ts`, and it is derived from the project's privacy
+  rules rather than a replacement for them. New text is checked against those
+  rules by a human reading it.
 
-Словарь живёт в одном модуле и импортируется тестами. Копия паттерна, которая
-оказалась мягче оригинала, — не дубликат, а дыра.
+The dictionary lives in one module and is imported by the tests. A copy of a
+pattern that turns out softer than the original is not a duplicate, it is a hole.
