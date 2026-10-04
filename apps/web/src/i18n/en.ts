@@ -1,6 +1,7 @@
 /**
- * Только хром интерфейса. Содержание резюме живёт в датасете и уже двуязычно:
- * строки отсюда ничего о Николае не рассказывают — они подписывают кнопки.
+ * Interface chrome only. The content of the resume lives in the dataset and is
+ * already bilingual: nothing here says anything about Nikolay — these strings
+ * label buttons.
  */
 export const en = {
   'section.summary': 'Summary',

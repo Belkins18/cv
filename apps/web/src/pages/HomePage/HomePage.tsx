@@ -23,8 +23,8 @@ export const HomePage = () => {
   const { t, i18n } = useTranslation()
   const [helpOpen, setHelpOpen] = useState(false)
 
-  // Локаль живёт в URL и ведёт данные; хром интерфейса обязан идти за ней,
-  // иначе украинское резюме получает английские подписи кнопок.
+  // The locale lives in the URL and drives the data; the interface chrome has to
+  // follow it, or a Ukrainian resume ends up with English button labels.
   useEffect(() => {
     void i18n.changeLanguage(locale)
   }, [i18n, locale])
@@ -44,15 +44,16 @@ export const HomePage = () => {
         message={t('state.error')}
         retryLabel={t('state.retry')}
         /*
-         * Повтор — перезагрузка страницы, а не refetch, и это не лень.
-         * Данные локали приезжают динамическим `import()`, а браузер кэширует
-         * ПРОВАЛИВШИЙСЯ импорт: запись в module map становится null навсегда,
-         * и следующий `import()` того же URL падает, вообще не ходя в сеть.
-         * Проверено e2e: после отказа чанка повторных запросов к нему нет ни
-         * одного, сколько ни жми. Единственный отказ у `loadCv` — именно такой,
-         * так что refetch здесь был бы кнопкой, которая ничего не делает.
-         * Перезагрузка создаёт module map заново, а фильтр, язык и тема живут
-         * в URL — терять нечего.
+         * Retry means a full page reload, not a refetch, and that is not
+         * laziness. The locale data arrives through a dynamic `import()`, and
+         * the browser caches a FAILED import: the module-map entry becomes null
+         * forever, and the next `import()` of the same URL fails without ever
+         * touching the network. Confirmed by e2e: once the chunk has failed,
+         * there is not a single further request for it, however many times you
+         * click. That is the only failure `loadCv` can produce, so a refetch
+         * here would be a button that does nothing. A reload builds the module
+         * map from scratch, and the filter, the language and the theme all live
+         * in the URL — there is nothing to lose.
          */
         onRetry={reloadPage}
       />
@@ -60,8 +61,8 @@ export const HomePage = () => {
   }
 
   const now = new Date()
-  // Счётчик считается по всем записям, а не только по ролям: фильтр описывает
-  // весь стек резюме, и «ничего не совпало» обязано означать именно это.
+  // The count runs over every entry, not just the roles: the filter describes
+  // the resume's whole stack, and "nothing matched" has to mean exactly that.
   const entries = [...query.data.roles, ...query.data.projects]
   const matchCount = entries.filter((entry) =>
     matchesTech(entry, selected)

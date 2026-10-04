@@ -6,9 +6,10 @@ import { renderWithRouter } from '@/test-utils/renderWithRouter'
 import { useCvSearch } from './useCvSearch'
 
 /*
- * Побочные эффекты хука — запись в `<html>` и в хранилище — не покрывались
- * ничем: подмена записываемого значения оставляла все гейты зелёными и тихо
- * ломала тему у всех, кто не выбирал её руками. Зонд существует ради них.
+ * The hook's side effects — what it writes to `<html>` and to storage — were
+ * covered by nothing: changing the written value left every gate green while
+ * quietly breaking the theme for everyone who had not picked one by hand. This
+ * probe exists for them.
  */
 const Probe = () => {
   const { locale, themeMode, setLocale, setThemeMode } = useCvSearch()
@@ -16,10 +17,10 @@ const Probe = () => {
     <div>
       <output>{`${locale}/${themeMode}`}</output>
       <button type="button" onClick={() => setLocale('uk')}>
-        язык
+        language
       </button>
       <button type="button" onClick={() => setThemeMode('dark')}>
-        тема
+        theme
       </button>
     </div>
   )
@@ -33,15 +34,15 @@ afterEach(() => {
 })
 
 describe('useCvSearch', () => {
-  describe('тема в DOM', () => {
-    it('в режиме system не ставит data-theme вовсе — ветку выбирает CSS', async () => {
+  describe('the theme in the DOM', () => {
+    it('writes no data-theme at all in system mode, leaving the branch to CSS', async () => {
       renderProbe()
       expect(await screen.findByText('en/system')).toBeInTheDocument()
       expect(document.documentElement).not.toHaveAttribute('data-theme')
     })
 
     it.each(['light', 'dark'] as const)(
-      'явный выбор пишется атрибутом: %s',
+      'writes an explicit choice as an attribute: %s',
       async (mode) => {
         renderProbe(`/?theme=${mode}`)
         expect(await screen.findByText(`en/${mode}`)).toBeInTheDocument()
@@ -49,7 +50,7 @@ describe('useCvSearch', () => {
       }
     )
 
-    it('возврат к system снимает ранее поставленный атрибут', async () => {
+    it('removes a previously written attribute when the choice returns to system', async () => {
       const { unmount } = renderProbe('/?theme=dark')
       expect(await screen.findByText('en/dark')).toBeInTheDocument()
       unmount()
@@ -60,43 +61,43 @@ describe('useCvSearch', () => {
     })
   })
 
-  it('локаль уезжает в lang у <html> — без него скринридер читает украинский по-английски', async () => {
+  it('puts the locale into the lang of <html>, without which a screen reader reads Ukrainian as English', async () => {
     renderProbe('/?lang=uk')
     expect(await screen.findByText('uk/system')).toBeInTheDocument()
     expect(document.documentElement.lang).toBe('uk')
   })
 
-  describe('хранилище', () => {
-    it('выведенная локаль не сохраняется: ветка «язык браузера» обязана остаться живой', async () => {
+  describe('storage', () => {
+    it('does not store an inferred locale, so the "browser language" branch stays alive', async () => {
       renderProbe()
       expect(await screen.findByText('en/system')).toBeInTheDocument()
       expect(readStored()).toEqual({})
     })
 
-    it('локаль из ссылки не сохраняется: её выбрал отправитель, а не читатель', async () => {
+    it('does not store a locale that came from the link: the sender chose it, not the reader', async () => {
       renderProbe('/?lang=uk&theme=dark')
       expect(await screen.findByText('uk/dark')).toBeInTheDocument()
       expect(readStored()).toEqual({})
     })
 
-    it('нажатие на кнопку — сохраняется', async () => {
+    it('stores what the visitor clicked', async () => {
       const user = userEvent.setup()
       renderProbe()
-      await user.click(await screen.findByRole('button', { name: 'язык' }))
+      await user.click(await screen.findByRole('button', { name: 'language' }))
       expect(readStored()).toEqual({ lang: 'uk' })
 
-      await user.click(screen.getByRole('button', { name: 'тема' }))
-      // Второй выбор не затирает первый.
+      await user.click(screen.getByRole('button', { name: 'theme' }))
+      // The second choice does not overwrite the first.
       expect(readStored()).toEqual({ lang: 'uk', theme: 'dark' })
     })
   })
 
   /*
-   * Прямое доказательство того, ради чего чинилось чтение хранилища:
-   * битая запись больше не доезжает до loadCv и не оставляет посетителя
-   * с мёртвой страницей, которую нечем вылечить.
+   * Direct proof of what reading storage was fixed for: a broken entry no longer
+   * reaches loadCv and no longer leaves the visitor on a dead page with nothing
+   * to cure it.
    */
-  it('битое хранилище не уводит локаль в несуществующую', async () => {
+  it('does not let broken storage push the locale to one that does not exist', async () => {
     window.localStorage.setItem(
       'cv.preferences',
       '{"lang":"zz","theme":"banana"}'

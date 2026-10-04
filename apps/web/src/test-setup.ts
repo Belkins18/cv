@@ -1,11 +1,12 @@
 import '@testing-library/jest-dom/vitest'
 import { cleanup } from '@testing-library/react'
 import { afterEach } from 'vitest'
-// Словари подключаются один раз на прогон: без инициализации i18next
-// `t` возвращает сам ключ, и каждый тест с видимой строкой красный.
+// The dictionaries are wired up once per run: without initializing i18next, `t`
+// returns the key itself and every test that looks at a visible string is red.
 import '@/i18n'
 
-// При globals: false testing-library не находит глобальный afterEach и свою
-// автоочистку не регистрирует: отрендеренное остаётся в document.body, и второй
-// же render даёт «Found multiple elements». Поэтому cleanup подключается руками.
+// With globals: false testing-library cannot find a global afterEach and so
+// never registers its auto cleanup: whatever was rendered stays in document.body
+// and the very next render reports "Found multiple elements". Hence the manual
+// cleanup here.
 afterEach(cleanup)

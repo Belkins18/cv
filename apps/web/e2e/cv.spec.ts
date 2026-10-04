@@ -1,22 +1,22 @@
 import { expect, test } from '@playwright/test'
 
 /**
- * Чанк украинской локали. `import('../locales/uk.json')` Vite превращает не в
- * `.json`, а в `assets/uk-<hash>.js`: JSON инлайнится прямо в модуль. План ждал
- * `**\/*uk*.json` — такого файла в сборке не существует, и route молча не
- * срабатывал бы.
+ * The Ukrainian locale chunk. Vite turns `import('../locales/uk.json')` into
+ * `assets/uk-<hash>.js` rather than a `.json`: the JSON is inlined straight into
+ * the module. The plan expected `**\/*uk*.json` — no such file exists in the
+ * build, and the route would simply never have matched.
  */
 const UK_CHUNK = '**/assets/uk-*.js'
 
 /**
- * Чип отдаёт в доступное имя метку и счётчик: «React 5». Голое `/^React/`
- * поймало бы ещё и «React Hook Form», и строгий режим Playwright свалил бы тест
- * на двух совпадениях — отсюда цифра в хвосте.
+ * A chip exposes its label and its count as the accessible name: "React 5". A
+ * bare `/^React/` would also catch "React Hook Form", and Playwright's strict
+ * mode would fail the test on two matches — hence the trailing digits.
  */
 const chip = (label: string): RegExp =>
   new RegExp(`^${label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')} \\d+$`)
 
-test('ссылка с фильтром открывает резюме уже отфильтрованным', async ({
+test('a link carrying a filter opens the CV already filtered', async ({
   page
 }) => {
   await page.goto('/?tech=react,typescript,vite,tanstack-query')
@@ -35,12 +35,12 @@ test('ссылка с фильтром открывает резюме уже о
 })
 
 /**
- * Review Focus №3 в настоящем браузере. Юнит-тесты уже проверяют parseTechParam
- * и `.catch` в searchSchema; здесь то же самое проходит через реальный роутер,
- * реальную подгрузку чанка и реальный рендер — и не должно дать ни одной
- * необработанной ошибки на странице.
+ * Review Focus #3 in a real browser. The unit tests already cover parseTechParam
+ * and the `.catch` calls in searchSchema; here the same input goes through the
+ * real router, a real chunk fetch and a real render — and must not produce a
+ * single unhandled error on the page.
  */
-test('мусор в параметрах не ломает страницу', async ({ page }) => {
+test('junk in the search params does not break the page', async ({ page }) => {
   const errors: string[] = []
   page.on('pageerror', (error) => errors.push(error.message))
 
@@ -52,15 +52,16 @@ test('мусор в параметрах не ломает страницу', as
   await expect(
     page.getByRole('checkbox', { name: chip('React') })
   ).toBeChecked()
-  // `drogon` выброшен, пустой элемент выброшен, `REACT` схлопнулся с `react`:
-  // отмеченным остаётся ровно один чип.
+  // `drogon` is dropped, the empty item is dropped, `REACT` collapses into
+  // `react`: exactly one chip stays checked.
   await expect(page.getByRole('checkbox', { checked: true })).toHaveCount(1)
-  // lang=fr и theme=midnight деградировали до значений по умолчанию, а не уронили маршрут.
+  // lang=fr and theme=midnight degraded to their defaults instead of bringing
+  // the route down.
   await expect(page.locator('html')).toHaveAttribute('lang', 'en')
   expect(errors).toEqual([])
 })
 
-test('выбор чипа попадает в URL и переживает перезагрузку', async ({
+test('picking a chip lands in the URL and survives a reload', async ({
   page
 }) => {
   await page.goto('/')
@@ -74,7 +75,7 @@ test('выбор чипа попадает в URL и переживает пер
   ).toBeChecked()
 })
 
-test('переключение языка меняет интерфейс и грузит украинский чанк', async ({
+test('switching the language changes the interface and fetches the Ukrainian chunk', async ({
   page
 }) => {
   await page.goto('/')
@@ -85,7 +86,9 @@ test('переключение языка меняет интерфейс и г�
   await expect(page.getByRole('heading', { name: 'Досвід' })).toBeVisible()
 })
 
-test('когда чанк не отдаётся, видно ошибку и повтор', async ({ page }) => {
+test('shows an error and a retry when the chunk fails to load', async ({
+  page
+}) => {
   await page.route(UK_CHUNK, (route) => route.abort())
   await page.goto('/?lang=uk')
 
@@ -95,10 +98,11 @@ test('когда чанк не отдаётся, видно ошибку и по
   ).toBeVisible()
 
   /*
-   * Дальше — то, чего план не предполагал. Браузер кэширует ПРОВАЛИВШИЙСЯ
-   * динамический импорт: запись в module map становится null навсегда, и
-   * повторный `import()` того же URL падает, уже не ходя в сеть. Поэтому кнопка
-   * повтора не перезапрашивает чанк, а перезагружает страницу (см. HomePage).
+   * What follows is something the plan did not anticipate. The browser caches a
+   * FAILED dynamic import: the module-map entry becomes null forever, and a
+   * repeated `import()` of the same URL fails without touching the network. That
+   * is why the retry button reloads the page instead of re-requesting the chunk
+   * (see HomePage).
    */
   await page.unroute(UK_CHUNK)
   await page.getByRole('button', { name: /спробувати ще раз/i }).click()
@@ -107,7 +111,9 @@ test('когда чанк не отдаётся, видно ошибку и по
   await expect(page.getByRole('heading', { name: 'Досвід' })).toBeVisible()
 })
 
-test('клавиша / фокусирует фильтр, ? открывает справку', async ({ page }) => {
+test('the / key focuses the filter and ? opens the help panel', async ({
+  page
+}) => {
   await page.goto('/')
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
 
@@ -123,13 +129,13 @@ test('клавиша / фокусирует фильтр, ? открывает �
 })
 
 /*
- * Хранилище — такой же вход, как URL, и правит его кто угодно: devtools,
- * расширение, прошлая версия сайта. Пока значение оттуда шло без проверки,
- * `{"lang":"zz"}` уводил locale в несуществующий чанк, страница вставала
- * в ошибку — а кнопка «Повторить» перезагружала её и читала то же самое.
- * Сайт умирал навсегда, и вылечить его можно было только руками.
+ * Local storage is an input just like the URL, and anyone edits it: devtools, an
+ * extension, an older version of the site. While the value came through
+ * unvalidated, `{"lang":"zz"}` sent the locale at a chunk that does not exist,
+ * the page fell into its error state — and the retry button reloaded it and read
+ * the very same value back. The site died permanently, curable only by hand.
  */
-test('битое хранилище не убивает сайт', async ({ page }) => {
+test('broken stored preferences do not brick the site', async ({ page }) => {
   await page.addInitScript(() =>
     window.localStorage.setItem(
       'cv.preferences',
@@ -143,7 +149,7 @@ test('битое хранилище не убивает сайт', async ({ page
     'Nikolay Belibov'
   )
   await expect(page.locator('html')).toHaveAttribute('lang', 'en')
-  // И кнопка темы осталась кнопкой, а не упёрлась в undefined-режим.
+  // And the theme button is still a button, not stuck on an undefined mode.
   await page.getByRole('button', { name: /switch theme/i }).click()
   await expect(page).toHaveURL(/theme=(system|light|dark)/)
 })

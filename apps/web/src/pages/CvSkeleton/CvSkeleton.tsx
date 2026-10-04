@@ -1,8 +1,8 @@
 export type CvSkeletonProps = { message: string }
 
 /**
- * Скелетон — не декорация: пока данных нет, скринридер должен услышать статус,
- * иначе страница для него просто пустая.
+ * The skeleton is not decoration: while there is no data, a screen reader has to
+ * hear a status, otherwise the page is simply empty to it.
  */
 export const CvSkeleton = ({ message }: CvSkeletonProps) => (
   <div role="status" aria-live="polite" className="space-y-3 p-6">

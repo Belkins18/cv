@@ -6,21 +6,21 @@ import { Projects } from './Projects'
 const projects = project(cv, 'en').projects
 
 describe('Projects', () => {
-  it('даёт рабочие ссылки на публичные проекты', () => {
+  it('gives working links to the public projects', () => {
     render(<Projects projects={projects} selected={[]} />)
     expect(
       screen.getByRole('link', { name: /vibr-clan-statistics/ })
     ).toHaveAttribute('href', 'https://vibr-clan-statistics.netlify.app/hydra')
   })
 
-  it('внутренний продукт показывает без ссылки', () => {
+  it('shows an internal product without a link', () => {
     render(<Projects projects={projects} selected={[]} />)
     expect(
       screen.getByTestId('project-pdf-creator').querySelector('a')
     ).toBeNull()
   })
 
-  it('гасит проекты вне фильтра, не убирая их', () => {
+  it('dims the projects outside the filter without removing them', () => {
     render(<Projects projects={projects} selected={['supabase']} />)
     expect(screen.getByTestId('project-easyfop')).toHaveAttribute(
       'data-dimmed',

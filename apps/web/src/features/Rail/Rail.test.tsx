@@ -2,15 +2,16 @@ import { cv, project } from '@cv/data'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-// Единственный словарь запрещённого живёт в гварде: копия паттерна в тесте
-// рано или поздно разъедется с оригиналом и станет дырой (00-constraints).
+// The one dictionary of forbidden strings lives in the guard: a copy of a
+// pattern inside a test would sooner or later drift away from the original and
+// become a hole (00-constraints).
 import { PHONE } from '../../../../../tools/repo-guard/patterns'
 import { Rail } from './Rail'
 
 const data = project(cv, 'en')
 
 describe('Rail', () => {
-  it('показывает контакты без телефона', () => {
+  it('shows the contacts without a phone number', () => {
     render(
       <Rail
         data={data}
@@ -24,7 +25,7 @@ describe('Rail', () => {
     expect(document.body.textContent ?? '').not.toMatch(PHONE)
   })
 
-  it('даёт ссылку на PDF', () => {
+  it('offers a link to the PDF', () => {
     render(
       <Rail
         data={data}
@@ -40,7 +41,7 @@ describe('Rail', () => {
     )
   })
 
-  it('переключает язык, а тему перебирает по кругу', async () => {
+  it('switches the language and cycles through the themes', async () => {
     const onLocale = vi.fn()
     const onThemeMode = vi.fn()
     const user = userEvent.setup()
@@ -59,7 +60,7 @@ describe('Rail', () => {
     expect(onThemeMode).toHaveBeenCalledWith('light')
   })
 
-  it('из режима dark возвращается в system', async () => {
+  it('returns to system mode from dark', async () => {
     const onThemeMode = vi.fn()
     const user = userEvent.setup()
     render(

@@ -1,9 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="NB">
   <!--
-    SVG, а не PNG: .gitignore запрещает *.png и *.jpg на весь репозиторий ради
-    защиты от скриншотов, и обходить этот запрет исключением ради иконки незачем.
-    Цвет — акцент темы в hex, а не oklch: фавиконку рендерит не всегда полноценный
-    движок, и ошибаться она будет невидимо.
+    SVG, not PNG: .gitignore bans *.png and *.jpg across the whole repository to
+    keep screenshots out, and there is no reason to punch an exception through
+    that ban for an icon. The color is the theme accent in hex rather than oklch:
+    a favicon is not always rendered by a full engine, and it would fail
+    invisibly.
   -->
   <rect width="64" height="64" rx="14" fill="#0d8a73" />
   <text

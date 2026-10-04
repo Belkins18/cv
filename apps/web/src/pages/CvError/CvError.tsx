@@ -5,8 +5,9 @@ export type CvErrorProps = {
 }
 
 /**
- * Чанк с данными мог отдать 404 или битый JSON. Вечный скелетон в этом случае —
- * ложь: человек обязан увидеть, что сломалось, и иметь чем это починить.
+ * The data chunk may have returned a 404 or broken JSON. An eternal skeleton in
+ * that case is a lie: the visitor has to see what broke and be given something
+ * to fix it with.
  */
 export const CvError = ({ message, retryLabel, onRetry }: CvErrorProps) => (
   <div role="alert" className="m-6 rounded-lg border border-border p-6">

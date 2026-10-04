@@ -4,7 +4,7 @@ import { readStored, resolvePreferences, writeStored } from './preferences'
 afterEach(() => window.localStorage.clear())
 
 describe('resolvePreferences', () => {
-  it('URL важнее сохранённого выбора — присланная ссылка открывается как её собрали', () => {
+  it('lets the URL win over the saved choice, so a link opens the way it was built', () => {
     const result = resolvePreferences(
       { lang: 'uk', theme: 'light' },
       { lang: 'en', theme: 'dark' },
@@ -13,17 +13,17 @@ describe('resolvePreferences', () => {
     expect(result).toEqual({ locale: 'uk', themeMode: 'light' })
   })
 
-  it('без URL берёт сохранённое', () => {
+  it('falls back to the saved choice when the URL says nothing', () => {
     expect(
       resolvePreferences({}, { lang: 'uk', theme: 'light' }, ['en'])
     ).toEqual({ locale: 'uk', themeMode: 'light' })
   })
 
-  it('без сохранённого берёт язык браузера, если он украинский', () => {
+  it('falls back to the browser language when it is Ukrainian', () => {
     expect(resolvePreferences({}, {}, ['uk-UA', 'en']).locale).toBe('uk')
   })
 
-  it('режим по умолчанию — system: эффективную тему выбирает CSS, а не JS', () => {
+  it('defaults to system mode, leaving the effective theme to CSS rather than JS', () => {
     expect(resolvePreferences({}, {}, ['de-DE'])).toEqual({
       locale: 'en',
       themeMode: 'system'
@@ -32,48 +32,48 @@ describe('resolvePreferences', () => {
 })
 
 /*
- * Хранилище правит кто угодно: посетитель через devtools, расширение, прошлая
- * версия сайта с другой формой записи. Непроверенное значение отсюда доходило
- * до `loadCv(locale)` и убивало страницу навсегда — перезагрузка, которую
- * предлагает кнопка «Повторить», читала то же самое битое значение.
+ * Anyone edits this storage: the visitor through devtools, an extension, an older
+ * version of the site that wrote a different shape. An unvalidated value from
+ * here reached `loadCv(locale)` and killed the page for good — the reload the
+ * retry button offers read the very same broken value back.
  */
 describe('readStored', () => {
   const write = (raw: string): void =>
     window.localStorage.setItem('cv.preferences', raw)
 
-  it('пустое хранилище — пустые предпочтения', () => {
+  it('returns empty preferences for empty storage', () => {
     expect(readStored()).toEqual({})
   })
 
-  it('возвращает валидное как есть', () => {
+  it('returns a valid record as it is', () => {
     writeStored({ lang: 'uk', theme: 'dark' })
     expect(readStored()).toEqual({ lang: 'uk', theme: 'dark' })
   })
 
   it.each([
-    ['несуществующая локаль', '{"lang":"zz"}'],
-    ['несуществующая тема', '{"theme":"banana"}'],
-    ['число вместо строки', '{"lang":7,"theme":false}']
-  ])('гасит негодное поле: %s', (_label, raw) => {
+    ['a locale that does not exist', '{"lang":"zz"}'],
+    ['a theme that does not exist', '{"theme":"banana"}'],
+    ['a number where a string belongs', '{"lang":7,"theme":false}']
+  ])('drops an unusable field: %s', (_label, raw) => {
     write(raw)
     const stored = readStored()
     expect(stored.lang).toBeUndefined()
     expect(stored.theme).toBeUndefined()
-    // И главное: разрешение не выдумывает локаль, для которой нет чанка.
+    // And, crucially: resolution never invents a locale that has no chunk.
     expect(resolvePreferences({}, stored, ['en']).locale).toBe('en')
   })
 
   it.each([
-    ['не JSON', 'не json вовсе'],
-    ['массив', '[1,2,3]'],
-    ['строка', '"uk"'],
+    ['not JSON at all', 'not json at all'],
+    ['an array', '[1,2,3]'],
+    ['a string', '"uk"'],
     ['null', 'null']
-  ])('переживает не-объект: %s', (_label, raw) => {
+  ])('survives a value that is not an object: %s', (_label, raw) => {
     write(raw)
     expect(readStored()).toEqual({})
   })
 
-  it('годное поле выживает рядом с негодным', () => {
+  it('keeps a usable field next to an unusable one', () => {
     write('{"lang":"uk","theme":"banana"}')
     expect(readStored().lang).toBe('uk')
     expect(readStored().theme).toBeUndefined()

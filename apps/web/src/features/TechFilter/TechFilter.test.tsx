@@ -8,14 +8,14 @@ const data = project(cv, 'en')
 const entries = [...data.roles, ...data.projects]
 
 /**
- * В реестре есть и «React», и «React Hook Form», и обе технологии в данных
- * встречаются: простое /React/ нашло бы два чипа сразу. Счётчик в конце имени
- * отделяет сам React от всего, что с него начинается.
+ * The registry holds both "React" and "React Hook Form", and both appear in the
+ * data: a plain /React/ would find two chips at once. The count at the end of the
+ * accessible name separates React itself from everything that starts with it.
  */
 const REACT_CHIP = /^React\s*\d+$/
 
 describe('TechFilter', () => {
-  it('показывает счётчик совпадений у каждого чипа', () => {
+  it('shows a match count on every chip', () => {
     render(
       <TechFilter
         entries={entries}
@@ -28,7 +28,7 @@ describe('TechFilter', () => {
     expect(Number(react.textContent?.replace(/\D/g, ''))).toBeGreaterThan(0)
   })
 
-  it('клик по чипу добавляет технологию в выбор', async () => {
+  it('adds a technology to the selection when its chip is clicked', async () => {
     const onChange = vi.fn()
     const user = userEvent.setup()
     render(
@@ -43,7 +43,7 @@ describe('TechFilter', () => {
     expect(onChange).toHaveBeenCalledWith(['react'])
   })
 
-  it('повторный клик убирает технологию', async () => {
+  it('removes the technology again on a second click', async () => {
     const onChange = vi.fn()
     const user = userEvent.setup()
     render(
@@ -58,7 +58,7 @@ describe('TechFilter', () => {
     expect(onChange).toHaveBeenCalledWith([])
   })
 
-  it('когда не совпало ничего, показывает подсказку и кнопку сброса', () => {
+  it('shows a hint and a reset button when nothing matched', () => {
     render(
       <TechFilter
         entries={entries}
@@ -71,7 +71,7 @@ describe('TechFilter', () => {
     expect(screen.getByTestId('filter-reset')).toBeInTheDocument()
   })
 
-  it('сброс отдаёт пустой выбор', async () => {
+  it('reports an empty selection on reset', async () => {
     const onChange = vi.fn()
     const user = userEvent.setup()
     render(
@@ -86,7 +86,7 @@ describe('TechFilter', () => {
     expect(onChange).toHaveBeenCalledWith([])
   })
 
-  it('без выбора подсказки о пустом результате нет', () => {
+  it('shows no empty-result hint while nothing is selected', () => {
     render(
       <TechFilter
         entries={entries}

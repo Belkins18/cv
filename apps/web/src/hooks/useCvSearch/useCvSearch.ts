@@ -30,15 +30,17 @@ export const useCvSearch = () => {
   const selected = useMemo(() => parseTechParam(search.tech), [search.tech])
 
   /*
-   * В режиме `system` атрибут СНИМАЕТСЯ, а не пишется вычисленным значением.
+   * In `system` mode the attribute is REMOVED rather than written with a
+   * computed value.
    *
-   * Разрешать системную тему в JavaScript незачем: `theme.css` уже описывает
-   * обе ветки через `prefers-color-scheme`, а `:root:not([data-theme='dark'])`
-   * пропускает светлую схему ровно тогда, когда явного выбора нет. Пока хук
-   * писал сюда вычисленный `light`/`dark`, ради этого жили `matchMedia`,
-   * состояние `prefersDark`, подписка на смену схемы и отдельный тип `Theme` —
-   * два десятка строк, дублировавших то, что браузер считает сам, и комментарий
-   * в `theme.css` описывал дизайн лучше, чем код его реализовывал.
+   * There is no reason to resolve the system theme in JavaScript: `theme.css`
+   * already describes both branches through `prefers-color-scheme`, and
+   * `:root:not([data-theme='dark'])` lets the light scheme through exactly when
+   * no explicit choice has been made. As long as this hook wrote a computed
+   * `light`/`dark` here, it needed `matchMedia`, a `prefersDark` state, a
+   * subscription to scheme changes and a separate `Theme` type — two dozen lines
+   * duplicating what the browser works out by itself, with the comment in
+   * `theme.css` describing the design better than the code implemented it.
    */
   useEffect(() => {
     const root = document.documentElement
@@ -55,13 +57,14 @@ export const useCvSearch = () => {
   }
 
   /*
-   * Сохраняется только то, что человек нажал руками.
+   * Only what a person actually clicked gets stored.
    *
-   * Раньше запись шла эффектом от уже разрешённых предпочтений, то есть
-   * выведенная локаль возвращалась в хранилище как будто это был выбор: после
-   * первого же визита ветка «взять язык браузера» умирала навсегда, и немец
-   * получал `en` на всю жизнь, даже сменив язык системы. Язык из ссылки тоже
-   * не запоминается — его выбрал отправитель, а не тот, кто ссылку открыл.
+   * Writing used to happen in an effect over the already-resolved preferences,
+   * so an inferred locale went back into storage as if it had been chosen: after
+   * the very first visit the "take the browser language" branch died forever,
+   * and a German visitor got `en` for life, even after switching the system
+   * language. A locale coming from the link is not remembered either — the
+   * sender picked it, not the person who opened it.
    */
   const setLocale = (lang: Locale): void => {
     writeStored({ ...readStored(), lang })

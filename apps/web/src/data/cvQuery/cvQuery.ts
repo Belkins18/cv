@@ -5,14 +5,15 @@ export const cvQueryOptions = (locale: Locale) =>
   queryOptions<ResolvedCv>({
     queryKey: ['cv', locale],
     queryFn: () => loadCv(locale),
-    staleTime: Number.POSITIVE_INFINITY, // данные неизменны внутри сборки
+    staleTime: Number.POSITIVE_INFINITY, // the data is immutable within a build
     /*
-     * Повторять нечего. `loadCv` грузит локаль динамическим `import()`, а
-     * провалившийся импорт браузер запоминает: module map хранит null, и каждая
-     * следующая попытка падает мгновенно, не отправив ни одного запроса.
-     * Дефолтные три повтора с нарастающей паузой дают семь секунд скелетона
-     * ради четырёх отказов подряд — человек всё это время смотрит на ложь.
-     * Настоящий повтор — перезагрузка страницы, её делает кнопка в CvError.
+     * There is nothing to retry. `loadCv` fetches a locale through a dynamic
+     * `import()`, and the browser remembers a failed import: the module map
+     * holds null, and every subsequent attempt fails instantly without sending
+     * a single request. The default three retries with a growing backoff buy
+     * seven seconds of skeleton for four consecutive failures — seven seconds
+     * of showing the visitor a lie. The real retry is a page reload, and that
+     * is what the button in CvError does.
      */
     retry: false
   })

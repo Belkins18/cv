@@ -3,24 +3,25 @@ import type { z } from 'zod'
 import { searchSchema, type CvSearch } from '@/routes/search'
 
 /**
- * Режимы темы выводятся из той же схемы, что проверяет URL: отдельный union
- * рано или поздно разошёлся бы со схемой, а копия, которая мягче оригинала, —
- * это не дубликат, а дыра.
+ * The theme modes are derived from the same schema that validates the URL: a
+ * separate union would sooner or later drift away from it, and a copy that is
+ * softer than the original is not a duplicate, it is a hole.
  */
 export type ThemeMode = NonNullable<CvSearch['theme']>
 
 /**
- * Хранилище проходит ту же проверку, что и ссылка.
+ * Stored preferences go through the same validation as the link does.
  *
- * Раньше здесь стоял `JSON.parse(raw) as Stored` — каст без проверки, тогда как
- * URL рядом защищён `.catch(undefined)` на каждом поле. Цепочка от этого каста
- * доходила до конца: `{"lang":"zz"}` → `resolvePreferences` отдаёт
- * `locale: 'zz'` → `loadCv('zz')` ищет несуществующий импортёр и падает →
- * страница в состоянии ошибки. А кнопка «Повторить» перезагружает страницу,
- * где хранилище по-прежнему говорит `zz`: посетитель получал мёртвый сайт
- * навсегда, и вылечить его можно было только руками.
+ * This used to be `JSON.parse(raw) as Stored` — a cast with no check, while the
+ * URL right next to it is guarded by `.catch(undefined)` on every field. The
+ * chain from that cast ran all the way: `{"lang":"zz"}` → `resolvePreferences`
+ * returns `locale: 'zz'` → `loadCv('zz')` looks for an importer that does not
+ * exist and throws → the page lands in its error state. And the "Retry" button
+ * reloads a page whose storage still says `zz`: the visitor got a permanently
+ * dead site, curable only by hand.
  *
- * `tech` сюда не входит намеренно: фильтр живёт в ссылке, его не запоминают.
+ * `tech` is deliberately left out: the filter lives in the link and is not
+ * remembered.
  */
 export const storedSchema = searchSchema.pick({ lang: true, theme: true })
 export type Stored = z.infer<typeof storedSchema>
@@ -29,7 +30,7 @@ export type Preferences = { locale: Locale; themeMode: ThemeMode }
 
 const STORAGE_KEY = 'cv.preferences'
 
-/** Порядок приоритетов: ссылка → сохранённый выбор → браузер → умолчание. */
+/** Priority order: the link, then the saved choice, then the browser, then the default. */
 export const resolvePreferences = (
   search: CvSearch,
   stored: Stored,
@@ -47,13 +48,14 @@ export const readStored = (): Stored => {
     const raw = window.localStorage.getItem(STORAGE_KEY)
     if (raw === null) return {}
     /*
-     * safeParse поверх `.catch(undefined)`: негодное значение поля чинит схема,
-     * а не-объект целиком (строка, массив, null) — безопасный разбор.
+     * safeParse on top of `.catch(undefined)`: a bad field value is repaired by
+     * the schema, while a value that is not an object at all (a string, an
+     * array, null) is handled by parsing safely.
      */
     const parsed = storedSchema.safeParse(JSON.parse(raw))
     return parsed.success ? parsed.data : {}
   } catch {
-    return {} // приватный режим, запрещённое хранилище или не-JSON — не повод падать
+    return {} // private mode, blocked storage or non-JSON is no reason to crash
   }
 }
 
@@ -61,6 +63,6 @@ export const writeStored = (value: Stored): void => {
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(value))
   } catch {
-    /* молча: настройка не сохранится, страница работает */
+    /* silently: the preference will not persist, the page keeps working */
   }
 }

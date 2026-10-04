@@ -6,8 +6,9 @@ export type ShortcutHandlers = {
 }
 
 /**
- * Пока человек печатает, клавиша принадлежит полю, а не странице: иначе
- * «/» в поиске по странице или в любом будущем инпуте уводил бы фокус.
+ * While a person is typing, the key belongs to the field, not to the page:
+ * otherwise "/" in the browser's find-on-page bar, or in any future input, would
+ * steal the focus.
  */
 const isTypingTarget = (target: EventTarget | null): boolean =>
   target instanceof HTMLElement &&

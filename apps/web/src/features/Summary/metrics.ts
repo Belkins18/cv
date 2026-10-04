@@ -2,13 +2,15 @@ import { totalExperienceYears, type ResolvedCv } from '@cv/data'
 import type { UiKey } from '@/i18n/en'
 
 /**
- * Метрика отдаёт ключ словаря, а не готовую подпись: число считается здесь,
- * язык выбирается в компоненте, и смена локали не требует пересчёта.
+ * A metric returns a dictionary key rather than a finished caption: the number is
+ * computed here, the language is chosen in the component, and switching locale
+ * requires no recomputation.
  */
 export type Metric = { id: string; value: string; labelKey: UiKey }
 
 /**
- * Ни одно число здесь не вбито руками: всё считается из датасета и не устаревает.
+ * Not one number here is typed in by hand: everything is derived from the dataset
+ * and never goes stale.
  */
 export const buildMetrics = (data: ResolvedCv, now: Date): Metric[] => {
   const tech = new Set(
@@ -26,7 +28,7 @@ export const buildMetrics = (data: ResolvedCv, now: Date): Metric[] => {
       value: String(tech.size),
       labelKey: 'metric.tech'
     },
-    // Личный результат, без выгрузки внутренней аналитики (дизайн §10).
+    // The personal outcome only, with no internal analytics attached (design doc §10).
     { id: 'tokens', value: '8×', labelKey: 'metric.tokens' }
   ]
 }

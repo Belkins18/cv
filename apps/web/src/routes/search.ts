@@ -1,11 +1,12 @@
 import { z } from 'zod'
 
 /**
- * `.catch(undefined)` на каждом поле: битый параметр обязан деградировать до
- * значения по умолчанию, а не ронять маршрут. Ссылку правят руками и ломают
- * мессенджеры, и `?tech=react,drogon,,REACT&lang=fr` должен открыть страницу
- * с валидной частью фильтра. Сам список технологий чистит parseTechParam —
- * здесь проверяется только то, что это вообще строка.
+ * `.catch(undefined)` on every field: a broken parameter must degrade to the
+ * default value rather than bring the route down. Links get hand-edited and
+ * mangled by messengers, and `?tech=react,drogon,,REACT&lang=fr` has to open the
+ * page with whatever part of the filter is valid. The technology list itself is
+ * cleaned up by parseTechParam — all that is checked here is that it is a string
+ * at all.
  */
 export const searchSchema = z.object({
   tech: z.string().optional().catch(undefined),
