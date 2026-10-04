@@ -1,9 +1,9 @@
 {
   "extends": "./tsconfig/base.json",
-  // Пресет — это js-файл конфига ESLint плюс тесты строгости на TypeScript.
-  // Раньше include охватывал только `eslint/**/*.js` при `checkJs: false`,
-  // то есть `pnpm typecheck` в этом пакете был зелёным, не проверив ни строки,
-  // а `test/strict.test.ts` не попадал ни в один include вообще.
+  // The preset is a JS ESLint config file plus strictness tests in TypeScript.
+  // include used to cover only `eslint/**/*.js` with `checkJs: false`, meaning
+  // `pnpm typecheck` in this package was green without checking a single line,
+  // while `test/strict.test.ts` was in no include at all.
   "compilerOptions": {
     "allowJs": true,
     "checkJs": true,
@@ -15,7 +15,7 @@
     "eslint.config.js",
     "vitest.config.ts"
   ],
-  // Фикстура существует, чтобы НЕ компилироваться: тест проверяет, что строгие
-  // флаги её отвергают. В общий тайпчек она попасть не должна.
+  // The fixture exists in order NOT to compile: the test asserts that the
+  // strict flags reject it. It must stay out of the shared typecheck.
   "exclude": ["test/fixture"]
 }

@@ -9,9 +9,9 @@ export type CardProps = {
 }
 
 /**
- * Погашенная карточка остаётся в документе: видно и соответствие фильтру,
- * и общий масштаб списка. `as` позволяет вложить карточку в article/li,
- * не ломая семантику окружающей разметки.
+ * A dimmed card stays in the document: both the match against the filter and the
+ * overall size of the list remain visible. `as` lets the card become an
+ * article/li without breaking the semantics of the surrounding markup.
  */
 export const Card = ({
   children,

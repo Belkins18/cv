@@ -4,19 +4,19 @@ import { describe, expect, it, vi } from 'vitest'
 import { Chip } from './Chip'
 
 describe('Chip', () => {
-  it('сообщает состояние через aria-checked', () => {
+  it('reports its state through aria-checked', () => {
     render(<Chip label="React" selected onToggle={vi.fn()} />)
     expect(screen.getByRole('checkbox', { name: /React/ })).toBeChecked()
   })
 
-  it('показывает счётчик рядом с меткой', () => {
+  it('shows the count next to the label', () => {
     render(<Chip label="React" count={7} onToggle={vi.fn()} />)
     expect(screen.getByRole('checkbox', { name: /React/ })).toHaveTextContent(
       '7'
     )
   })
 
-  it('вызывает onToggle по клику и по пробелу', async () => {
+  it('calls onToggle on a click and on the space key', async () => {
     const onToggle = vi.fn()
     const user = userEvent.setup()
     render(<Chip label="React" onToggle={onToggle} />)
@@ -27,7 +27,7 @@ describe('Chip', () => {
     expect(onToggle).toHaveBeenCalledTimes(2)
   })
 
-  it('погашенный чип остаётся в доступном дереве — общий масштаб набора должен быть виден', () => {
+  it('keeps a dimmed chip in the accessibility tree, so the size of the whole set stays visible', () => {
     render(<Chip label="Solana" dimmed onToggle={vi.fn()} />)
     expect(screen.getByRole('checkbox', { name: /Solana/ })).toBeVisible()
   })

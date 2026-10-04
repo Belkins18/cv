@@ -1,9 +1,9 @@
 @import 'tailwindcss';
 
 /*
- * Тёмная тема — значения по умолчанию, светлая переопределяет те же имена.
- * Компоненты про тему не знают: они пишут text-ink, bg-surface, border-border,
- * а какой это цвет — решает активный набор переменных.
+ * The dark theme holds the default values; the light one redefines the same
+ * names. Components know nothing about themes: they write text-ink, bg-surface,
+ * border-border, and which color that is depends on the active variable set.
  */
 @theme {
   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
@@ -18,7 +18,7 @@
   --color-accent-ink: oklch(0.18 0.03 170);
 }
 
-/* Светлая тема — тот же набор имён, другие значения. */
+/* Light theme: the same set of names, different values. */
 :root[data-theme='light'] {
   --color-surface: oklch(0.99 0.002 260);
   --color-surface-raised: oklch(0.96 0.004 260);
@@ -30,9 +30,9 @@
 }
 
 /*
- * Режим "system" из ThemeMode не ставит data-theme вовсе: раскладку выбирает
- * операционная система. Атрибут data-theme="dark" пишется только при явном
- * выборе пользователя и возвращает значения по умолчанию поверх светлой схемы.
+ * The "system" value of ThemeMode sets no data-theme attribute at all: the OS
+ * picks the scheme. data-theme="dark" is written only on an explicit user
+ * choice, and it restores the default values on top of a light OS scheme.
  */
 @media (prefers-color-scheme: light) {
   :root:not([data-theme='dark']) {

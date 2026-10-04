@@ -9,8 +9,9 @@ export type MetricTileProps = {
 }
 
 /**
- * Плитка «крупное число + подпись». Подпись связана с плиткой через
- * aria-labelledby: голый числовой текст без неё в скринридере бессмыслен.
+ * A "big number plus caption" tile. The caption is tied to the tile through
+ * aria-labelledby: without it a bare numeric string means nothing in a screen
+ * reader.
  */
 export const MetricTile = ({
   value,
