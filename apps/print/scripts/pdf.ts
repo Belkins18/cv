@@ -8,14 +8,14 @@ const outDir = fileURLToPath(new URL('../../../out/', import.meta.url))
 
 await mkdir(outDir, { recursive: true })
 
-// Статическая страница поднимается через preview, а не открывается по file:// —
-// модульные скрипты по file:// блокируются политикой CORS.
+// The static page is served through preview rather than opened over file://:
+// module scripts loaded from file:// are blocked by the CORS policy.
 const server = await preview({
   root,
   preview: { port: 4327, strictPort: true }
 })
 const url = server.resolvedUrls?.local[0]
-if (url === undefined) throw new Error('preview-сервер не отдал адрес')
+if (url === undefined) throw new Error('the preview server returned no address')
 
 const browser = await chromium.launch()
 try {
@@ -27,7 +27,7 @@ try {
     printBackground: true,
     preferCSSPageSize: true
   })
-  console.log(`написано ${outDir}cv-nikolay-belibov.pdf`)
+  console.log(`written ${outDir}cv-nikolay-belibov.pdf`)
 } finally {
   await browser.close()
   await server.close()

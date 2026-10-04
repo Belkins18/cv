@@ -20,12 +20,12 @@ beforeAll(async () => {
   totalPages = extracted.totalPages
 })
 
-describe('PDF пригоден для ATS', () => {
-  it('имеет текстовый слой, а не картинку', () => {
+describe('the PDF is ATS-readable', () => {
+  it('carries a text layer rather than an image', () => {
     expect(text.length).toBeGreaterThan(1500)
   })
 
-  it('помещается в две страницы', () => {
+  it('fits on two pages', () => {
     expect(totalPages).toBeLessThanOrEqual(2)
   })
 
@@ -41,25 +41,25 @@ describe('PDF пригоден для ATS', () => {
     'TanStack Query',
     'Playwright',
     'Tailwind CSS'
-  ])('содержит ключевое слово: %s', (keyword) => {
+  ])('contains the keyword: %s', (keyword) => {
     expect(text).toContain(keyword)
   })
 
-  it('подставил стаж и не оставил сырых токенов', () => {
+  it('substituted the years of experience and left no raw tokens', () => {
     expect(text).toContain('11 years')
     expect(text).not.toContain('{{')
   })
 
   it.each(FORBIDDEN_IN_RESUME)(
-    'не содержит запрещённой формулировки: %s',
+    'does not contain the forbidden wording: %s',
     (_label, pattern) => {
       expect(text).not.toMatch(pattern)
     }
   )
 
-  it('телефон присутствует ровно тогда, когда задан CV_PHONE', () => {
-    // Значение берётся тем же резолвером, что и сборка: если проверка будет
-    // читать свой источник, рассинхрон снова пройдёт мимо теста.
+  it('carries a phone number exactly when CV_PHONE is set', () => {
+    // The value comes from the same resolver the build uses: if the check read
+    // a source of its own, a drift between the two would slip past the test again.
     const expected = resolveCvPhone()
     if (expected === '') {
       expect(text).not.toMatch(PHONE)

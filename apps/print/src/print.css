@@ -1,4 +1,5 @@
-/* Печатный лист: A4 с полями, заданными в CSS, — Playwright вызывается с preferCSSPageSize. */
+/* The printed sheet: A4 with the margins defined here in CSS — Playwright is
+   called with preferCSSPageSize. */
 @page {
   size: A4;
   margin: 12mm 13mm;
@@ -52,9 +53,10 @@ body {
   color: var(--muted);
 }
 
-/* Секция рвётся между страницами, а неделимы её части — роль, проект, колонка.
-   С `break-inside: avoid` на самой секции Projects целиком уезжал на следующий лист,
-   оставляя треть страницы пустой, и документ не влезал в два листа при том же тексте. */
+/* A section may break across pages; what must stay whole are its parts — a role,
+   a project, a column. With `break-inside: avoid` on the section itself, Projects
+   moved to the next sheet in one piece, left a third of the page empty, and the
+   document no longer fit on two sheets with exactly the same text. */
 .section {
   margin-top: 4mm;
 }
@@ -67,7 +69,8 @@ body {
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  /* Заголовок не остаётся один внизу страницы в отрыве от своего содержимого. */
+  /* The heading never ends up alone at the bottom of a page, cut off from what
+     it introduces. */
   break-after: avoid;
 }
 
@@ -133,7 +136,7 @@ body {
   margin-bottom: 0.7mm;
 }
 
-/* Свёрнутая строка раннего опыта: без отбивки и без буллетов. */
+/* The folded early-experience line: no extra spacing and no bullets. */
 .role--compact {
   margin-top: 1.5mm;
 }
@@ -149,10 +152,11 @@ body {
   margin: 0 0 1mm;
 }
 
-/* Ссылки в резюме настоящие — по репозиторию, LinkedIn и проектам нужно кликать.
-   Выглядят они при этом как обычный текст: синий подчёркнутый URL в печатном
-   документе только шумит. Правило не в @media print: на экране должно быть ровно
-   то же, что в PDF. Текстовый слой от <a> не страдает, ATS читает так же. */
+/* The links in this resume are real — the repository, LinkedIn and the projects
+   are meant to be clicked. They still look like plain text: a blue underlined URL
+   is pure noise in a printed document. The rule deliberately sits outside
+   @media print: the screen must show exactly what the PDF shows. The text layer
+   does not suffer from <a>, and an ATS reads it just the same. */
 a {
   color: inherit;
   text-decoration: none;

@@ -5,10 +5,11 @@ import { App } from '@/App'
 import './print.css'
 
 const root = document.getElementById('root')
-if (root === null) throw new Error('не найден #root')
+if (root === null) throw new Error('#root was not found')
 
-// Телефон проводится в бандл из CV_PHONE через define в vite.config.ts (дизайн §10).
-// Пустая строка — штатное «переменная не задана»: блок телефона не рендерится.
+// The phone number reaches the bundle from CV_PHONE through define in
+// vite.config.ts (design doc §10). An empty string is the ordinary "variable not
+// set" case: the phone block is simply not rendered.
 const phone = import.meta.env.VITE_CV_PHONE
 
 createRoot(root).render(
