@@ -56,3 +56,28 @@ test('the description stays inside the boundaries set for the resume text', asyn
   expect(head).not.toMatch(/\bSenior\b/i)
   expect(head).not.toMatch(new RegExp(['cyber', 'security'].join(' ?'), 'i'))
 })
+
+/*
+ * og:url and the canonical link were held back until the site had a real
+ * address, because a wrong one is worse than none: platforms prefer it over the
+ * address the visitor actually came from. Now that the address exists, the two
+ * have to agree — a canonical pointing one way and an og:url another splits the
+ * same page across two records, and the link that gets shared is the loser.
+ */
+test('the published address is declared once, and the same in both places', async ({
+  page
+}) => {
+  const site = 'https://nikolay-belibov-cv.netlify.app/'
+
+  await page.goto('/')
+
+  const ogUrl = await page
+    .locator('meta[property="og:url"]')
+    .getAttribute('content')
+  const canonical = await page
+    .locator('link[rel="canonical"]')
+    .getAttribute('href')
+
+  expect(ogUrl).toBe(site)
+  expect(canonical).toBe(site)
+})

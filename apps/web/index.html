@@ -29,13 +29,22 @@
     <meta property="og:locale" content="en_US" />
     <meta property="og:locale:alternate" content="uk_UA" />
     <meta name="twitter:card" content="summary" />
+
     <!--
-      og:url and og:image are deliberately absent. The address only exists once
-      Netlify is wired up, and a wrong og:url is worse than a missing one:
-      platforms prefer it over the address the visitor actually came from. A
-      preview image would have to live as PNG or JPEG — formats .gitignore bans
-      outright; SVG is no good for a preview, neither LinkedIn nor Telegram
-      reads it.
+      The address the site is published at. og:url and canonical must stay equal:
+      pointing them at different addresses splits one page across two records,
+      and the link that travels is the one that loses. Both are absolute on
+      purpose — a relative og:url is ignored. If the site ever moves to its own
+      domain, these two lines move with it, and the e2e test that pins them
+      fails until they do.
+    -->
+    <meta property="og:url" content="https://nikolay-belibov-cv.netlify.app/" />
+    <link rel="canonical" href="https://nikolay-belibov-cv.netlify.app/" />
+
+    <!--
+      og:image stays absent. A preview image has to be PNG or JPEG — formats
+      .gitignore bans outright to keep screenshots out of the repository — and
+      SVG is no good for a preview: neither LinkedIn nor Telegram reads it.
     -->
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
