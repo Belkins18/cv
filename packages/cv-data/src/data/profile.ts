@@ -26,7 +26,7 @@ export const profile: { name: string; title: Localized; summary: Localized } = {
 
 export const contacts = {
   email: 'belibov.nikolay@gmail.com',
-  telegram: '@Belkins18',
+  telegram: '@belkins_22',
   linkedin: 'https://www.linkedin.com/in/nikolay-belibov-781507b3/',
   github: 'https://github.com/Belkins18',
   location: {

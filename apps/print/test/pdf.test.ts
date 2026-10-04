@@ -33,7 +33,7 @@ describe('the PDF is ATS-readable', () => {
     'Nikolay Belibov',
     'Frontend Engineer',
     'belibov.nikolay@gmail.com',
-    '@Belkins18',
+    '@belkins_22',
     'WireX Systems',
     'React',
     'TypeScript',
