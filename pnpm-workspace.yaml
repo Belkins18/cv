@@ -2,9 +2,9 @@ packages:
   - 'packages/*'
   - 'apps/*'
 
-# pnpm 10+ не запускает postinstall-скрипты зависимостей без явного разрешения,
-# а pnpm 12 на этом ещё и валит установку. esbuild — бинарник под vite/vitest,
-# без сборки он не работает.
+# pnpm 10+ does not run a dependency's postinstall scripts without explicit
+# permission, and pnpm 12 fails the install over it outright. esbuild is a native
+# binary behind vite/vitest and does not work unless it is built.
 allowBuilds:
   '@parcel/watcher': true
   esbuild: true

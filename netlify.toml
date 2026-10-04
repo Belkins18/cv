@@ -1,36 +1,39 @@
-# Деплой сайта-резюме. Команда и каталог публикации живут здесь, а не в
-# интерфейсе Netlify: иначе сборку нельзя прочитать из репозитория.
+# Deployment of the CV site. The build command and the publish directory live
+# here rather than in the Netlify UI: otherwise the build cannot be read from the
+# repository.
 
 [build]
-  # Chromium ставится отдельным шагом: его тянет `@cv/print#pdf`, от которого
-  # зависит сборка сайта — PDF обязан существовать до того, как Vite перенесёт
-  # его в dist. `--filter=@cv/web...` при этом подхватывает и сам шаг pdf:
-  # turbo разрешает явную зависимость `@cv/print#pdf` поверх фильтра.
+  # Chromium is installed as a separate step: it is pulled in by `@cv/print#pdf`,
+  # which the site build depends on — the PDF has to exist before Vite moves it
+  # into dist. `--filter=@cv/web...` picks up the pdf step as well: turbo resolves
+  # the explicit `@cv/print#pdf` dependency on top of the filter.
   command = "pnpm --filter @cv/web exec playwright install chromium && pnpm turbo run build --filter=@cv/web..."
   publish = "apps/web/dist"
 
 [build.environment]
   NODE_VERSION = "24"
-  # Ровно та версия, что в `packageManager` корневого package.json. Разойдутся —
-  # corepack уронит установку: план предлагал «10», репозиторий давно на 12.
+  # Exactly the version in `packageManager` of the root package.json. If the two
+  # drift apart, corepack fails the install: the plan suggested "10", while the
+  # repository has long been on 12.
   PNPM_VERSION = "12.8.1"
-  # Браузер кладётся в node_modules, который Netlify кэширует между сборками, —
-  # иначе Chromium качается каждый раз заново.
+  # The browser goes into node_modules, which Netlify caches between builds —
+  # otherwise Chromium is downloaded from scratch every time.
   PLAYWRIGHT_BROWSERS_PATH = "0"
-  # CV_PHONE здесь не задан и задан быть не должен: телефон попадает только
-  # в PDF для отклика, который собирается локально (дизайн §10).
+  # CV_PHONE is unset here and must stay unset: the phone number reaches only
+  # the PDF built locally for a job application (design doc §10).
 
-# Фавиконка — SVG, но за /favicon.ico всё равно ходят краулеры и старые клиенты,
-# и правило ниже отдавало бы им HTML со статусом 200. Это объявлено до общего
-# правила: Netlify берёт первое совпавшее.
+# The favicon is an SVG, but crawlers and older clients still ask for
+# /favicon.ico, and the rule below would hand them HTML with status 200. This is
+# declared before the catch-all: Netlify takes the first rule that matches.
 [[redirects]]
   from = "/favicon.ico"
   to = "/favicon.svg"
   status = 200
 
-# SPA: фильтр и язык живут в search-параметрах, но прямая ссылка на любой путь
-# обязана отдать приложение, а не 404. Существующие файлы — в том числе
-# /cv-nikolay-belibov.pdf и /favicon.svg — Netlify отдаёт раньше редиректа.
+# SPA: the filter and the language live in the search params, but a direct link
+# to any path has to serve the application rather than a 404. Files that exist —
+# /cv-nikolay-belibov.pdf and /favicon.svg among them — are served by Netlify
+# ahead of the redirect.
 [[redirects]]
   from = "/*"
   to = "/index.html"

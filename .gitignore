@@ -10,12 +10,12 @@ packages/cv-data/locales/
 !.env.example
 .DS_Store
 
-# приватные материалы: в публичный репозиторий не попадают никогда
+# private material: never enters a public repository
 docs/superpowers/specs/
 *.png
 *.jpg
 
-# собранный PDF: в публичный репозиторий не попадает.
-# out/ — место сборки, apps/web/public — куда его кладёт prebuild сайта.
+# the built PDF: never enters a public repository.
+# out/ is where it is built, apps/web/public is where the site's prebuild puts it.
 out/
 apps/web/public/*.pdf
