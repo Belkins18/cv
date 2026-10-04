@@ -22,16 +22,21 @@ const tracked = (): string[] =>
     .filter(Boolean)
 
 /**
- * The files the scanner does not scan.
- * A dictionary of forbidden strings is required to contain forbidden strings —
- * that is its job. Without the exception the guard would always fail on itself,
- * and the dictionary would have to hide behind string concatenation, which is to
- * say become unreadable. `pnpm-lock.yaml` is a machine-written file full of
- * hashes, where every match is a false one.
+ * The file the scanner does not scan: `pnpm-lock.yaml`, machine-written and full
+ * of hashes, where every match is a false one.
  *
- * Neither file holds any resume data, so neither creates a blind spot.
+ * The dictionary itself used to sit here too, on the reasoning that a file of
+ * forbidden strings is required to contain them. It is not: every pattern is
+ * written so that its own source text does not match it, and the test below
+ * holds that property rather than trusting it.
+ *
+ * The old comment claimed the exemption created no blind spot, because the file
+ * held no resume data. The blind spot was never about resume data: what the
+ * exemption hid was the real phone number, written out in a comment inside the
+ * dictionary — the one string this guard exists to find, invisible to it for as
+ * long as the exemption stood.
  */
-const SELF = ['tools/repo-guard/patterns.ts', 'pnpm-lock.yaml']
+const SELF = ['pnpm-lock.yaml']
 
 /** The dataset files: exactly what the resume text is assembled from. */
 const DATASET = /^packages\/cv-data\/src\/data\/[^/]+\.ts$/
@@ -49,6 +54,10 @@ describe('the privacy of a public repository', () => {
     // Insurance against silent self-neutralization: if the filters ever cut
     // everything away, the remaining tests go green having checked nothing.
     expect(scannable.length).toBeGreaterThan(20)
+  })
+
+  it('scans the dictionary of forbidden strings itself', () => {
+    expect(scannable).toContain('tools/repo-guard/patterns.ts')
   })
 
   it.each(FORBIDDEN_PATHS)('tracks no %s', (_label, pattern) => {
