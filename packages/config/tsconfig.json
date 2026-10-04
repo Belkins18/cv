@@ -1,0 +1,21 @@
+{
+  "extends": "./tsconfig/base.json",
+  // The preset is a JS ESLint config file plus strictness tests in TypeScript.
+  // include used to cover only `eslint/**/*.js` with `checkJs: false`, meaning
+  // `pnpm typecheck` in this package was green without checking a single line,
+  // while `test/strict.test.ts` was in no include at all.
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "types": ["node"]
+  },
+  "include": [
+    "eslint/**/*.js",
+    "test/**/*.ts",
+    "eslint.config.js",
+    "vitest.config.ts"
+  ],
+  // The fixture exists in order NOT to compile: the test asserts that the
+  // strict flags reject it. It must stay out of the shared typecheck.
+  "exclude": ["test/fixture"]
+}

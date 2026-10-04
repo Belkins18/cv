@@ -1,0 +1,163 @@
+/* The printed sheet: A4 with the margins defined here in CSS — Playwright is
+   called with preferCSSPageSize. */
+@page {
+  size: A4;
+  margin: 12mm 13mm;
+}
+
+:root {
+  --ink: #111111;
+  --muted: #4a4a4a;
+  --rule: #d8d8d8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+  color: var(--ink);
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 9.4pt;
+  line-height: 1.38;
+}
+
+.sheet {
+  max-width: 184mm;
+  margin: 0 auto;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 22pt;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.title {
+  margin: 1mm 0 2mm;
+  font-size: 11pt;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.contacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 4mm;
+  margin: 0;
+  color: var(--muted);
+}
+
+/* A section may break across pages; what must stay whole are its parts — a role,
+   a project, a column. With `break-inside: avoid` on the section itself, Projects
+   moved to the next sheet in one piece, left a third of the page empty, and the
+   document no longer fit on two sheets with exactly the same text. */
+.section {
+  margin-top: 4mm;
+}
+
+.section h2 {
+  margin: 0 0 1.5mm;
+  padding-bottom: 0.8mm;
+  border-bottom: 0.4pt solid var(--rule);
+  font-size: 8.4pt;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  /* The heading never ends up alone at the bottom of a page, cut off from what
+     it introduces. */
+  break-after: avoid;
+}
+
+.summary {
+  margin: 0;
+}
+
+.skills-row {
+  display: grid;
+  grid-template-columns: 34mm 1fr;
+  gap: 2mm;
+}
+
+.skills-row dt {
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.skills-row dd {
+  margin: 0;
+}
+
+.role,
+.project {
+  margin-top: 2.5mm;
+  break-inside: avoid;
+}
+
+.role-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 4mm;
+}
+
+.role h3,
+.project h3 {
+  margin: 0;
+  font-size: 9.8pt;
+  font-weight: 700;
+}
+
+.company {
+  font-weight: 500;
+}
+
+.period {
+  white-space: nowrap;
+  color: var(--muted);
+}
+
+.location,
+.project-detail {
+  margin: 0.4mm 0 0;
+  color: var(--muted);
+}
+
+.role ul {
+  margin: 1mm 0 0;
+  padding-left: 4.5mm;
+}
+
+.role li {
+  margin-bottom: 0.7mm;
+}
+
+/* The folded early-experience line: no extra spacing and no bullets. */
+.role--compact {
+  margin-top: 1.5mm;
+}
+
+.two-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6mm;
+  break-inside: avoid;
+}
+
+.two-column p {
+  margin: 0 0 1mm;
+}
+
+/* The links in this resume are real — the repository, LinkedIn and the projects
+   are meant to be clicked. They still look like plain text: a blue underlined URL
+   is pure noise in a printed document. The rule deliberately sits outside
+   @media print: the screen must show exactly what the PDF shows. The text layer
+   does not suffer from <a>, and an ATS reads it just the same. */
+a {
+  color: inherit;
+  text-decoration: none;
+}

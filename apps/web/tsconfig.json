@@ -1,0 +1,20 @@
+{
+  "extends": "@cv/config/tsconfig/react.json",
+  // The vite/vitest configs resolve paths from import.meta.url — that is Node
+  // code. The @cv/config/tsconfig/react.json preset only knows vite/client, so
+  // "node" is added here rather than in the shared preset.
+  "compilerOptions": {
+    "types": ["vite/client", "node"],
+    // No baseUrl: since TypeScript 5 the "paths" patterns resolve relative to
+    // this file, so the option only adds a deprecated global resolution root.
+    "paths": { "@/*": ["./src/*"] }
+  },
+  "include": [
+    "src",
+    "e2e",
+    "scripts",
+    "vite.config.ts",
+    "vitest.config.ts",
+    "playwright.config.ts"
+  ]
+}

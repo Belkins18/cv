@@ -1,0 +1,40 @@
+# Deployment of the CV site. The build command and the publish directory live
+# here rather than in the Netlify UI: otherwise the build cannot be read from the
+# repository.
+
+[build]
+  # Chromium is installed as a separate step: it is pulled in by `@cv/print#pdf`,
+  # which the site build depends on — the PDF has to exist before Vite moves it
+  # into dist. `--filter=@cv/web...` picks up the pdf step as well: turbo resolves
+  # the explicit `@cv/print#pdf` dependency on top of the filter.
+  command = "pnpm --filter @cv/web exec playwright install chromium && pnpm turbo run build --filter=@cv/web..."
+  publish = "apps/web/dist"
+
+[build.environment]
+  NODE_VERSION = "24"
+  # Exactly the version in `packageManager` of the root package.json. If the two
+  # drift apart, corepack fails the install: the plan suggested "10", while the
+  # repository has long been on 12.
+  PNPM_VERSION = "12.8.1"
+  # The browser goes into node_modules, which Netlify caches between builds —
+  # otherwise Chromium is downloaded from scratch every time.
+  PLAYWRIGHT_BROWSERS_PATH = "0"
+  # CV_PHONE is unset here and must stay unset: the phone number reaches only
+  # the PDF built locally for a job application (design doc §10).
+
+# The favicon is an SVG, but crawlers and older clients still ask for
+# /favicon.ico, and the rule below would hand them HTML with status 200. This is
+# declared before the catch-all: Netlify takes the first rule that matches.
+[[redirects]]
+  from = "/favicon.ico"
+  to = "/favicon.svg"
+  status = 200
+
+# SPA: the filter and the language live in the search params, but a direct link
+# to any path has to serve the application rather than a 404. Files that exist —
+# /cv-nikolay-belibov.pdf and /favicon.svg among them — are served by Netlify
+# ahead of the redirect.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

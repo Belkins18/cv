@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Nikolay Belibov — Frontend Engineer</title>
+    <!--
+      This site travels as a link: in an email, on LinkedIn, in a message to a
+      recruiter. Without a description and og tags that link unfurls as an empty
+      card, and the first impression of the CV is that there is nothing to it.
+      The text stays inside the same boundaries as the dataset: the title is
+      exactly the one in the resume, and the domain is called network-protocol
+      analysis. The terms the project forbids must not be spelled out here —
+      HTML comments travel into the build, and `postbuild` catches them just
+      like code. It caught precisely that.
+    -->
+    <meta
+      name="description"
+      content="Nikolay Belibov — frontend engineer. React, TypeScript in strict mode, Vite; the web client for a network-protocol analysis platform at WireX Systems. Interactive CV with a stack filter in the URL and a PDF to download."
+    />
+
+    <meta property="og:type" content="profile" />
+    <meta property="og:title" content="Nikolay Belibov — Frontend Engineer" />
+    <meta
+      property="og:description"
+      content="React, TypeScript in strict mode, Vite. Interactive CV with a stack filter in the URL and a PDF to download."
+    />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="uk_UA" />
+    <meta name="twitter:card" content="summary" />
+    <!--
+      og:url and og:image are deliberately absent. The address only exists once
+      Netlify is wired up, and a wrong og:url is worse than a missing one:
+      platforms prefer it over the address the visitor actually came from. A
+      preview image would have to live as PNG or JPEG — formats .gitignore bans
+      outright; SVG is no good for a preview, neither LinkedIn nor Telegram
+      reads it.
+    -->
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!--
+      The browser paints its own chrome before the CSS arrives: without this a
+      light system theme flashes white over a dark page.
+    -->
+    <meta name="color-scheme" content="dark light" />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: dark)"
+      content="#15171d"
+    />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: light)"
+      content="#fcfcfd"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- The @cv/ui theme tokens only name Inter and JetBrains Mono; loading them is the app's job. -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

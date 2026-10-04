@@ -1,0 +1,1 @@
+export { CvSkeleton } from './CvSkeleton'

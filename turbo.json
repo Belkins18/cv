@@ -2,9 +2,31 @@
   "$schema": "https://turbo.build/schema.json",
   "tasks": {
     "lint": {},
-    "build": { "dependsOn": ["^build"], "outputs": ["dist/**", "locales/**"] },
-    "typecheck": { "dependsOn": ["^build", "build"] },
-    "test": { "dependsOn": ["^build", "build"] },
-    "pdf": { "dependsOn": ["^build"], "outputs": ["../web/public/*.pdf"] }
-  }
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", "locales/**"],
+      "env": ["CV_PHONE"]
+    },
+    "typecheck": {
+      "dependsOn": ["^build", "build"]
+    },
+    "test": {
+      "dependsOn": ["^build", "build"]
+    },
+    "@cv/web#build": {
+      "dependsOn": ["^build", "@cv/print#pdf"],
+      "outputs": ["dist/**"],
+      "env": ["CV_PHONE"]
+    },
+    "@cv/print#pdf": {
+      "dependsOn": ["build"],
+      "outputs": ["../../out/*.pdf"],
+      "env": ["CV_PHONE"]
+    },
+    "@cv/print#verify:pdf": {
+      "dependsOn": ["@cv/print#pdf"],
+      "env": ["CV_PHONE"]
+    }
+  },
+  "globalDependencies": [".env"]
 }

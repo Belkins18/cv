@@ -1,0 +1,31 @@
+@import '@cv/ui/theme.css';
+
+/*
+ * Where Tailwind looks for classes — established by building, not by reading the
+ * documentation.
+ *
+ * Under @tailwindcss/vite, content auto-detection is measured from the Vite root
+ * (apps/web), not from the directory of the CSS file that holds
+ * `@import 'tailwindcss'`. So the app gets its own src with or without the
+ * directive; the line below nails it down explicitly, so that changing the root
+ * or moving to the CLI cannot switch the utilities off in silence.
+ */
+@source '.';
+
+/*
+ * The @cv/ui sources, on the other hand, auto-detection never finds: the app
+ * sees that package through a symlink in node_modules, and Tailwind excludes
+ * node_modules from scanning. Without this line the build is green and the page
+ * renders, yet the primitives' classes — opacity-35 on a dimmed card,
+ * tabular-nums on the counters, the focus-visible outline — never reach the CSS
+ * at all. Verified by removing the directive: the CSS shrinks from 14.4 KB to
+ * 11.9 KB, and by exactly those classes.
+ */
+@source '../../../packages/ui/src';
+
+body {
+  margin: 0;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}

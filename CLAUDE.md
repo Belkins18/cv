@@ -1,34 +1,38 @@
-# CV — вход для ИИ-агента
+# CV — the entry point for an AI agent
 
-Правила проекта живут в `AGENTS.md` и в `docs/instructions/`. Этот файл
-существует, чтобы несколько вещей попадали в контекст агента сразу.
+The project rules live in `AGENTS.md` and in `docs/instructions/`. This file
+exists so that a handful of things land in the agent's context immediately.
 
-## Прочитать перед работой
+## Read before starting work
 
-- `AGENTS.md` — стек, структура пакетов, менеджер пакетов, запреты;
-- `docs/instructions/` — правила по теме: git flow, качество кода, тестирование.
+- `AGENTS.md` — the stack, the package layout, the package manager, the prohibitions;
+- `docs/instructions/` — rules by topic: git flow, code quality, testing, deployment.
 
-## Главное про этот репозиторий
+## The essentials about this repository
 
-Репозиторий **публичный**. Личного телефона, рабочей почты и внутренних метрик
-работодателя в нём нет ни в каком виде — это проверяет `pnpm guard`.
-Телефон попадает в PDF только через переменную окружения `CV_PHONE`.
+The repository is **public**. The personal phone number, the employer work email
+and the employer internal metrics exist in it in no form whatsoever — `pnpm guard`
+checks that. The phone number reaches the PDF only through the `CV_PHONE`
+environment variable.
 
-Монорепо на pnpm + Turborepo. `npm`, `yarn` и `bun` запрещены.
-Команды — из корня: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`, `pnpm guard`.
+A monorepo on pnpm + Turborepo. `npm`, `yarn` and `bun` are forbidden.
+Commands run from the root: `pnpm lint`, `pnpm typecheck`, `pnpm test`,
+`pnpm build`, `pnpm guard`.
 
-## Гигиена контекста
+## Context hygiene
 
-Один чат — одна стадия работы. Контекст очищается на двух границах:
+One chat, one stage of work. The context is cleared at two boundaries:
 
-- **после того как план написан и утверждён** — реализация идёт в новом чате;
-- **после того как задача реализована и закоммичена** — следующая задача
-  начинается с чистого листа.
+- **once the plan is written and approved** — the implementation moves to a new chat;
+- **once a task is implemented and committed** — the next task starts from a
+  clean slate.
 
-Всё, что должно пережить очистку, выносится на диск до неё: решения — в
-`docs/instructions/`, состояние работы — в план, код — в коммит.
+Anything that has to survive the clearing is written to disk beforehand:
+decisions go into `docs/instructions/`, the state of the work goes into the plan,
+and the code goes into a commit.
 
-## Язык
+## Language
 
-Общение и документация — по-русски. Имена файлов, кода и веток Git — по-английски.
-Комментарии в коде — по-русски и объясняют «почему», а не «что».
+Communication and documentation are in English. So are the names of files, code
+and Git branches. Code comments are in English too, and they explain "why"
+rather than "what".

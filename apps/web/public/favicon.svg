@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="NB">
+  <!--
+    SVG, not PNG: .gitignore bans *.png and *.jpg across the whole repository to
+    keep screenshots out, and there is no reason to punch an exception through
+    that ban for an icon. The color is the theme accent in hex rather than oklch:
+    a favicon is not always rendered by a full engine, and it would fail
+    invisibly.
+  -->
+  <rect width="64" height="64" rx="14" fill="#0d8a73" />
+  <text
+    x="32"
+    y="44"
+    text-anchor="middle"
+    font-family="Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
+    font-size="32"
+    font-weight="700"
+    fill="#ffffff"
+  >NB</text>
+</svg>

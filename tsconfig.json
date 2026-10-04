@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  // The repository tooling: the privacy guard and its dictionary. These files
+  // used to be in no include at all — the most security-critical code in the
+  // project was never typechecked. Packages and apps check themselves with their
+  // own tsconfigs.
+  "extends": "./packages/config/tsconfig/base.json",
+  "compilerOptions": { "types": ["node"] },
+  "include": ["tools"]
+}

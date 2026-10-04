@@ -1,0 +1,8 @@
+{
+  "extends": "@cv/config/tsconfig/base.json",
+  // scripts/build-locales.ts is a Node script: it needs console, fs/promises and
+  // import.meta.url. The base preset is shared and knows nothing about Node, so
+  // the types are added here rather than in @cv/config.
+  "compilerOptions": { "types": ["node"] },
+  "include": ["src", "scripts"]
+}

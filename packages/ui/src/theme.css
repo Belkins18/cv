@@ -1,0 +1,56 @@
+@import 'tailwindcss';
+
+/*
+ * The dark theme holds the default values; the light one redefines the same
+ * names. Components know nothing about themes: they write text-ink, bg-surface,
+ * border-border, and which color that is depends on the active variable set.
+ */
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --color-surface: oklch(0.18 0.012 260);
+  --color-surface-raised: oklch(0.23 0.014 260);
+  --color-border: oklch(0.32 0.014 260);
+  --color-ink: oklch(0.95 0.005 260);
+  --color-ink-muted: oklch(0.72 0.012 260);
+  --color-accent: oklch(0.74 0.15 170);
+  --color-accent-ink: oklch(0.18 0.03 170);
+}
+
+/* Light theme: the same set of names, different values. */
+:root[data-theme='light'] {
+  --color-surface: oklch(0.99 0.002 260);
+  --color-surface-raised: oklch(0.96 0.004 260);
+  --color-border: oklch(0.88 0.006 260);
+  --color-ink: oklch(0.21 0.012 260);
+  --color-ink-muted: oklch(0.46 0.012 260);
+  --color-accent: oklch(0.55 0.14 170);
+  --color-accent-ink: oklch(0.99 0.01 170);
+}
+
+/*
+ * The "system" value of ThemeMode sets no data-theme attribute at all: the OS
+ * picks the scheme. data-theme="dark" is written only on an explicit user
+ * choice, and it restores the default values on top of a light OS scheme.
+ */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) {
+    --color-surface: oklch(0.99 0.002 260);
+    --color-surface-raised: oklch(0.96 0.004 260);
+    --color-border: oklch(0.88 0.006 260);
+    --color-ink: oklch(0.21 0.012 260);
+    --color-ink-muted: oklch(0.46 0.012 260);
+    --color-accent: oklch(0.55 0.14 170);
+    --color-accent-ink: oklch(0.99 0.01 170);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
